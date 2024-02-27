@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nenv.logger.UtilityDistributionLogger &mdash; NegoLog 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            NegoLog
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">NegoLog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">NegoLog</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">nenv.logger.UtilityDistributionLogger</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for nenv.logger.UtilityDistributionLogger</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">nenv.Preference</span> <span class="kn">import</span> <span class="n">domain_loader</span>
+<span class="kn">from</span> <span class="nn">nenv.BidSpace</span> <span class="kn">import</span> <span class="n">BidSpace</span><span class="p">,</span> <span class="n">BidPoint</span>
+<span class="kn">from</span> <span class="nn">nenv.logger.AbstractLogger</span> <span class="kn">import</span> <span class="n">AbstractLogger</span><span class="p">,</span> <span class="n">SessionLogs</span><span class="p">,</span> <span class="n">Session</span><span class="p">,</span> <span class="n">LogRow</span><span class="p">,</span> <span class="n">ExcelLog</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">nenv.utils.tournament_graphs</span> <span class="kn">import</span> <span class="n">plt</span><span class="p">,</span> <span class="n">DRAWING_FORMAT</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+
+<div class="viewcode-block" id="UtilityDistributionLogger">
+<a class="viewcode-back" href="../../../nenv.logger.html#nenv.logger.UtilityDistributionLogger.UtilityDistributionLogger">[docs]</a>
+<span class="k">class</span> <span class="nc">UtilityDistributionLogger</span><span class="p">(</span><span class="n">AbstractLogger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        UtilityDistributionLogger logs the offered utility distribution and draws them.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="UtilityDistributionLogger.on_session_end">
+<a class="viewcode-back" href="../../../nenv.logger.html#nenv.logger.UtilityDistributionLogger.UtilityDistributionLogger.on_session_end">[docs]</a>
+    <span class="k">def</span> <span class="nf">on_session_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">final_row</span><span class="p">:</span> <span class="n">LogRow</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Session</span><span class="p">,</span> <span class="n">SessionLogs</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">LogRow</span><span class="p">:</span>
+        <span class="c1"># Collect utility values</span>
+        <span class="n">utility_a</span><span class="p">,</span> <span class="n">utility_b</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+        <span class="n">opp_utility_a</span><span class="p">,</span> <span class="n">opp_utility_b</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">log_row</span> <span class="ow">in</span> <span class="n">session</span><span class="o">.</span><span class="n">session_log</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="s2">&quot;Session&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">log_row</span><span class="p">[</span><span class="s2">&quot;Action&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;Offer&quot;</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">log_row</span><span class="p">[</span><span class="s2">&quot;Who&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span>
+                <span class="n">utility_a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">log_row</span><span class="p">[</span><span class="s2">&quot;AgentAUtility&quot;</span><span class="p">])</span>
+                <span class="n">opp_utility_a</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">log_row</span><span class="p">[</span><span class="s2">&quot;AgentBUtility&quot;</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">utility_b</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">log_row</span><span class="p">[</span><span class="s2">&quot;AgentBUtility&quot;</span><span class="p">])</span>
+                <span class="n">opp_utility_b</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">log_row</span><span class="p">[</span><span class="s2">&quot;AgentAUtility&quot;</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;UtilityDist&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;MeanAgentUtilityA&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">utility_a</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">utility_a</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.</span><span class="p">,</span>
+            <span class="s2">&quot;MeanAgentUtilityB&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">utility_b</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">utility_b</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.</span><span class="p">,</span>
+            <span class="s2">&quot;MeanOpponentUtilityA&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">opp_utility_a</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">opp_utility_a</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.</span><span class="p">,</span>
+            <span class="s2">&quot;MeanOpponentUtilityB&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">opp_utility_b</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">opp_utility_b</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.</span><span class="p">,</span>
+            <span class="s2">&quot;StdAgentUtilityA&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">utility_a</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">utility_a</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.</span><span class="p">,</span>
+            <span class="s2">&quot;StdAgentUtilityB&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">utility_b</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">utility_b</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.</span><span class="p">,</span>
+            <span class="s2">&quot;StdOpponentUtilityA&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">opp_utility_a</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">opp_utility_a</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.</span><span class="p">,</span>
+            <span class="s2">&quot;StdOpponentUtilityB&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">opp_utility_b</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">opp_utility_b</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.</span><span class="p">,</span>
+            <span class="s2">&quot;MaxAgentUtilityA&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">utility_a</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">utility_a</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.</span><span class="p">,</span>
+            <span class="s2">&quot;MaxAgentUtilityB&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">utility_b</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">utility_b</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.</span><span class="p">,</span>
+            <span class="s2">&quot;MaxOpponentUtilityA&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">opp_utility_a</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">opp_utility_a</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.</span><span class="p">,</span>
+            <span class="s2">&quot;MaxOpponentUtilityB&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">opp_utility_b</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">opp_utility_b</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.</span><span class="p">,</span>
+            <span class="s2">&quot;MinAgentUtilityA&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">utility_a</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">utility_a</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.</span><span class="p">,</span>
+            <span class="s2">&quot;MinAgentUtilityB&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">utility_b</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">utility_b</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.</span><span class="p">,</span>
+            <span class="s2">&quot;MinOpponentUtilityA&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">opp_utility_a</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">opp_utility_a</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.</span><span class="p">,</span>
+            <span class="s2">&quot;MinOpponentUtilityB&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">opp_utility_b</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">opp_utility_b</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mf">0.</span><span class="p">,</span>
+        <span class="p">}}</span></div>
+
+
+<div class="viewcode-block" id="UtilityDistributionLogger.on_tournament_end">
+<a class="viewcode-back" href="../../../nenv.logger.html#nenv.logger.UtilityDistributionLogger.UtilityDistributionLogger.on_tournament_end">[docs]</a>
+    <span class="k">def</span> <span class="nf">on_tournament_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tournament_logs</span><span class="p">:</span> <span class="n">ExcelLog</span><span class="p">,</span> <span class="n">agent_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">domain_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                          <span class="n">estimator_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_agent_opponent_utility</span><span class="p">(</span><span class="n">tournament_logs</span><span class="p">,</span> <span class="n">agent_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_dir</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;domains/&quot;</span><span class="p">)):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;domains/&quot;</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">domain</span> <span class="ow">in</span> <span class="n">domain_names</span><span class="p">:</span>
+            <span class="n">domain_name</span> <span class="o">=</span> <span class="s2">&quot;Domain</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">domain</span>
+            <span class="n">domain_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;domains/</span><span class="si">%s</span><span class="s2">/&quot;</span> <span class="o">%</span> <span class="n">domain_name</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">domain_dir</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">domain_dir</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_agent_opponent_utility</span><span class="p">(</span><span class="n">tournament_logs</span><span class="p">,</span> <span class="n">agent_names</span><span class="p">,</span> <span class="n">domain_dir</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">domain</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="UtilityDistributionLogger.draw_agent_opponent_utility">
+<a class="viewcode-back" href="../../../nenv.logger.html#nenv.logger.UtilityDistributionLogger.UtilityDistributionLogger.draw_agent_opponent_utility">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_agent_opponent_utility</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tournament_logs</span><span class="p">:</span> <span class="n">ExcelLog</span><span class="p">,</span> <span class="n">agent_names</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                                    <span class="n">draw_pareto</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">target_domain_id</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">agent_mean_utilities</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">opponent_mean_utilities</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">agent_min_utilities</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">opponent_min_utilities</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">agent_max_utilities</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">opponent_max_utilities</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">csv_infos</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">domain_id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+        <span class="k">for</span> <span class="n">agent_name</span> <span class="ow">in</span> <span class="n">agent_names</span><span class="p">:</span>
+            <span class="n">agent_mean_utilities</span><span class="p">[</span><span class="n">agent_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">opponent_mean_utilities</span><span class="p">[</span><span class="n">agent_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="n">agent_min_utilities</span><span class="p">[</span><span class="n">agent_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">opponent_min_utilities</span><span class="p">[</span><span class="n">agent_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="n">agent_max_utilities</span><span class="p">[</span><span class="n">agent_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">opponent_max_utilities</span><span class="p">[</span><span class="n">agent_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tournament_logs</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="s2">&quot;UtilityDist&quot;</span><span class="p">]):</span>
+            <span class="n">domain_id</span> <span class="o">=</span> <span class="n">tournament_logs</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;DomainName&quot;</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">target_domain_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">domain_id</span> <span class="o">!=</span> <span class="n">target_domain_id</span><span class="p">:</span>
+                <span class="k">continue</span>
+
+            <span class="n">agent_a</span> <span class="o">=</span> <span class="n">tournament_logs</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;AgentA&quot;</span><span class="p">]</span>
+            <span class="n">agent_b</span> <span class="o">=</span> <span class="n">tournament_logs</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;AgentB&quot;</span><span class="p">]</span>
+
+            <span class="n">agent_mean_utilities</span><span class="p">[</span><span class="n">agent_a</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;MeanAgentUtilityA&quot;</span><span class="p">])</span>
+            <span class="n">agent_mean_utilities</span><span class="p">[</span><span class="n">agent_b</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;MeanAgentUtilityB&quot;</span><span class="p">])</span>
+
+            <span class="n">opponent_mean_utilities</span><span class="p">[</span><span class="n">agent_a</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;MeanOpponentUtilityA&quot;</span><span class="p">])</span>
+            <span class="n">opponent_mean_utilities</span><span class="p">[</span><span class="n">agent_b</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;MeanOpponentUtilityB&quot;</span><span class="p">])</span>
+
+            <span class="n">agent_min_utilities</span><span class="p">[</span><span class="n">agent_a</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;MinAgentUtilityA&quot;</span><span class="p">])</span>
+            <span class="n">agent_min_utilities</span><span class="p">[</span><span class="n">agent_b</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;MinAgentUtilityB&quot;</span><span class="p">])</span>
+
+            <span class="n">opponent_min_utilities</span><span class="p">[</span><span class="n">agent_a</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;MinOpponentUtilityA&quot;</span><span class="p">])</span>
+            <span class="n">opponent_min_utilities</span><span class="p">[</span><span class="n">agent_b</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;MinOpponentUtilityB&quot;</span><span class="p">])</span>
+
+            <span class="n">agent_max_utilities</span><span class="p">[</span><span class="n">agent_a</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;MaxAgentUtilityA&quot;</span><span class="p">])</span>
+            <span class="n">agent_max_utilities</span><span class="p">[</span><span class="n">agent_b</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;MaxAgentUtilityB&quot;</span><span class="p">])</span>
+
+            <span class="n">opponent_max_utilities</span><span class="p">[</span><span class="n">agent_a</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;MaxOpponentUtilityA&quot;</span><span class="p">])</span>
+            <span class="n">opponent_max_utilities</span><span class="p">[</span><span class="n">agent_b</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;MaxOpponentUtilityB&quot;</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">agent_name</span> <span class="ow">in</span> <span class="n">opponent_mean_utilities</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">opponent_mean_utilities</span><span class="p">[</span><span class="n">agent_name</span><span class="p">])</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">agent_mean_utilities</span><span class="p">[</span><span class="n">agent_name</span><span class="p">])</span>
+            <span class="n">x_err</span> <span class="o">=</span> <span class="p">[[</span><span class="nb">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">opponent_min_utilities</span><span class="p">[</span><span class="n">agent_name</span><span class="p">]))],</span>
+                     <span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">opponent_max_utilities</span><span class="p">[</span><span class="n">agent_name</span><span class="p">])</span> <span class="o">-</span> <span class="n">x</span><span class="p">)]]</span>
+
+            <span class="n">y_err</span> <span class="o">=</span> <span class="p">[[</span><span class="nb">abs</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">agent_min_utilities</span><span class="p">[</span><span class="n">agent_name</span><span class="p">]))],</span>
+                     <span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">agent_max_utilities</span><span class="p">[</span><span class="n">agent_name</span><span class="p">])</span> <span class="o">-</span> <span class="n">y</span><span class="p">)]]</span>
+
+            <span class="n">csv_infos</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s2">&quot;AgentName&quot;</span><span class="p">:</span> <span class="n">agent_name</span><span class="p">,</span>
+                <span class="s2">&quot;OpponentMeanUtility&quot;</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+                <span class="s2">&quot;AgentMeanUtility&quot;</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span>
+                <span class="s2">&quot;OpponentMinUtility&quot;</span><span class="p">:</span> <span class="n">x_err</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                <span class="s2">&quot;AgentMinUtility&quot;</span><span class="p">:</span> <span class="n">y_err</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                <span class="s2">&quot;OpponentMaxUtility&quot;</span><span class="p">:</span> <span class="n">x_err</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+                <span class="s2">&quot;AgentMaxUtility&quot;</span><span class="p">:</span> <span class="n">y_err</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span>
+            <span class="p">})</span>
+
+            <span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xerr</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x_err</span><span class="p">),</span> <span class="n">yerr</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_err</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="n">agent_name</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mf">5.</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">draw_pareto</span><span class="p">:</span>
+            <span class="n">pareto</span><span class="p">,</span> <span class="n">nash_point</span><span class="p">,</span> <span class="n">kalai_point</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_pareto_nash_kalai</span><span class="p">(</span><span class="n">domain_id</span><span class="p">)</span>
+
+            <span class="n">nash</span> <span class="o">=</span> <span class="p">[</span><span class="n">nash_point</span><span class="o">.</span><span class="n">utility_a</span><span class="p">,</span> <span class="n">nash_point</span><span class="o">.</span><span class="n">utility_b</span><span class="p">]</span>
+            <span class="n">kalai</span> <span class="o">=</span> <span class="p">[</span><span class="n">kalai_point</span><span class="o">.</span><span class="n">utility_a</span><span class="p">,</span> <span class="n">kalai_point</span><span class="o">.</span><span class="n">utility_b</span><span class="p">]</span>
+
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pareto</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">pareto</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;-*k&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Pareto&quot;</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">nash</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">nash</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;^&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Nash&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">75</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">kalai</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">kalai</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Kalai&quot;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Opponent Utility&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Agent Utility&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Utility Distribution&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">set_size_inches</span><span class="p">(</span><span class="mf">18.5</span><span class="p">,</span> <span class="mf">10.5</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">DRAWING_FORMAT</span> <span class="o">==</span> <span class="s2">&quot;matplotlib-PNG&quot;</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s2">&quot;utility_distribution.png&quot;</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">1200</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">DRAWING_FORMAT</span> <span class="o">==</span> <span class="s2">&quot;matplotlib-SVG&quot;</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s2">&quot;utility_distribution.svg&quot;</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">1200</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;UtilityDistributionLogger does not support `plotly` format in this version. &quot;</span> <span class="o">+</span>
+                          <span class="s2">&quot;Format for utility distribution is set as `matplotlib-SVG`&quot;</span><span class="p">,</span> <span class="ne">UserWarning</span><span class="p">)</span>
+
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s2">&quot;utility_distribution.png&quot;</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">1200</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="c1"># To CSV</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s2">&quot;utility_distribution.csv&quot;</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;AgentName;OpponentMeanUtility;AgentMeanUtility;OpponentMinUtility;AgentMinUtility;&quot;</span> <span class="o">+</span>
+                    <span class="s2">&quot;OpponentMaxUtility;AgentMaxUtility;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">info_row</span> <span class="ow">in</span> <span class="n">csv_infos</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">info_row</span><span class="p">[</span><span class="s2">&quot;AgentName&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;;&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">info_row</span><span class="p">[</span><span class="s2">&quot;OpponentMeanUtility&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;;&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">info_row</span><span class="p">[</span><span class="s2">&quot;AgentMeanUtility&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;;&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">info_row</span><span class="p">[</span><span class="s2">&quot;OpponentMinUtility&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;;&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">info_row</span><span class="p">[</span><span class="s2">&quot;AgentMinUtility&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;;&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">info_row</span><span class="p">[</span><span class="s2">&quot;OpponentMaxUtility&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;;&quot;</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">info_row</span><span class="p">[</span><span class="s2">&quot;AgentMaxUtility&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="UtilityDistributionLogger.get_pareto_nash_kalai">
+<a class="viewcode-back" href="../../../nenv.logger.html#nenv.logger.UtilityDistributionLogger.UtilityDistributionLogger.get_pareto_nash_kalai">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_pareto_nash_kalai</span><span class="p">(</span><span class="n">domain_no</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">BidPoint</span><span class="p">,</span> <span class="n">BidPoint</span><span class="p">):</span>
+        <span class="n">preference_A</span><span class="p">,</span> <span class="n">preference_B</span> <span class="o">=</span> <span class="n">domain_loader</span><span class="p">(</span><span class="n">domain_no</span><span class="p">)</span>
+
+        <span class="n">bid_space</span> <span class="o">=</span> <span class="n">BidSpace</span><span class="p">(</span><span class="n">preference_A</span><span class="p">,</span> <span class="n">preference_B</span><span class="p">)</span>
+
+        <span class="n">pareto_points</span> <span class="o">=</span> <span class="n">bid_space</span><span class="o">.</span><span class="n">pareto</span>
+
+        <span class="n">pareto</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">pareto_point</span> <span class="ow">in</span> <span class="n">pareto_points</span><span class="p">:</span>
+            <span class="n">pareto</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">pareto_point</span><span class="o">.</span><span class="n">utility_a</span><span class="p">,</span> <span class="n">pareto_point</span><span class="o">.</span><span class="n">utility_b</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pareto</span><span class="p">),</span> <span class="n">bid_space</span><span class="o">.</span><span class="n">nash_point</span><span class="p">,</span> <span class="n">bid_space</span><span class="o">.</span><span class="n">kalai_point</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, aniltrue.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

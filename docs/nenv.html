@@ -1,0 +1,1677 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nenv package &mdash; NegoLog 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8d563738"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="nenv.OpponentModel package" href="nenv.OpponentModel.html" />
+    <link rel="prev" title="NegoLog" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            NegoLog
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">NegoLog</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">nenv package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-nenv.Action">nenv.Action module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#nenv.Action.Accept"><code class="docutils literal notranslate"><span class="pre">Accept</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nenv.Action.Action"><code class="docutils literal notranslate"><span class="pre">Action</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nenv.Action.Offer"><code class="docutils literal notranslate"><span class="pre">Offer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-nenv.Agent">nenv.Agent module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#nenv.Agent.AbstractAgent"><code class="docutils literal notranslate"><span class="pre">AbstractAgent</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nenv.Agent.AgentClass"><code class="docutils literal notranslate"><span class="pre">AgentClass</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-nenv.Bid">nenv.Bid module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#nenv.Bid.Bid"><code class="docutils literal notranslate"><span class="pre">Bid</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nenv.Bid.IssueIterator"><code class="docutils literal notranslate"><span class="pre">IssueIterator</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-nenv.BidSpace">nenv.BidSpace module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#nenv.BidSpace.BidPoint"><code class="docutils literal notranslate"><span class="pre">BidPoint</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nenv.BidSpace.BidSpace"><code class="docutils literal notranslate"><span class="pre">BidSpace</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-nenv.EditablePreference">nenv.EditablePreference module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#nenv.EditablePreference.EditablePreference"><code class="docutils literal notranslate"><span class="pre">EditablePreference</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-nenv.Issue">nenv.Issue module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#nenv.Issue.Issue"><code class="docutils literal notranslate"><span class="pre">Issue</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-nenv.Preference">nenv.Preference module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#nenv.Preference.Preference"><code class="docutils literal notranslate"><span class="pre">Preference</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nenv.Preference.domain_loader"><code class="docutils literal notranslate"><span class="pre">domain_loader()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-nenv.Session">nenv.Session module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#nenv.Session.Session"><code class="docutils literal notranslate"><span class="pre">Session</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-nenv.SessionLogs">nenv.SessionLogs module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#nenv.SessionLogs.SessionLogs"><code class="docutils literal notranslate"><span class="pre">SessionLogs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-nenv.SessionManager">nenv.SessionManager module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#nenv.SessionManager.SessionManager"><code class="docutils literal notranslate"><span class="pre">SessionManager</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-nenv.Tournament">nenv.Tournament module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#nenv.Tournament.Tournament"><code class="docutils literal notranslate"><span class="pre">Tournament</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="nenv.OpponentModel.html">nenv.OpponentModel package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.logger.html">nenv.logger package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.utils.html">nenv.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-nenv">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="agents.html">agents package</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NegoLog</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">NegoLog</a></li>
+      <li class="breadcrumb-item active">nenv package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/nenv.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="nenv-package">
+<h1>nenv package<a class="headerlink" href="#nenv-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-nenv.Action">
+<span id="nenv-action-module"></span><h2>nenv.Action module<a class="headerlink" href="#module-nenv.Action" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.Action.Accept">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.Action.</span></span><span class="sig-name descname"><span class="pre">Accept</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/Action.html#Accept"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Action.Accept" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nenv.Action.Offer" title="nenv.Action.Offer"><code class="xref py py-class docutils literal notranslate"><span class="pre">Offer</span></code></a></p>
+<p>If agent accepts the opponent’s bid, it should return Accept Action.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.Action.Action">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.Action.</span></span><span class="sig-name descname"><span class="pre">Action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/Action.html#Action"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Action.Action" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>An agent should return a Negotiation Action during negotiation. An Action can be an Offer or an Accept. Also,
+each action obtains corresponding bid.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Action.Action.bid">
+<span class="sig-name descname"><span class="pre">bid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></em><a class="headerlink" href="#nenv.Action.Action.bid" title="Link to this definition"></a></dt>
+<dd><p>Corresponding bid</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.Action.Offer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.Action.</span></span><span class="sig-name descname"><span class="pre">Offer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/Action.html#Offer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Action.Offer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nenv.Action.Action" title="nenv.Action.Action"><code class="xref py py-class docutils literal notranslate"><span class="pre">Action</span></code></a></p>
+<p>If agent makes an offer (or counter-offer), it should return Offer Action.</p>
+</dd></dl>
+
+</section>
+<section id="module-nenv.Agent">
+<span id="nenv-agent-module"></span><h2>nenv.Agent module<a class="headerlink" href="#module-nenv.Agent" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.Agent.AbstractAgent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.Agent.</span></span><span class="sig-name descname"><span class="pre">AbstractAgent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preference</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.Preference.Preference" title="nenv.Preference.Preference"><span class="pre">Preference</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimators</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="nenv.OpponentModel.html#nenv.OpponentModel.AbstractOpponentModel.AbstractOpponentModel" title="nenv.OpponentModel.AbstractOpponentModel.AbstractOpponentModel"><span class="pre">AbstractOpponentModel</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/Agent.html#AbstractAgent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Agent.AbstractAgent" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Agents aim to reach a joint decision within a limited time through negotiation without fully revealing their
+preferences. During negotiation, agents must decide what to offer and when to accept the opponent’s offer. To
+facilitate this process, this abstract class provides a framework for developing negotiating agents. Each agent
+must extend this abstract class to implement its specific negotiation strategy.</p>
+<dl>
+<dt><strong>Components</strong>:</dt><dd><dl class="simple">
+<dt>Negotiating agents can be formulated as consisting of three main components <a class="reference internal" href="#boacomponents" id="id1"><span>[BOAComponents]</span></a>.</dt><dd><ul class="simple">
+<li><p><strong>Bidding Strategy</strong>:  Determines what to offer.</p></li>
+<li><p><strong>Acceptance Strategy</strong>: Decides when to accept the opponent’s offer</p></li>
+<li><p><strong>Opponent Model</strong>: Estimates the preferences of the opponent.</p></li>
+</ul>
+</dd>
+</dl>
+<p>By extending this class, <em>bidding strategy</em> and <em>acceptance strategy</em> are implemented to develop an agent.
+To implement an opponent model, see also <em>AbstractOpponentModel</em> class.</p>
+</dd>
+<dt><strong>Methods</strong>:</dt><dd><dl class="simple">
+<dt>To extend this abstract class, following methods must be implemented.</dt><dd><ul class="simple">
+<li><p><strong>initiate</strong>: Use this method to initialize required variables instead of the constructor.</p></li>
+<li><p><strong>name</strong>: Each agent must have a unique name for logging purposes.</p></li>
+<li><p><strong>receive_offer</strong>: This method is called when an offer is received. Generally, the opponent model can be updated in this method.</p></li>
+<li><p><strong>act</strong>: This method determines the action that the agent takes. It should include the <em>bidding strategy</em> and <em>acceptance strategy</em>.</p></li>
+<li><p><strong>terminate</strong>: This method is called at the end of the negotiation session.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<div role="list" class="citation-list">
+<div class="citation" id="boacomponents" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">BOAComponents</a><span class="fn-bracket">]</span></span>
+<p>Tim Baarslag, Koen Hindriks, Mark Hendrikx, Alexander Dirkzwager, and Catholijn Jonker. 2014. Decoupling Negotiating Agents to Explore the Space of Negotiation Strategies. Springer Japan, Tokyo, 61–83. &lt;<a class="reference external" href="https://doi.org/10.1007/978-4-431-54758-7_4">https://doi.org/10.1007/978-4-431-54758-7_4</a>&gt;</p>
+</div>
+</div>
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.Agent.AbstractAgent.accept_action">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accept_action</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#nenv.Action.Accept" title="nenv.Action.Accept"><span class="pre">Accept</span></a></em><a class="headerlink" href="#nenv.Agent.AbstractAgent.accept_action" title="Link to this definition"></a></dt>
+<dd><p>This method creates an Accept object in an easier manner.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Accept object to accept the opponent’s offer.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.Agent.AbstractAgent.act">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">act</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#nenv.Action.Action" title="nenv.Action.Action"><span class="pre">Action</span></a></span></span><a class="reference internal" href="_modules/nenv/Agent.html#AbstractAgent.act"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Agent.AbstractAgent.act" title="Link to this definition"></a></dt>
+<dd><p>This method is called by the negotiation session object to get the decision of the agent. The decision must
+be an Action object. The decision can be making offer or accepting the opponent’s offer:</p>
+<ul class="simple">
+<li><p><strong>Making offer</strong>: You should return an <strong>Offer</strong> object such as: <em>nenv.Offer(bid)</em></p></li>
+<li><p><strong>Accepting offer</strong>: You should return an <strong>Accept</strong> object such as <em>nevn.Accept(bid)</em>, or in a simpler manner: <em>self.accept_action</em></p></li>
+</ul>
+<p><em>Note</em> Do not forget to check whether the agent can accept the offer. Therefore, you can use <strong>can_accept</strong>
+method to check. Otherwise, your agent will be failed and penalized.</p>
+<dl class="field-list">
+<dt class="field-odd">Example<span class="colon">:</span></dt>
+<dd class="field-odd"><p>This example belongs to time-based linear bidding strategy and AC_Next acceptance strategy.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">target_utility</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">preference</span><span class="o">.</span><span class="n">reservation_value</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>  <span class="c1"># Do not offer a bid with the utility lower than reservation value</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preference</span><span class="o">.</span><span class="n">get_bid_at</span><span class="p">(</span><span class="n">target_utility</span><span class="p">)</span>    <span class="c1"># Select the closest bid to the target utility</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">can_accept</span><span class="p">()</span> <span class="ow">and</span> <span class="n">bid</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_received_bids</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>    <span class="c1"># AC_Next acceptance strategy</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">accept_action</span>   <span class="c1"># Accept the opponent&#39;s offer</span>
+<span class="gp">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">return</span> <span class="n">nenv</span><span class="o">.</span><span class="n">Offer</span><span class="p">(</span><span class="n">bid</span><span class="p">)</span>  <span class="c1"># Make an offer</span>
+</pre></div>
+</div>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>t</strong> – Current negotiation time</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The decision of the agent as an Action object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.Agent.AbstractAgent.can_accept">
+<span class="sig-name descname"><span class="pre">can_accept</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/nenv/Agent.html#AbstractAgent.can_accept"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Agent.AbstractAgent.can_accept" title="Link to this definition"></a></dt>
+<dd><p>This method tells if the agent can accept the opponent’s offer, or not.
+Please, call this method to check before accepting the offer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Whether the agent can accept the opponent’s offer, or not.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Agent.AbstractAgent.estimators">
+<span class="sig-name descname"><span class="pre">estimators</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="nenv.OpponentModel.html#nenv.OpponentModel.AbstractOpponentModel.AbstractOpponentModel" title="nenv.OpponentModel.AbstractOpponentModel.AbstractOpponentModel"><span class="pre">AbstractOpponentModel</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#nenv.Agent.AbstractAgent.estimators" title="Link to this definition"></a></dt>
+<dd><p>The list of Provided Opponent Model by the tournament settings</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.Agent.AbstractAgent.initiate">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">initiate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">opponent_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/Agent.html#AbstractAgent.initiate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Agent.AbstractAgent.initiate" title="Link to this definition"></a></dt>
+<dd><p>This method is called before the negotiation session starts.
+You should initiate your agent in this method. Do not use constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>opponent_name</strong> – Opponent name if learning is available, otherwise None</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Agent.AbstractAgent.last_received_bids">
+<span class="sig-name descname"><span class="pre">last_received_bids</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#nenv.Agent.AbstractAgent.last_received_bids" title="Link to this definition"></a></dt>
+<dd><p>The history of received bids from the opponent</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.Agent.AbstractAgent.name">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#nenv.Agent.AbstractAgent.name" title="Link to this definition"></a></dt>
+<dd><p>Each agent must have a unique name for the loggers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The name of Agent as string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Agent.AbstractAgent.preference">
+<span class="sig-name descname"><span class="pre">preference</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#nenv.Preference.Preference" title="nenv.Preference.Preference"><span class="pre">Preference</span></a></em><a class="headerlink" href="#nenv.Agent.AbstractAgent.preference" title="Link to this definition"></a></dt>
+<dd><p>Provided preferences for the agent</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.Agent.AbstractAgent.receive_bid">
+<span class="sig-name descname"><span class="pre">receive_bid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/Agent.html#AbstractAgent.receive_bid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Agent.AbstractAgent.receive_bid" title="Link to this definition"></a></dt>
+<dd><p>This method is called when a bid received from the opponent. This method add the received bid into the
+history. Then, it calls the receive_offer method.</p>
+<p>For the agent implementation, implement your strategy in <strong>receive_offer</strong> method instead of this method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bid</strong> – Received bid from the opponent</p></li>
+<li><p><strong>t</strong> – Current negotiation time</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.Agent.AbstractAgent.receive_offer">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">receive_offer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/Agent.html#AbstractAgent.receive_offer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Agent.AbstractAgent.receive_offer" title="Link to this definition"></a></dt>
+<dd><p>This method is called when a bid received from the opponent. Implement your strategy in this method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bid</strong> – Received bid from the opponent</p></li>
+<li><p><strong>t</strong> – Current negotiation time</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Agent.AbstractAgent.session_time">
+<span class="sig-name descname"><span class="pre">session_time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#nenv.Agent.AbstractAgent.session_time" title="Link to this definition"></a></dt>
+<dd><p>The maximum time (in terms of seconds) of the current session</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.Agent.AbstractAgent.terminate">
+<span class="sig-name descname"><span class="pre">terminate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_accept</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opponent_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/Agent.html#AbstractAgent.terminate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Agent.AbstractAgent.terminate" title="Link to this definition"></a></dt>
+<dd><p>This method is called when the negotiation session end.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>is_accept</strong> – Whether the negotiation is end with an acceptance, or not</p></li>
+<li><p><strong>opponent_name</strong> – The name of the opponent agent.</p></li>
+<li><p><strong>t</strong> – Current negotiation time</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.Agent.AgentClass">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.Agent.</span></span><span class="sig-name descname"><span class="pre">AgentClass</span></span><a class="headerlink" href="#nenv.Agent.AgentClass" title="Link to this definition"></a></dt>
+<dd><p>Type variable of AbstractAgent class to declare a type for a variable</p>
+<p>alias of TypeVar(‘AgentClass’, bound=<code class="xref py py-class docutils literal notranslate"><span class="pre">ABCMeta</span></code>)</p>
+</dd></dl>
+
+</section>
+<section id="module-nenv.Bid">
+<span id="nenv-bid-module"></span><h2>nenv.Bid module<a class="headerlink" href="#module-nenv.Bid" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.Bid.Bid">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.Bid.</span></span><span class="sig-name descname"><span class="pre">Bid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">utility</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/Bid.html#Bid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Bid.Bid" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Bid class can hold the offer content and corresponding utility value.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Bid.Bid.content">
+<span class="sig-name descname"><span class="pre">content</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#nenv.Issue.Issue" title="nenv.Issue.Issue"><span class="pre">Issue</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#nenv.Bid.Bid.content" title="Link to this definition"></a></dt>
+<dd><p>Corresponding offer content as dictionary.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.Bid.Bid.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/Bid.html#Bid.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Bid.Bid.copy" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Copy of the Bid object with utility value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.Bid.Bid.copy_without_utility">
+<span class="sig-name descname"><span class="pre">copy_without_utility</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/Bid.html#Bid.copy_without_utility"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Bid.Bid.copy_without_utility" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Copy of the Bid object without utility value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Bid.Bid.utility">
+<span class="sig-name descname"><span class="pre">utility</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#nenv.Bid.Bid.utility" title="Link to this definition"></a></dt>
+<dd><p>Utility value of the bid. It may be unassigned (-1).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.Bid.IssueIterator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.Bid.</span></span><span class="sig-name descname"><span class="pre">IssueIterator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/Bid.html#IssueIterator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Bid.IssueIterator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class helps to iterate Issue-Value pairs over a given bid. You can iterate over Bid object as shown below:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Example<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Example of iterating issue-value pairs
+&gt;&gt;&gt; for issue, value in bid:
+&gt;&gt;&gt;     …</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-nenv.BidSpace">
+<span id="nenv-bidspace-module"></span><h2>nenv.BidSpace module<a class="headerlink" href="#module-nenv.BidSpace" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.BidSpace.BidPoint">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.BidSpace.</span></span><span class="sig-name descname"><span class="pre">BidPoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">utility_a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">utility_b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/BidSpace.html#BidPoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.BidSpace.BidPoint" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>BidPoint class holds the Bid object with the utilit values of each agent.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.BidSpace.BidPoint.bid">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nenv.BidSpace.BidPoint.bid" title="Link to this definition"></a></dt>
+<dd><p>Copy of Bid object without utility value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>return</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.BidSpace.BidPoint.distance">
+<span class="sig-name descname"><span class="pre">distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bid_point</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/nenv/BidSpace.html#BidPoint.distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.BidSpace.BidPoint.distance" title="Link to this definition"></a></dt>
+<dd><p>This method calculates the Euclidean distance between the BidPoints</p>
+<dl class="field-list">
+<dt class="field-odd">Example<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Example usage of distance calculation</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bid_point1</span> <span class="o">=</span> <span class="n">BidPoint</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bid_point2</span> <span class="o">=</span> <span class="n">BidPoint</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">distance</span> <span class="o">=</span> <span class="n">bid_point1</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">bid_point2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">distance</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span> <span class="c1"># 0.71</span>
+</pre></div>
+</div>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>bid_point</strong> – Other BidPoint</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Euclidean distance between bid points in the corresponding bid space</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.BidSpace.BidPoint.product_score">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">product_score</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#nenv.BidSpace.BidPoint.product_score" title="Link to this definition"></a></dt>
+<dd><p>Product Score of this BidPoint</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>return</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.BidSpace.BidPoint.social_welfare">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">social_welfare</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#nenv.BidSpace.BidPoint.social_welfare" title="Link to this definition"></a></dt>
+<dd><p>Social welfate of this BidPoint</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>return</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.BidSpace.BidPoint.utility_a">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">utility_a</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#nenv.BidSpace.BidPoint.utility_a" title="Link to this definition"></a></dt>
+<dd><p>Utility value of AgentA</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>return</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.BidSpace.BidPoint.utility_b">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">utility_b</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#nenv.BidSpace.BidPoint.utility_b" title="Link to this definition"></a></dt>
+<dd><p>Utility value of AgentB</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>return</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.BidSpace.BidSpace">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.BidSpace.</span></span><span class="sig-name descname"><span class="pre">BidSpace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefA</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.Preference.Preference" title="nenv.Preference.Preference"><span class="pre">Preference</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefB</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.Preference.Preference" title="nenv.Preference.Preference"><span class="pre">Preference</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/BidSpace.html#BidSpace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.BidSpace.BidSpace" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Bid space of preferences of the agents.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.BidSpace.BidSpace.bid_points">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bid_points</span></span><a class="headerlink" href="#nenv.BidSpace.BidSpace.bid_points" title="Link to this definition"></a></dt>
+<dd><p>The bid points of the bid space. It is initiated when the first call.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The bid points of the bid space</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.BidSpace.BidSpace.calculate_balance_score">
+<span class="sig-name descname"><span class="pre">calculate_balance_score</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/nenv/BidSpace.html#BidSpace.calculate_balance_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.BidSpace.BidSpace.calculate_balance_score" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>This method calculates the <strong>balance score</strong> of this bid space.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Balance Score</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.BidSpace.BidSpace.calculate_normalized_balance_score">
+<span class="sig-name descname"><span class="pre">calculate_normalized_balance_score</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/nenv/BidSpace.html#BidSpace.calculate_normalized_balance_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.BidSpace.BidSpace.calculate_normalized_balance_score" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>This method calculates the <strong>normalized balance score</strong> of this bid space.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Normalized Balance Score</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.BidSpace.BidSpace.calculate_opposition">
+<span class="sig-name descname"><span class="pre">calculate_opposition</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/nenv/BidSpace.html#BidSpace.calculate_opposition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.BidSpace.BidSpace.calculate_opposition" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>This method calculates the <strong>opposition</strong> score of this bid space.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Opposition score</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.BidSpace.BidSpace.get_bid_point">
+<span class="sig-name descname"><span class="pre">get_bid_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#nenv.BidSpace.BidPoint" title="nenv.BidSpace.BidPoint"><span class="pre">BidPoint</span></a></span></span><a class="reference internal" href="_modules/nenv/BidSpace.html#BidSpace.get_bid_point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.BidSpace.BidSpace.get_bid_point" title="Link to this definition"></a></dt>
+<dd><p>This method converts given bid into <em>BidPoint</em> object</p>
+<dl class="field-list">
+<dt class="field-odd">Example<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Example of converting a Bid object to BidPoint object</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bid_point</span> <span class="o">=</span> <span class="n">bid_space</span><span class="o">.</span><span class="n">get_bid_point</span><span class="p">(</span><span class="n">bid</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>bid</strong> – Corresponding bid that will be converted into BidPoint object</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>that is converted from the given bid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.BidSpace.BidSpace.kalai_distance">
+<span class="sig-name descname"><span class="pre">kalai_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#nenv.BidSpace.BidPoint" title="nenv.BidSpace.BidPoint"><span class="pre">BidPoint</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/nenv/BidSpace.html#BidSpace.kalai_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.BidSpace.BidSpace.kalai_distance" title="Link to this definition"></a></dt>
+<dd><p>Euclidean distance between the target and Kalai point</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>target</strong> – The target as Bid or BidSpace</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Euclidean distance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.BidSpace.BidSpace.kalai_point">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">kalai_point</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#nenv.BidSpace.BidPoint" title="nenv.BidSpace.BidPoint"><span class="pre">BidPoint</span></a></em><a class="headerlink" href="#nenv.BidSpace.BidSpace.kalai_point" title="Link to this definition"></a></dt>
+<dd><p>The Bid Point which has the highest Social Welfare</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Kalai point of the bid space as BidPoint</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.BidSpace.BidSpace.kalai_score">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">kalai_score</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#nenv.BidSpace.BidSpace.kalai_score" title="Link to this definition"></a></dt>
+<dd><p>The highest Social Welfare</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Social Welfare of the Kalai point</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.BidSpace.BidSpace.nash_distance">
+<span class="sig-name descname"><span class="pre">nash_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#nenv.BidSpace.BidPoint" title="nenv.BidSpace.BidPoint"><span class="pre">BidPoint</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/nenv/BidSpace.html#BidSpace.nash_distance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.BidSpace.BidSpace.nash_distance" title="Link to this definition"></a></dt>
+<dd><p>Euclidean distance between the target and Nash point</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>target</strong> – The target as Bid or BidSpace</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Euclidean distance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.BidSpace.BidSpace.nash_point">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nash_point</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#nenv.BidSpace.BidPoint" title="nenv.BidSpace.BidPoint"><span class="pre">BidPoint</span></a></em><a class="headerlink" href="#nenv.BidSpace.BidSpace.nash_point" title="Link to this definition"></a></dt>
+<dd><p>The Bid Point which has the highest Nash Product</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Nash point of the bid space as BidPoint</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.BidSpace.BidSpace.nash_score">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nash_score</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#nenv.BidSpace.BidSpace.nash_score" title="Link to this definition"></a></dt>
+<dd><p>The highest Product Score</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Product Score of the Nash point</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.BidSpace.BidSpace.pareto">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pareto</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#nenv.BidSpace.BidPoint" title="nenv.BidSpace.BidPoint"><span class="pre">BidPoint</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#nenv.BidSpace.BidSpace.pareto" title="Link to this definition"></a></dt>
+<dd><p>List of BidPoint on pareto frontier</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>return</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.BidSpace.BidSpace.prefA">
+<span class="sig-name descname"><span class="pre">prefA</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#nenv.Preference.Preference" title="nenv.Preference.Preference"><span class="pre">Preference</span></a></em><a class="headerlink" href="#nenv.BidSpace.BidSpace.prefA" title="Link to this definition"></a></dt>
+<dd><p>Preferences of agentA</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.BidSpace.BidSpace.prefB">
+<span class="sig-name descname"><span class="pre">prefB</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#nenv.Preference.Preference" title="nenv.Preference.Preference"><span class="pre">Preference</span></a></em><a class="headerlink" href="#nenv.BidSpace.BidSpace.prefB" title="Link to this definition"></a></dt>
+<dd><p>Preferences of agentB</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nenv.EditablePreference">
+<span id="nenv-editablepreference-module"></span><h2>nenv.EditablePreference module<a class="headerlink" href="#module-nenv.EditablePreference" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.EditablePreference.EditablePreference">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.EditablePreference.</span></span><span class="sig-name descname"><span class="pre">EditablePreference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">issue_weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">issues</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reservation_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generate_bids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/EditablePreference.html#EditablePreference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.EditablePreference.EditablePreference" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nenv.Preference.Preference" title="nenv.Preference.Preference"><code class="xref py py-class docutils literal notranslate"><span class="pre">Preference</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.EditablePreference.EditablePreference.get_issue_weight">
+<span class="sig-name descname"><span class="pre">get_issue_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">issue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.Issue.Issue" title="nenv.Issue.Issue"><span class="pre">Issue</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/nenv/EditablePreference.html#EditablePreference.get_issue_weight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.EditablePreference.EditablePreference.get_issue_weight" title="Link to this definition"></a></dt>
+<dd><p>Get the weight of an issue</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>issue</strong> – Issue object or IssueName as string</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Weight of corresponding Issue</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.EditablePreference.EditablePreference.get_value_weight">
+<span class="sig-name descname"><span class="pre">get_value_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">issue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.Issue.Issue" title="nenv.Issue.Issue"><span class="pre">Issue</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/nenv/EditablePreference.html#EditablePreference.get_value_weight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.EditablePreference.EditablePreference.get_value_weight" title="Link to this definition"></a></dt>
+<dd><p>Get the utility (weight) of a value under an issue</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>issue</strong> – Issue object or IssueName as string</p></li>
+<li><p><strong>value</strong> – Value as string</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Weight of corresponding Issue-Value pair</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.EditablePreference.EditablePreference.normalize">
+<span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/EditablePreference.html#EditablePreference.normalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.EditablePreference.EditablePreference.normalize" title="Link to this definition"></a></dt>
+<dd><p>This method normalize the Issue and Value weights.</p>
+<ul class="simple">
+<li><p>Value weights must be in <strong>[0.0-1.0]</strong> range</p></li>
+<li><p>Sum of Issue weights must be <strong>1.0</strong></p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.EditablePreference.EditablePreference.set_issue_weight">
+<span class="sig-name descname"><span class="pre">set_issue_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">issue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.Issue.Issue" title="nenv.Issue.Issue"><span class="pre">Issue</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/EditablePreference.html#EditablePreference.set_issue_weight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.EditablePreference.EditablePreference.set_issue_weight" title="Link to this definition"></a></dt>
+<dd><p>Change Issue Weight</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>issue</strong> – Issue object or IssueName as string</p></li>
+<li><p><strong>weight</strong> – New weight that will be assigned</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.EditablePreference.EditablePreference.set_reservation_value">
+<span class="sig-name descname"><span class="pre">set_reservation_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/EditablePreference.html#EditablePreference.set_reservation_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.EditablePreference.EditablePreference.set_reservation_value" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>Change <em>reservation</em> value</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> – New reservation value</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.EditablePreference.EditablePreference.set_value_weight">
+<span class="sig-name descname"><span class="pre">set_value_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">issue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.Issue.Issue" title="nenv.Issue.Issue"><span class="pre">Issue</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/EditablePreference.html#EditablePreference.set_value_weight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.EditablePreference.EditablePreference.set_value_weight" title="Link to this definition"></a></dt>
+<dd><p>Change Value weight</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>issue</strong> – Issue object or IssueName as string</p></li>
+<li><p><strong>value</strong> – Value as string</p></li>
+<li><p><strong>weight</strong> – New weight that will be assigned</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nenv.Issue">
+<span id="nenv-issue-module"></span><h2>nenv.Issue module<a class="headerlink" href="#module-nenv.Issue" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.Issue.Issue">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.Issue.</span></span><span class="sig-name descname"><span class="pre">Issue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/Issue.html#Issue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Issue.Issue" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Issue class holds the issue name and the possible discrete values of the corresponding issue in any domain.
+The objects of this class are mutual.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.Issue.Issue.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#nenv.Issue.Issue.name" title="Link to this definition"></a></dt>
+<dd><p>Get the name of this issue</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Issue name as string</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.Issue.Issue.values">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">values</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#nenv.Issue.Issue.values" title="Link to this definition"></a></dt>
+<dd><p>Get a copy of list of values under this issue</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The list of possible discrete values of the issue</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nenv.Preference">
+<span id="nenv-preference-module"></span><h2>nenv.Preference module<a class="headerlink" href="#module-nenv.Preference" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.Preference.Preference">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.Preference.</span></span><span class="sig-name descname"><span class="pre">Preference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">profile_json_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generate_bids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/Preference.html#Preference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Preference.Preference" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Preference class represents the preferences of an agent during a negotiation session. It reads the profile data
+via json file. Thus, you can get the Issue and Issue-Value weights, reservation value, bid space in that domain,
+the utility value of a bid.</p>
+<p><strong>Note</strong>: Preference object is mutual.</p>
+<dl>
+<dt><strong>Bid</strong>:</dt><dd><p>The Preference class provides all possible bids in that domains. A bid consists of a value for each issue in
+the given domain. In other words, any value combination is presented as a <em>Bid</em> object.</p>
+<p><strong>Note</strong>: The issues and the possible values under each issue are pre-defined in the JSON file.</p>
+</dd>
+<dt><strong>Utility</strong>:</dt><dd><p>Each value under each issue has a pre-defined <strong>utility</strong> value in range <strong>[0.0, 1.0]</strong>. Besides, each issue
+has a pre-defined <strong>weight</strong> value, and the summation of the issue weights equal to <strong>1.0</strong>. Hence, the
+utility of a bid can be calculated based on additive utility function.</p>
+<p><em>Additive Utility Function</em>:</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}U_{bid} = \sum_i W_i V_i ({bid})\\{s.t.,}\\\sum_i W_i = 1.0\\0.0 \leq V_i \leq 1.0\end{aligned}\end{align} \]</div>
+</div></blockquote>
+</dd>
+<dt><strong>Reservation Value</strong>:</dt><dd><p>At the end of a negotiation session, if the agents fail to reach an agreement, they receive the <em>reservation
+utility</em>. The default value of reservation utility is set to 0.</p>
+<p><strong>Note</strong>: The reservation value can vary for each profile.</p>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.Preference.Preference.bids">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bids</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#nenv.Preference.Preference.bids" title="Link to this definition"></a></dt>
+<dd><p>This method provides the list of all possible bids in a domain. It extracts the bids on the first call.
+Also, the bids in the list are assigned the utility value, and they are sorted in descending order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Sorted (in descending order) list of all bids in that domain</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.Preference.Preference.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/Preference.html#Preference.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Preference.Preference.copy" title="Link to this definition"></a></dt>
+<dd><p>A copy of this object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Copy of Preference object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.Preference.Preference.get_bid_at">
+<span class="sig-name descname"><span class="pre">get_bid_at</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_utility</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></span><a class="reference internal" href="_modules/nenv/Preference.html#Preference.get_bid_at"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Preference.Preference.get_bid_at" title="Link to this definition"></a></dt>
+<dd><p>This method returns the closest bid to provided target utility. Binary Search approach is applied.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>target_utility</strong> – Target utility</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The closest bid</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.Preference.Preference.get_bids_at">
+<span class="sig-name descname"><span class="pre">get_bids_at</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_utility</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/nenv/Preference.html#Preference.get_bids_at"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Preference.Preference.get_bids_at" title="Link to this definition"></a></dt>
+<dd><p>This method provides a list of bids in the utility window.</p>
+<div class="math notranslate nohighlight">
+\[U_{bid} \in [U_{lower}, U_{upper}]\]</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target_utility</strong> – Center of the utility window</p></li>
+<li><p><strong>lower_bound</strong> – The lower bound of the <em>window = target_utility - lower_bound</em></p></li>
+<li><p><strong>upper_bound</strong> – The upper bound of the <em>window = target_utility + upper_bound</em></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of bids in that window.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.Preference.Preference.get_bids_at_range">
+<span class="sig-name descname"><span class="pre">get_bids_at_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lower_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/nenv/Preference.html#Preference.get_bids_at_range"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Preference.Preference.get_bids_at_range" title="Link to this definition"></a></dt>
+<dd><p>This method provides a list of bids in the utility range.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lower_bound</strong> – The lower bound of the range</p></li>
+<li><p><strong>upper_bound</strong> – The upper bound of the range</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of bids in that range.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.Preference.Preference.get_random_bid">
+<span class="sig-name descname"><span class="pre">get_random_bid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lower_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_bound</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/Preference.html#Preference.get_random_bid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Preference.Preference.get_random_bid" title="Link to this definition"></a></dt>
+<dd><p>This method randomly selects a bid in a range [max(lower_bound, reservation_value), upper_bound]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lower_bound</strong> – Minimum utility value that the bid can obtain. If <em>lower_bound &lt; reservation_value</em>, <strong>reservation value</strong> will be used for the lower bound of the range. <em>Default = 0.0</em></p></li>
+<li><p><strong>upper_bound</strong> – Maximum utility value that the bid can obtain. <em>Default = 1.0</em></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Randomly selected bid in that utility range.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.Preference.Preference.get_utility">
+<span class="sig-name descname"><span class="pre">get_utility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/nenv/Preference.html#Preference.get_utility"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Preference.Preference.get_utility" title="Link to this definition"></a></dt>
+<dd><p>This method calculates the utility value of a given bid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>bid</strong> – Target bid</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Utility value of the bid</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.Preference.Preference.issue_weights">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">issue_weights</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#nenv.Issue.Issue" title="nenv.Issue.Issue"><span class="pre">Issue</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#nenv.Preference.Preference.issue_weights" title="Link to this definition"></a></dt>
+<dd><p>Copy of dictionary of Issue-Weight pairs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Copy of dictionary of Issue-Weight pairs.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.Preference.Preference.issues">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">issues</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#nenv.Issue.Issue" title="nenv.Issue.Issue"><span class="pre">Issue</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#nenv.Preference.Preference.issues" title="Link to this definition"></a></dt>
+<dd><p>A copy of list of Issue in that domain</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Copy of list of Issue in that domain</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.Preference.Preference.max_util_bid">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_util_bid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></em><a class="headerlink" href="#nenv.Preference.Preference.max_util_bid" title="Link to this definition"></a></dt>
+<dd><p>The maximum utility value in the bid space</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The maximum utility value in the bid space</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.Preference.Preference.min_util_bid">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">min_util_bid</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></em><a class="headerlink" href="#nenv.Preference.Preference.min_util_bid" title="Link to this definition"></a></dt>
+<dd><p>The minimum utility value in the bid space</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The minimum utility value in the bid space</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Preference.Preference.profile_json_path">
+<span class="sig-name descname"><span class="pre">profile_json_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#nenv.Preference.Preference.profile_json_path" title="Link to this definition"></a></dt>
+<dd><p>JSON file path of this preference</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.Preference.Preference.reservation_value">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reservation_value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#nenv.Preference.Preference.reservation_value" title="Link to this definition"></a></dt>
+<dd><p>The reservation value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Provided reservation value</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.Preference.Preference.value_weights">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">value_weights</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#nenv.Issue.Issue" title="nenv.Issue.Issue"><span class="pre">Issue</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#nenv.Preference.Preference.value_weights" title="Link to this definition"></a></dt>
+<dd><p>Copy of dictionary of Issue-Value - Weight pairs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Copy of dictionary of Issue-Value - Weight pairs</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nenv.Preference.domain_loader">
+<span class="sig-prename descclassname"><span class="pre">nenv.Preference.</span></span><span class="sig-name descname"><span class="pre">domain_loader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">domain_name:</span> <span class="pre">str)</span> <span class="pre">-&gt;</span> <span class="pre">(&lt;class</span> <span class="pre">'nenv.Preference.Preference'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'nenv.Preference.Preference'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/Preference.html#domain_loader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Preference.domain_loader" title="Link to this definition"></a></dt>
+<dd><p>This method generates the Preferences for both parties based on the given domain no.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>domain_name</strong> – The name of the domain</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Preferences of profileA, Preferences of profileB</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-nenv.Session">
+<span id="nenv-session-module"></span><h2>nenv.Session module<a class="headerlink" href="#module-nenv.Session" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.Session.Session">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.Session.</span></span><span class="sig-name descname"><span class="pre">Session</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agentA</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.Agent.AbstractAgent" title="nenv.Agent.AbstractAgent"><span class="pre">AbstractAgent</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">agentB</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.Agent.AbstractAgent" title="nenv.Agent.AbstractAgent"><span class="pre">AbstractAgent</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deadline_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deadline_round</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loggers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/Session.html#Session"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Session.Session" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Session class holds the all necessary information about the negotiation session. It conducts the negotiation
+session by calling the corresponding methods.</p>
+<dl>
+<dt><strong>Protocol</strong>:</dt><dd><p>The agents aim to reach a joint decision within a limited time through negotiation without fully revealing
+their preferences. The Session class enables the agent to engage in negotiation governed by a predefined
+protocol, specifically the <em>stacked alternating offer protocol</em>, a commonly used approach <a class="reference internal" href="#aydogan2017" id="id2"><span>[Aydogan2017]</span></a>.
+AgentA initiates the negotiation by making the first offer. AgentB (the second agent) is presented with two
+options: propose a counter-offer or accept AgentA’s offer. The turn then returns to AgentA, who can either
+accept the received offer or propose a counter-offer. This turn-taking process continues until an agreement
+is reached or the negotiation deadline expires. If no agreement is reached by the deadline, both parties
+receive zero utility or the reservation utility (if defined). This negotiation protocol ensures a structured
+and iterative exchange of offers, providing a systematic framework for the negotiation process.</p>
+<p><strong>Note</strong>: The agents know only their own preferences.</p>
+</dd>
+</dl>
+<div role="list" class="citation-list">
+<div class="citation" id="aydogan2017" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">Aydogan2017</a><span class="fn-bracket">]</span></span>
+<p>Reyhan Aydoğan, David Festen, Koen V. Hindriks, and Catholijn M. Jonker. 2017. Alternating Offers Protocols for Multilateral Negotiation. Springer International Publishing, Cham, 153–167. &lt;<a class="reference external" href="https://doi.org/10.1007/978-3-319-51563-2_10">https://doi.org/10.1007/978-3-319-51563-2_10</a>&gt;</p>
+</div>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Session.Session.action_history">
+<span class="sig-name descname"><span class="pre">action_history</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#nenv.Action.Action" title="nenv.Action.Action"><span class="pre">Action</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#nenv.Session.Session.action_history" title="Link to this definition"></a></dt>
+<dd><p>List of Action that the agents have taken</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Session.Session.agentA">
+<span class="sig-name descname"><span class="pre">agentA</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#nenv.Agent.AbstractAgent" title="nenv.Agent.AbstractAgent"><span class="pre">AbstractAgent</span></a></em><a class="headerlink" href="#nenv.Session.Session.agentA" title="Link to this definition"></a></dt>
+<dd><p>AgentA object</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Session.Session.agentB">
+<span class="sig-name descname"><span class="pre">agentB</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#nenv.Agent.AbstractAgent" title="nenv.Agent.AbstractAgent"><span class="pre">AbstractAgent</span></a></em><a class="headerlink" href="#nenv.Session.Session.agentB" title="Link to this definition"></a></dt>
+<dd><p>AgentB object</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Session.Session.bidSpace">
+<span class="sig-name descname"><span class="pre">bidSpace</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#nenv.BidSpace.BidSpace" title="nenv.BidSpace.BidSpace"><span class="pre">BidSpace</span></a></em><a class="headerlink" href="#nenv.Session.Session.bidSpace" title="Link to this definition"></a></dt>
+<dd><p>BidSpace object of the domain</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Session.Session.deadline_round">
+<span class="sig-name descname"><span class="pre">deadline_round</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#nenv.Session.Session.deadline_round" title="Link to this definition"></a></dt>
+<dd><p>Round-based deadline in terms of seconds</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Session.Session.deadline_time">
+<span class="sig-name descname"><span class="pre">deadline_time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#nenv.Session.Session.deadline_time" title="Link to this definition"></a></dt>
+<dd><p>Time-based deadline in terms of seconds</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.Session.Session.get_number_of_offers">
+<span class="sig-name descname"><span class="pre">get_number_of_offers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/nenv/Session.html#Session.get_number_of_offers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Session.Session.get_number_of_offers" title="Link to this definition"></a></dt>
+<dd><p>This method provides the number of offered bid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of offers</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.Session.Session.get_time">
+<span class="sig-name descname"><span class="pre">get_time</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/nenv/Session.html#Session.get_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Session.Session.get_time" title="Link to this definition"></a></dt>
+<dd><p>Get the normalized negotiation time.</p>
+<p><strong>Note</strong>: If mixed deadline is set, the maximum normalized negotiation time will be provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Normalized negotiation time</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Session.Session.last_row">
+<span class="sig-name descname"><span class="pre">last_row</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#nenv.Session.Session.last_row" title="Link to this definition"></a></dt>
+<dd><p>Last row of the log</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Session.Session.log_path">
+<span class="sig-name descname"><span class="pre">log_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#nenv.Session.Session.log_path" title="Link to this definition"></a></dt>
+<dd><p>Session Log csv path</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Session.Session.loggers">
+<span class="sig-name descname"><span class="pre">loggers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#nenv.Session.Session.loggers" title="Link to this definition"></a></dt>
+<dd><p>List of Loggers</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.Session.Session.on_acceptance">
+<span class="sig-name descname"><span class="pre">on_acceptance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_no</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.Action.Accept" title="nenv.Action.Accept"><span class="pre">Accept</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/Session.html#Session.on_acceptance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Session.Session.on_acceptance" title="Link to this definition"></a></dt>
+<dd><p>This method is called when an agent accepts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent_no</strong> – Who accepted, <em>‘A’</em> or <em>‘B’</em></p></li>
+<li><p><strong>action</strong> – Accept action</p></li>
+<li><p><strong>t</strong> – Acceptance time</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Log row for tournament</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.Session.Session.on_error">
+<span class="sig-name descname"><span class="pre">on_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_no</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/Session.html#Session.on_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Session.Session.on_error" title="Link to this definition"></a></dt>
+<dd><p>This method is called when an error occurs. The agent which raises an error will get 0 utility.
+The other agent will get the reservation value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent_no</strong> – The agent which raises an error.</p></li>
+<li><p><strong>t</strong> – Negotiation time</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Log row for tournament</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.Session.Session.on_fail">
+<span class="sig-name descname"><span class="pre">on_fail</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/Session.html#Session.on_fail"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Session.Session.on_fail" title="Link to this definition"></a></dt>
+<dd><p>This method is called when the deadline is up without any acceptance</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>t</strong> – Negotiation time</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Log row for tournament</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.Session.Session.on_offer">
+<span class="sig-name descname"><span class="pre">on_offer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.Action.Action" title="nenv.Action.Action"><span class="pre">Action</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_no</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/Session.html#Session.on_offer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Session.Session.on_offer" title="Link to this definition"></a></dt>
+<dd><p>This method is called when an offer received from an agent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>action</strong> – Offer action</p></li>
+<li><p><strong>agent_no</strong> – Who made the offer, <em>‘A’</em> or <em>‘B’</em></p></li>
+<li><p><strong>t</strong> – Negotiation time when received the offer</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Log row for session</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.Session.Session.on_timed_out">
+<span class="sig-name descname"><span class="pre">on_timed_out</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_no</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/Session.html#Session.on_timed_out"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Session.Session.on_timed_out" title="Link to this definition"></a></dt>
+<dd><p>This method is called when a process of the agent is timed out. The agent which raises an error will get 0
+utility. The other agent will get the reservation value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent_no</strong> – The agent which has timed out process</p></li>
+<li><p><strong>t</strong> – Negotiation time</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Log row for tournament</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Session.Session.process_manager">
+<span class="sig-name descname"><span class="pre">process_manager</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="nenv.utils.html#nenv.utils.ProcessManager.ProcessManager" title="nenv.utils.ProcessManager.ProcessManager"><span class="pre">ProcessManager</span></a></em><a class="headerlink" href="#nenv.Session.Session.process_manager" title="Link to this definition"></a></dt>
+<dd><p>Process Manager</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Session.Session.round">
+<span class="sig-name descname"><span class="pre">round</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#nenv.Session.Session.round" title="Link to this definition"></a></dt>
+<dd><p>Current negotiation round</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Session.Session.session_log">
+<span class="sig-name descname"><span class="pre">session_log</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.ExcelLog" title="nenv.utils.ExcelLog.ExcelLog"><span class="pre">ExcelLog</span></a></em><a class="headerlink" href="#nenv.Session.Session.session_log" title="Link to this definition"></a></dt>
+<dd><p>Session log</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.Session.Session.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/Session.html#Session.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Session.Session.start" title="Link to this definition"></a></dt>
+<dd><p>This method starts the negotiation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Log row for tournament</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Session.Session.start_time">
+<span class="sig-name descname"><span class="pre">start_time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#nenv.Session.Session.start_time" title="Link to this definition"></a></dt>
+<dd><p>Start time of the session</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Session.Session.time_out">
+<span class="sig-name descname"><span class="pre">time_out</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#nenv.Session.Session.time_out" title="Link to this definition"></a></dt>
+<dd><p>Time out for any process</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nenv.SessionLogs">
+<span id="nenv-sessionlogs-module"></span><h2>nenv.SessionLogs module<a class="headerlink" href="#module-nenv.SessionLogs" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.SessionLogs.SessionLogs">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.SessionLogs.</span></span><span class="sig-name descname"><span class="pre">SessionLogs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agentA</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.Agent.AbstractAgent" title="nenv.Agent.AbstractAgent"><span class="pre">AbstractAgent</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">agentB</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.Agent.AbstractAgent" title="nenv.Agent.AbstractAgent"><span class="pre">AbstractAgent</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loggers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initiate_agents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/SessionLogs.html#SessionLogs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.SessionLogs.SessionLogs" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>SessionEstimator simulates the negotiation to generate additional logs after the tournament.
+It takes the previous session logs and simulates for the loggers.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.SessionLogs.SessionLogs.action_history">
+<span class="sig-name descname"><span class="pre">action_history</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#nenv.Action.Action" title="nenv.Action.Action"><span class="pre">Action</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#nenv.SessionLogs.SessionLogs.action_history" title="Link to this definition"></a></dt>
+<dd><p>List of Action that the agents have taken</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.SessionLogs.SessionLogs.agentA">
+<span class="sig-name descname"><span class="pre">agentA</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#nenv.Agent.AbstractAgent" title="nenv.Agent.AbstractAgent"><span class="pre">AbstractAgent</span></a></em><a class="headerlink" href="#nenv.SessionLogs.SessionLogs.agentA" title="Link to this definition"></a></dt>
+<dd><p>AgentA object</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.SessionLogs.SessionLogs.agentB">
+<span class="sig-name descname"><span class="pre">agentB</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#nenv.Agent.AbstractAgent" title="nenv.Agent.AbstractAgent"><span class="pre">AbstractAgent</span></a></em><a class="headerlink" href="#nenv.SessionLogs.SessionLogs.agentB" title="Link to this definition"></a></dt>
+<dd><p>AgentB object</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.SessionLogs.SessionLogs.log_path">
+<span class="sig-name descname"><span class="pre">log_path</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#nenv.SessionLogs.SessionLogs.log_path" title="Link to this definition"></a></dt>
+<dd><p>Session Log csv path</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.SessionLogs.SessionLogs.loggers">
+<span class="sig-name descname"><span class="pre">loggers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#nenv.SessionLogs.SessionLogs.loggers" title="Link to this definition"></a></dt>
+<dd><p>List of Loggers</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.SessionLogs.SessionLogs.parse_bid">
+<span class="sig-name descname"><span class="pre">parse_bid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bid_content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></span><a class="reference internal" href="_modules/nenv/SessionLogs.html#SessionLogs.parse_bid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.SessionLogs.SessionLogs.parse_bid" title="Link to this definition"></a></dt>
+<dd><p>This method converts string to Bid object</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>bid_content</strong> – String</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Bid object</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.SessionLogs.SessionLogs.process_end">
+<span class="sig-name descname"><span class="pre">process_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/SessionLogs.html#SessionLogs.process_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.SessionLogs.SessionLogs.process_end" title="Link to this definition"></a></dt>
+<dd><p>This method is called when simulated session ends.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>row</strong> – Current tournament row</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Updated tournament row</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.SessionLogs.SessionLogs.process_row">
+<span class="sig-name descname"><span class="pre">process_row</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_tournament</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/nenv/SessionLogs.html#SessionLogs.process_row"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.SessionLogs.SessionLogs.process_row" title="Link to this definition"></a></dt>
+<dd><p>This method simulates the round row in the session log</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row</strong> – Current log row</p></li>
+<li><p><strong>row_index</strong> – Index of the row</p></li>
+<li><p><strong>row_tournament</strong> – Tournament log row</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Updated log row</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.SessionLogs.SessionLogs.session_log">
+<span class="sig-name descname"><span class="pre">session_log</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.ExcelLog" title="nenv.utils.ExcelLog.ExcelLog"><span class="pre">ExcelLog</span></a></em><a class="headerlink" href="#nenv.SessionLogs.SessionLogs.session_log" title="Link to this definition"></a></dt>
+<dd><p>Session log</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.SessionLogs.SessionLogs.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row_tournament</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/SessionLogs.html#SessionLogs.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.SessionLogs.SessionLogs.start" title="Link to this definition"></a></dt>
+<dd><p>This method simulates the all rounds for the estimators. Then, it updates the session log file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>LogRow of current session</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nenv.SessionManager">
+<span id="nenv-sessionmanager-module"></span><h2>nenv.SessionManager module<a class="headerlink" href="#module-nenv.SessionManager" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.SessionManager.SessionManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.SessionManager.</span></span><span class="sig-name descname"><span class="pre">SessionManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agentA_class</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.Agent.AgentClass" title="nenv.Agent.AgentClass"><span class="pre">AgentClass</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">agentB_class</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.Agent.AgentClass" title="nenv.Agent.AgentClass"><span class="pre">AgentClass</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deadline_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deadline_round</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimators</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="nenv.OpponentModel.html#nenv.OpponentModel.OpponentModelClass" title="nenv.OpponentModel.OpponentModelClass"><span class="pre">OpponentModelClass</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loggers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="nenv.logger.html#nenv.logger.LoggerClass" title="nenv.logger.LoggerClass"><span class="pre">LoggerClass</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/SessionManager.html#SessionManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.SessionManager.SessionManager" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class helps to run negotiation session.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.SessionManager.SessionManager.agentA">
+<span class="sig-name descname"><span class="pre">agentA</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#nenv.Agent.AbstractAgent" title="nenv.Agent.AbstractAgent"><span class="pre">AbstractAgent</span></a></em><a class="headerlink" href="#nenv.SessionManager.SessionManager.agentA" title="Link to this definition"></a></dt>
+<dd><p>AgentA object</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.SessionManager.SessionManager.agentB">
+<span class="sig-name descname"><span class="pre">agentB</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#nenv.Agent.AbstractAgent" title="nenv.Agent.AbstractAgent"><span class="pre">AbstractAgent</span></a></em><a class="headerlink" href="#nenv.SessionManager.SessionManager.agentB" title="Link to this definition"></a></dt>
+<dd><p>AgentB object</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.SessionManager.SessionManager.deadline_time">
+<span class="sig-name descname"><span class="pre">deadline_time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#nenv.SessionManager.SessionManager.deadline_time" title="Link to this definition"></a></dt>
+<dd><p>The round-based in terms of number of rounds</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.SessionManager.SessionManager.loggers">
+<span class="sig-name descname"><span class="pre">loggers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="nenv.logger.html#nenv.logger.AbstractLogger.AbstractLogger" title="nenv.logger.AbstractLogger.AbstractLogger"><span class="pre">AbstractLogger</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#nenv.SessionManager.SessionManager.loggers" title="Link to this definition"></a></dt>
+<dd><p>List of logger</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.SessionManager.SessionManager.prefA">
+<span class="sig-name descname"><span class="pre">prefA</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#nenv.Preference.Preference" title="nenv.Preference.Preference"><span class="pre">Preference</span></a></em><a class="headerlink" href="#nenv.SessionManager.SessionManager.prefA" title="Link to this definition"></a></dt>
+<dd><p>Preferences of agentA</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.SessionManager.SessionManager.prefB">
+<span class="sig-name descname"><span class="pre">prefB</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#nenv.Preference.Preference" title="nenv.Preference.Preference"><span class="pre">Preference</span></a></em><a class="headerlink" href="#nenv.SessionManager.SessionManager.prefB" title="Link to this definition"></a></dt>
+<dd><p>Preferences of agentB</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.SessionManager.SessionManager.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/SessionManager.html#SessionManager.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.SessionManager.SessionManager.run" title="Link to this definition"></a></dt>
+<dd><p>Starts the negotiation session.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>save_path</strong> – Session log file</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Log row for tournament</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.SessionManager.SessionManager.session">
+<span class="sig-name descname"><span class="pre">session</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#nenv.Session.Session" title="nenv.Session.Session"><span class="pre">Session</span></a></em><a class="headerlink" href="#nenv.SessionManager.SessionManager.session" title="Link to this definition"></a></dt>
+<dd><p>Negotiation session object</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nenv.Tournament">
+<span id="nenv-tournament-module"></span><h2>nenv.Tournament module<a class="headerlink" href="#module-nenv.Tournament" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.Tournament.Tournament">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.Tournament.</span></span><span class="sig-name descname"><span class="pre">Tournament</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#nenv.Agent.AgentClass" title="nenv.Agent.AgentClass"><span class="pre">AgentClass</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#nenv.Agent.AgentClass" title="nenv.Agent.AgentClass"><span class="pre">AgentClass</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domains</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="nenv.logger.html#nenv.logger.LoggerClass" title="nenv.logger.LoggerClass"><span class="pre">LoggerClass</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="nenv.logger.html#nenv.logger.LoggerClass" title="nenv.logger.LoggerClass"><span class="pre">LoggerClass</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="nenv.OpponentModel.html#nenv.OpponentModel.OpponentModelClass" title="nenv.OpponentModel.OpponentModelClass"><span class="pre">OpponentModelClass</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="nenv.OpponentModel.html#nenv.OpponentModel.OpponentModelClass" title="nenv.OpponentModel.OpponentModelClass"><span class="pre">OpponentModelClass</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deadline_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deadline_round</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">self_negotiation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">result_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'results/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shuffle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/Tournament.html#Tournament"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Tournament.Tournament" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class conducts a tournament based on given settings.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Tournament.Tournament.agent_classes">
+<span class="sig-name descname"><span class="pre">agent_classes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#nenv.Agent.AgentClass" title="nenv.Agent.AgentClass"><span class="pre">AgentClass</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#nenv.Tournament.Tournament.agent_classes" title="Link to this definition"></a></dt>
+<dd><p>List of Agent classes</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Tournament.Tournament.deadline_round">
+<span class="sig-name descname"><span class="pre">deadline_round</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nenv.Tournament.Tournament.deadline_round" title="Link to this definition"></a></dt>
+<dd><p>Round-based deadline in terms of number of rounds</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Tournament.Tournament.deadline_time">
+<span class="sig-name descname"><span class="pre">deadline_time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nenv.Tournament.Tournament.deadline_time" title="Link to this definition"></a></dt>
+<dd><p>Time-based deadline in terms of seconds</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Tournament.Tournament.domains">
+<span class="sig-name descname"><span class="pre">domains</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#nenv.Tournament.Tournament.domains" title="Link to this definition"></a></dt>
+<dd><p>List of domains</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Tournament.Tournament.estimators">
+<span class="sig-name descname"><span class="pre">estimators</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="nenv.OpponentModel.html#nenv.OpponentModel.OpponentModelClass" title="nenv.OpponentModel.OpponentModelClass"><span class="pre">OpponentModelClass</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#nenv.Tournament.Tournament.estimators" title="Link to this definition"></a></dt>
+<dd><p>List of opponent models</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.Tournament.Tournament.extract_domains">
+<span class="sig-name descname"><span class="pre">extract_domains</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/Tournament.html#Tournament.extract_domains"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Tournament.Tournament.extract_domains" title="Link to this definition"></a></dt>
+<dd><p>This method extracts the domain information into the result directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.Tournament.Tournament.generate_combinations">
+<span class="sig-name descname"><span class="pre">generate_combinations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#nenv.Agent.AgentClass" title="nenv.Agent.AgentClass"><span class="pre">AgentClass</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#nenv.Agent.AgentClass" title="nenv.Agent.AgentClass"><span class="pre">AgentClass</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/nenv/Tournament.html#Tournament.generate_combinations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Tournament.Tournament.generate_combinations" title="Link to this definition"></a></dt>
+<dd><p>This method generates all combinations of negotiations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Tournament.Tournament.killed">
+<span class="sig-name descname"><span class="pre">killed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#nenv.Tournament.Tournament.killed" title="Link to this definition"></a></dt>
+<dd><p>Whether the tournament process is killed, or not</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Tournament.Tournament.loggers">
+<span class="sig-name descname"><span class="pre">loggers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="nenv.logger.html#nenv.logger.AbstractLogger.AbstractLogger" title="nenv.logger.AbstractLogger.AbstractLogger"><span class="pre">AbstractLogger</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#nenv.Tournament.Tournament.loggers" title="Link to this definition"></a></dt>
+<dd><p>List of Logger classes</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Tournament.Tournament.repeat">
+<span class="sig-name descname"><span class="pre">repeat</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#nenv.Tournament.Tournament.repeat" title="Link to this definition"></a></dt>
+<dd><p>Number of repetition for each combination</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Tournament.Tournament.result_dir">
+<span class="sig-name descname"><span class="pre">result_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#nenv.Tournament.Tournament.result_dir" title="Link to this definition"></a></dt>
+<dd><p>The directory where the result logs will be extracted</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.Tournament.Tournament.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/Tournament.html#Tournament.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.Tournament.Tournament.run" title="Link to this definition"></a></dt>
+<dd><p>This method starts the tournament</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Tournament.Tournament.seed">
+<span class="sig-name descname"><span class="pre">seed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nenv.Tournament.Tournament.seed" title="Link to this definition"></a></dt>
+<dd><p>Random seed for whole tournament</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Tournament.Tournament.self_negotiation">
+<span class="sig-name descname"><span class="pre">self_negotiation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#nenv.Tournament.Tournament.self_negotiation" title="Link to this definition"></a></dt>
+<dd><p>Whether the agents negotiate with itself, or not</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Tournament.Tournament.shuffle">
+<span class="sig-name descname"><span class="pre">shuffle</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#nenv.Tournament.Tournament.shuffle" title="Link to this definition"></a></dt>
+<dd><p>Whether the combinations will be shuffled, or not</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.Tournament.Tournament.tournament_process">
+<span class="sig-name descname"><span class="pre">tournament_process</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="nenv.utils.html#nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor" title="nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor"><span class="pre">TournamentProcessMonitor</span></a></em><a class="headerlink" href="#nenv.Tournament.Tournament.tournament_process" title="Link to this definition"></a></dt>
+<dd><p>Process monitor</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nenv.OpponentModel.html">nenv.OpponentModel package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nenv.OpponentModel.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.OpponentModel.html#module-nenv.OpponentModel.AbstractOpponentModel">nenv.OpponentModel.AbstractOpponentModel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.OpponentModel.html#module-nenv.OpponentModel.BayesianOpponentModel">nenv.OpponentModel.BayesianOpponentModel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.OpponentModel.html#module-nenv.OpponentModel.ClassicFrequencyOpponentModel">nenv.OpponentModel.ClassicFrequencyOpponentModel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.OpponentModel.html#module-nenv.OpponentModel.ConflictBasedOpponentModel">nenv.OpponentModel.ConflictBasedOpponentModel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.OpponentModel.html#module-nenv.OpponentModel.EstimatedPreference">nenv.OpponentModel.EstimatedPreference module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.OpponentModel.html#module-nenv.OpponentModel.WindowedFrequencyOpponentModel">nenv.OpponentModel.WindowedFrequencyOpponentModel module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.OpponentModel.html#module-nenv.OpponentModel">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nenv.logger.html">nenv.logger package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nenv.logger.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.logger.html#module-nenv.logger.AbstractLogger">nenv.logger.AbstractLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.logger.html#module-nenv.logger.BidSpaceLogger">nenv.logger.BidSpaceLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.logger.html#module-nenv.logger.DomainGraphsLogger">nenv.logger.DomainGraphsLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.logger.html#module-nenv.logger.EstimatedBidSpaceLogger">nenv.logger.EstimatedBidSpaceLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.logger.html#module-nenv.logger.EstimatedUtilityLogger">nenv.logger.EstimatedUtilityLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.logger.html#module-nenv.logger.EstimatedMoveLogger">nenv.logger.EstimatedMoveLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.logger.html#module-nenv.logger.EstimatorMetricLogger">nenv.logger.EstimatorMetricLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.logger.html#module-nenv.logger.EstimatorOnlyFinalMetricLogger">nenv.logger.EstimatorOnlyFinalMetricLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.logger.html#module-nenv.logger.EstimatedParetoLogger">nenv.logger.EstimatedParetoLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.logger.html#module-nenv.logger.FinalGraphsLogger">nenv.logger.FinalGraphsLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.logger.html#module-nenv.logger.MoveAnalyzeLogger">nenv.logger.MoveAnalyzeLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.logger.html#module-nenv.logger.TournamentSummaryLogger">nenv.logger.TournamentSummaryLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.logger.html#module-nenv.logger.UtilityDistributionLogger">nenv.logger.UtilityDistributionLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.logger.html#module-nenv.logger">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="nenv.utils.html">nenv.utils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nenv.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.utils.html#module-nenv.utils.DynamicImport">nenv.utils.DynamicImport module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.utils.html#module-nenv.utils.ExcelLog">nenv.utils.ExcelLog module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.utils.html#module-nenv.utils.KillableThread">nenv.utils.KillableThread module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.utils.html#module-nenv.utils.Move">nenv.utils.Move module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.utils.html#module-nenv.utils.ProcessManager">nenv.utils.ProcessManager module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.utils.html#module-nenv.utils.SessionOps">nenv.utils.SessionOps module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.utils.html#module-nenv.utils.TournamentProcessMonitor">nenv.utils.TournamentProcessMonitor module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.utils.html#module-nenv.utils.TypeCheck">nenv.utils.TypeCheck module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.utils.html#module-nenv.utils.tournament_graphs">nenv.utils.tournament_graphs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.utils.html#module-nenv.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="module-nenv">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-nenv" title="Link to this heading"></a></h2>
+<p>This module contains entire components of Negotiation ENVironment framework.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="NegoLog" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nenv.OpponentModel.html" class="btn btn-neutral float-right" title="nenv.OpponentModel package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, aniltrue.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

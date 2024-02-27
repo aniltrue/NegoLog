@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nenv.Session &mdash; NegoLog 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            NegoLog
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">NegoLog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NegoLog</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">nenv.Session</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for nenv.Session</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">nenv.Action</span> <span class="kn">import</span> <span class="n">Accept</span><span class="p">,</span> <span class="n">Action</span><span class="p">,</span> <span class="n">Offer</span>
+<span class="kn">from</span> <span class="nn">nenv.Agent</span> <span class="kn">import</span> <span class="n">AbstractAgent</span>
+<span class="kn">from</span> <span class="nn">nenv.BidSpace</span> <span class="kn">import</span> <span class="n">BidSpace</span>
+<span class="kn">from</span> <span class="nn">nenv.utils.ProcessManager</span> <span class="kn">import</span> <span class="n">ProcessManager</span>
+<span class="kn">from</span> <span class="nn">nenv.utils.SessionOps</span> <span class="kn">import</span> <span class="n">session_operation</span>
+<span class="kn">from</span> <span class="nn">nenv.utils.ExcelLog</span> <span class="kn">import</span> <span class="n">ExcelLog</span><span class="p">,</span> <span class="n">LogRow</span><span class="p">,</span> <span class="n">update</span>
+
+
+<div class="viewcode-block" id="Session">
+<a class="viewcode-back" href="../../nenv.html#nenv.Session.Session">[docs]</a>
+<span class="k">class</span> <span class="nc">Session</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Session class holds the all necessary information about the negotiation session. It conducts the negotiation</span>
+<span class="sd">        session by calling the corresponding methods.</span>
+
+<span class="sd">        **Protocol**:</span>
+<span class="sd">            The agents aim to reach a joint decision within a limited time through negotiation without fully revealing</span>
+<span class="sd">            their preferences. The Session class enables the agent to engage in negotiation governed by a predefined</span>
+<span class="sd">            protocol, specifically the *stacked alternating offer protocol*, a commonly used approach [Aydogan2017]_.</span>
+<span class="sd">            AgentA initiates the negotiation by making the first offer. AgentB (the second agent) is presented with two</span>
+<span class="sd">            options: propose a counter-offer or accept AgentA&#39;s offer. The turn then returns to AgentA, who can either</span>
+<span class="sd">            accept the received offer or propose a counter-offer. This turn-taking process continues until an agreement</span>
+<span class="sd">            is reached or the negotiation deadline expires. If no agreement is reached by the deadline, both parties</span>
+<span class="sd">            receive zero utility or the reservation utility (if defined). This negotiation protocol ensures a structured</span>
+<span class="sd">            and iterative exchange of offers, providing a systematic framework for the negotiation process.</span>
+
+<span class="sd">            **Note**: The agents know only their own preferences.</span>
+
+<span class="sd">        .. [Aydogan2017] Reyhan Aydoğan, David Festen, Koen V. Hindriks, and Catholijn M. Jonker. 2017. Alternating Offers Protocols for Multilateral Negotiation. Springer International Publishing, Cham, 153–167. &lt;https://doi.org/10.1007/978-3-319-51563-2_10&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">agentA</span><span class="p">:</span> <span class="n">AbstractAgent</span>                   <span class="c1">#: AgentA object</span>
+    <span class="n">agentB</span><span class="p">:</span> <span class="n">AbstractAgent</span>                   <span class="c1">#: AgentB object</span>
+    <span class="n">session_log</span><span class="p">:</span> <span class="n">ExcelLog</span>                   <span class="c1">#: Session log</span>
+    <span class="n">loggers</span><span class="p">:</span> <span class="nb">list</span>                           <span class="c1">#: List of Loggers</span>
+    <span class="nb">round</span><span class="p">:</span> <span class="nb">int</span>                              <span class="c1">#: Current negotiation round</span>
+    <span class="n">action_history</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Action</span><span class="p">]</span>            <span class="c1">#: List of Action that the agents have taken</span>
+    <span class="n">bidSpace</span><span class="p">:</span> <span class="n">BidSpace</span>                      <span class="c1">#: BidSpace object of the domain</span>
+    <span class="n">log_path</span><span class="p">:</span> <span class="nb">str</span>                           <span class="c1">#: Session Log csv path</span>
+    <span class="n">deadline_time</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>         <span class="c1">#: Time-based deadline in terms of seconds</span>
+    <span class="n">deadline_round</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>        <span class="c1">#: Round-based deadline in terms of seconds</span>
+    <span class="n">last_row</span><span class="p">:</span> <span class="nb">dict</span>                          <span class="c1">#: Last row of the log</span>
+    <span class="n">start_time</span><span class="p">:</span> <span class="nb">float</span>                       <span class="c1">#: Start time of the session</span>
+    <span class="n">process_manager</span><span class="p">:</span> <span class="n">ProcessManager</span>         <span class="c1">#: Process Manager</span>
+    <span class="n">time_out</span><span class="p">:</span> <span class="nb">float</span>                         <span class="c1">#: Time out for any process</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agentA</span><span class="p">:</span> <span class="n">AbstractAgent</span><span class="p">,</span> <span class="n">agentB</span><span class="p">:</span> <span class="n">AbstractAgent</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">deadline_time</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">deadline_round</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">loggers</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Constructor</span>
+
+<span class="sd">            :param agentA: AgentA object</span>
+<span class="sd">            :param agentB: AgentB object</span>
+<span class="sd">            :param path: Session log file path</span>
+<span class="sd">            :param deadline_time: Time-Based deadline in terms of seconds.</span>
+<span class="sd">            :param deadline_round: Round-based deadline in terms of number of rounds.</span>
+<span class="sd">            :param loggers: List of logger</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="n">deadline_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">deadline_round</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;No deadline type is specified.&quot;</span>
+        <span class="k">assert</span> <span class="n">deadline_time</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">deadline_time</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Deadline must be positive.&quot;</span>
+        <span class="k">assert</span> <span class="n">deadline_round</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">deadline_round</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Deadline must be positive.&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">process_manager</span> <span class="o">=</span> <span class="n">ProcessManager</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">agentA</span> <span class="o">=</span> <span class="n">agentA</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agentB</span> <span class="o">=</span> <span class="n">agentB</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bidSpace</span> <span class="o">=</span> <span class="n">BidSpace</span><span class="p">(</span><span class="n">agentA</span><span class="o">.</span><span class="n">preference</span><span class="p">,</span> <span class="n">agentB</span><span class="o">.</span><span class="n">preference</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_path</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deadline_time</span> <span class="o">=</span> <span class="n">deadline_time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deadline_round</span> <span class="o">=</span> <span class="n">deadline_round</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_row</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_history</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">round</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_out</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="n">deadline_time</span><span class="p">)</span> <span class="k">if</span> <span class="n">deadline_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">60</span>
+
+        <span class="n">sheet_names</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Session&quot;</span><span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">estimator</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agentA</span><span class="o">.</span><span class="n">estimators</span><span class="p">:</span>
+            <span class="n">sheet_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">estimator</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">loggers</span> <span class="o">=</span> <span class="n">loggers</span>
+
+        <span class="k">for</span> <span class="n">logger</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loggers</span><span class="p">:</span>
+            <span class="n">logger_sheet_names</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">before_session_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">sheet_name</span> <span class="ow">in</span> <span class="n">logger_sheet_names</span><span class="p">:</span>
+                <span class="n">sheet_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">sheet_name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">session_log</span> <span class="o">=</span> <span class="n">ExcelLog</span><span class="p">(</span><span class="n">sheet_names</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Session.get_time">
+<a class="viewcode-back" href="../../nenv.html#nenv.Session.Session.get_time">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_time</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Get the normalized negotiation time.</span>
+
+<span class="sd">            **Note**: If mixed deadline is set, the maximum normalized negotiation time will be provided.</span>
+
+<span class="sd">            :return: Normalized negotiation time</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">deadline_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">deadline_round</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">t_time</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">deadline_time</span>
+            <span class="n">t_round</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">round</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">deadline_round</span>
+
+            <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">t_round</span><span class="p">,</span> <span class="n">t_time</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">deadline_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">deadline_time</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">deadline_round</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">round</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">deadline_round</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;No deadline is specified.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Session.on_offer">
+<a class="viewcode-back" href="../../nenv.html#nenv.Session.Session.on_offer">[docs]</a>
+    <span class="k">def</span> <span class="nf">on_offer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Action</span><span class="p">,</span> <span class="n">agent_no</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method is called when an offer received from an agent.</span>
+
+<span class="sd">            :param action: Offer action</span>
+<span class="sd">            :param agent_no: Who made the offer, *&#39;A&#39;* or *&#39;B&#39;*</span>
+<span class="sd">            :param t: Negotiation time when received the offer</span>
+<span class="sd">            :return: Log row for session</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+        <span class="n">agent1_utility</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">agentA</span><span class="o">.</span><span class="n">preference</span><span class="o">.</span><span class="n">get_utility</span><span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">bid</span><span class="p">)</span>
+        <span class="n">agent2_utility</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">agentB</span><span class="o">.</span><span class="n">preference</span><span class="o">.</span><span class="n">get_utility</span><span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">bid</span><span class="p">)</span>
+
+        <span class="n">row</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Round&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">round</span><span class="p">,</span>
+            <span class="s2">&quot;Time&quot;</span><span class="p">:</span> <span class="n">t</span><span class="p">,</span>
+            <span class="s2">&quot;Who&quot;</span><span class="p">:</span> <span class="n">agent_no</span><span class="p">,</span>
+            <span class="s2">&quot;Action&quot;</span><span class="p">:</span> <span class="s2">&quot;Offer&quot;</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">Action</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;Accept&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;AgentAUtility&quot;</span><span class="p">:</span> <span class="n">agent1_utility</span><span class="p">,</span>
+            <span class="s2">&quot;AgentBUtility&quot;</span><span class="p">:</span> <span class="n">agent2_utility</span><span class="p">,</span>
+            <span class="s2">&quot;ProductScore&quot;</span><span class="p">:</span> <span class="n">agent1_utility</span> <span class="o">*</span> <span class="n">agent2_utility</span><span class="p">,</span>
+            <span class="s2">&quot;SocialWelfare&quot;</span><span class="p">:</span> <span class="n">agent1_utility</span> <span class="o">+</span> <span class="n">agent2_utility</span><span class="p">,</span>
+            <span class="s2">&quot;BidContent&quot;</span><span class="p">:</span> <span class="n">action</span><span class="o">.</span><span class="n">bid</span><span class="p">,</span>
+            <span class="s2">&quot;ElapsedTime&quot;</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">session_log</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;Session&quot;</span><span class="p">:</span> <span class="n">row</span><span class="p">})</span>
+
+        <span class="c1"># Update each sheet with loggers</span>
+        <span class="k">for</span> <span class="n">logger</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loggers</span><span class="p">:</span>
+            <span class="n">logger_row</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">on_offer</span><span class="p">(</span><span class="n">agent_no</span><span class="p">,</span> <span class="n">action</span><span class="o">.</span><span class="n">bid</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">session_log</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">logger_row</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_row</span> <span class="o">=</span> <span class="n">row</span></div>
+
+
+<div class="viewcode-block" id="Session.on_acceptance">
+<a class="viewcode-back" href="../../nenv.html#nenv.Session.Session.on_acceptance">[docs]</a>
+    <span class="k">def</span> <span class="nf">on_acceptance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_no</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">action</span><span class="p">:</span> <span class="n">Accept</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LogRow</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method is called when an agent accepts.</span>
+
+<span class="sd">            :param agent_no: Who accepted, *&#39;A&#39;* or *&#39;B&#39;*</span>
+<span class="sd">            :param action: Accept action</span>
+<span class="sd">            :param t: Acceptance time</span>
+<span class="sd">            :return: Log row for tournament</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+        <span class="n">agent1_utility</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">agentA</span><span class="o">.</span><span class="n">preference</span><span class="o">.</span><span class="n">get_utility</span><span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">bid</span><span class="p">)</span>
+        <span class="n">agent2_utility</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">agentB</span><span class="o">.</span><span class="n">preference</span><span class="o">.</span><span class="n">get_utility</span><span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">bid</span><span class="p">)</span>
+
+        <span class="n">row</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Round&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">round</span><span class="p">,</span>
+            <span class="s2">&quot;Time&quot;</span><span class="p">:</span> <span class="n">t</span><span class="p">,</span>
+            <span class="s2">&quot;Who&quot;</span><span class="p">:</span> <span class="n">agent_no</span><span class="p">,</span>
+            <span class="s2">&quot;Action&quot;</span><span class="p">:</span> <span class="s2">&quot;Accept&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;AgentAUtility&quot;</span><span class="p">:</span> <span class="n">agent1_utility</span><span class="p">,</span>
+            <span class="s2">&quot;AgentBUtility&quot;</span><span class="p">:</span> <span class="n">agent2_utility</span><span class="p">,</span>
+            <span class="s2">&quot;ProductScore&quot;</span><span class="p">:</span> <span class="n">agent1_utility</span> <span class="o">*</span> <span class="n">agent2_utility</span><span class="p">,</span>
+            <span class="s2">&quot;SocialWelfare&quot;</span><span class="p">:</span> <span class="n">agent1_utility</span> <span class="o">+</span> <span class="n">agent2_utility</span><span class="p">,</span>
+            <span class="s2">&quot;BidContent&quot;</span><span class="p">:</span> <span class="n">action</span><span class="o">.</span><span class="n">bid</span><span class="p">,</span>
+            <span class="s2">&quot;ElapsedTime&quot;</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">session_log</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;Session&quot;</span><span class="p">:</span> <span class="n">row</span><span class="p">})</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">session_log</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_path</span><span class="p">)</span>
+
+        <span class="c1"># Terminate</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_run_process_manager</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;Terminate&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">is_accept</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">opponent_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">agentB</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_run_process_manager</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;Terminate&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">is_accept</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">opponent_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">agentA</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+        <span class="c1"># Tournament log</span>
+
+        <span class="n">row</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;AgentA&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">agentA</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;AgentB&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">agentB</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;Round&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">round</span><span class="p">,</span>
+            <span class="s2">&quot;Time&quot;</span><span class="p">:</span> <span class="n">t</span><span class="p">,</span>
+            <span class="s2">&quot;NumOffer&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_number_of_offers</span><span class="p">(),</span>
+            <span class="s2">&quot;Who&quot;</span><span class="p">:</span> <span class="n">agent_no</span><span class="p">,</span>
+            <span class="s2">&quot;Result&quot;</span><span class="p">:</span> <span class="s2">&quot;Acceptance&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;AgentAUtility&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_row</span><span class="p">[</span><span class="s2">&quot;AgentAUtility&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;AgentBUtility&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_row</span><span class="p">[</span><span class="s2">&quot;AgentBUtility&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;ProductScore&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_row</span><span class="p">[</span><span class="s2">&quot;ProductScore&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;SocialWelfare&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_row</span><span class="p">[</span><span class="s2">&quot;SocialWelfare&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;BidContent&quot;</span><span class="p">:</span> <span class="n">action</span><span class="o">.</span><span class="n">bid</span><span class="p">,</span>
+            <span class="s2">&quot;ElapsedTime&quot;</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span>
+        <span class="p">}}</span>
+
+        <span class="k">for</span> <span class="n">logger</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loggers</span><span class="p">:</span>
+            <span class="n">update</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">logger</span><span class="o">.</span><span class="n">on_accept</span><span class="p">(</span><span class="n">agent_no</span><span class="p">,</span> <span class="n">action</span><span class="o">.</span><span class="n">bid</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">row</span></div>
+
+
+<div class="viewcode-block" id="Session.on_fail">
+<a class="viewcode-back" href="../../nenv.html#nenv.Session.Session.on_fail">[docs]</a>
+    <span class="k">def</span> <span class="nf">on_fail</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LogRow</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method is called when the deadline is up without any acceptance</span>
+
+<span class="sd">            :param t: Negotiation time</span>
+<span class="sd">            :return: Log row for tournament</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session_log</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_path</span><span class="p">)</span>
+
+        <span class="c1"># Terminate</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_run_process_manager</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;Terminate&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">is_accept</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">opponent_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">agentB</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_run_process_manager</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;Terminate&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">is_accept</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">opponent_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">agentA</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+
+        <span class="n">agentA_utility</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">agentA</span><span class="o">.</span><span class="n">preference</span><span class="o">.</span><span class="n">reservation_value</span>
+        <span class="n">agentB_utility</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">agentB</span><span class="o">.</span><span class="n">preference</span><span class="o">.</span><span class="n">reservation_value</span>
+
+        <span class="c1"># Tournament Log</span>
+
+        <span class="n">row</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;AgentA&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">agentA</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;AgentB&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">agentB</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;Round&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">round</span><span class="p">,</span>
+            <span class="s2">&quot;Time&quot;</span><span class="p">:</span> <span class="n">t</span><span class="p">,</span>
+            <span class="s2">&quot;NumOffer&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_number_of_offers</span><span class="p">(),</span>
+            <span class="s2">&quot;Who&quot;</span><span class="p">:</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Result&quot;</span><span class="p">:</span> <span class="s2">&quot;Failed&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;AgentAUtility&quot;</span><span class="p">:</span> <span class="n">agentA_utility</span><span class="p">,</span>
+            <span class="s2">&quot;AgentBUtility&quot;</span><span class="p">:</span> <span class="n">agentB_utility</span><span class="p">,</span>
+            <span class="s2">&quot;ProductScore&quot;</span><span class="p">:</span> <span class="n">agentA_utility</span> <span class="o">*</span> <span class="n">agentB_utility</span><span class="p">,</span>
+            <span class="s2">&quot;SocialWelfare&quot;</span><span class="p">:</span> <span class="n">agentA_utility</span> <span class="o">+</span> <span class="n">agentB_utility</span><span class="p">,</span>
+            <span class="s2">&quot;BidContent&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;ElapsedTime&quot;</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span>
+        <span class="p">}}</span>
+
+        <span class="k">for</span> <span class="n">logger</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loggers</span><span class="p">:</span>
+            <span class="n">update</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">logger</span><span class="o">.</span><span class="n">on_fail</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">row</span></div>
+
+
+<div class="viewcode-block" id="Session.on_error">
+<a class="viewcode-back" href="../../nenv.html#nenv.Session.Session.on_error">[docs]</a>
+    <span class="k">def</span> <span class="nf">on_error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_no</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LogRow</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method is called when an error occurs. The agent which raises an error will get 0 utility.</span>
+<span class="sd">            The other agent will get the reservation value.</span>
+
+<span class="sd">            :param agent_no: The agent which raises an error.</span>
+<span class="sd">            :param t: Negotiation time</span>
+<span class="sd">            :return: Log row for tournament</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session_log</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_path</span><span class="p">)</span>
+
+        <span class="c1"># Terminate</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_run_process_manager</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;Terminate&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">is_accept</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">opponent_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">agentB</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_run_process_manager</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;Terminate&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">is_accept</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">opponent_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">agentA</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+
+        <span class="n">agentA_utility</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="k">if</span> <span class="n">agent_no</span> <span class="o">==</span> <span class="s1">&#39;A&#39;</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">agentA</span><span class="o">.</span><span class="n">preference</span><span class="o">.</span><span class="n">reservation_value</span>
+        <span class="n">agentB_utility</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="k">if</span> <span class="n">agent_no</span> <span class="o">==</span> <span class="s1">&#39;B&#39;</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">agentB</span><span class="o">.</span><span class="n">preference</span><span class="o">.</span><span class="n">reservation_value</span>
+
+        <span class="c1"># Tournament log</span>
+
+        <span class="n">row</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;AgentA&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">agentA</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;AgentB&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">agentB</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;Round&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">round</span><span class="p">,</span>
+            <span class="s2">&quot;Time&quot;</span><span class="p">:</span> <span class="n">t</span><span class="p">,</span>
+            <span class="s2">&quot;NumOffer&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_number_of_offers</span><span class="p">(),</span>
+            <span class="s2">&quot;Who&quot;</span><span class="p">:</span> <span class="n">agent_no</span><span class="p">,</span>
+            <span class="s2">&quot;Result&quot;</span><span class="p">:</span> <span class="s2">&quot;Error&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;AgentAUtility&quot;</span><span class="p">:</span> <span class="n">agentA_utility</span><span class="p">,</span>
+            <span class="s2">&quot;AgentBUtility&quot;</span><span class="p">:</span> <span class="n">agentB_utility</span><span class="p">,</span>
+            <span class="s2">&quot;ProductScore&quot;</span><span class="p">:</span> <span class="n">agentA_utility</span> <span class="o">*</span> <span class="n">agentB_utility</span><span class="p">,</span>
+            <span class="s2">&quot;SocialWelfare&quot;</span><span class="p">:</span> <span class="n">agentA_utility</span> <span class="o">+</span> <span class="n">agentB_utility</span><span class="p">,</span>
+            <span class="s2">&quot;BidContent&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;ElapsedTime&quot;</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span>
+        <span class="p">}}</span>
+
+        <span class="k">for</span> <span class="n">logger</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loggers</span><span class="p">:</span>
+            <span class="n">update</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">logger</span><span class="o">.</span><span class="n">on_fail</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">row</span></div>
+
+
+<div class="viewcode-block" id="Session.on_timed_out">
+<a class="viewcode-back" href="../../nenv.html#nenv.Session.Session.on_timed_out">[docs]</a>
+    <span class="k">def</span> <span class="nf">on_timed_out</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_no</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LogRow</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method is called when a process of the agent is timed out. The agent which raises an error will get 0</span>
+<span class="sd">            utility. The other agent will get the reservation value.</span>
+
+<span class="sd">            :param agent_no: The agent which has timed out process</span>
+<span class="sd">            :param t: Negotiation time</span>
+<span class="sd">            :return: Log row for tournament</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session_log</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_path</span><span class="p">)</span>
+
+        <span class="c1"># Terminate</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_run_process_manager</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;Terminate&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">is_accept</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">opponent_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">agentB</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_run_process_manager</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;Terminate&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">is_accept</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">opponent_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">agentA</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+
+        <span class="n">agentA_utility</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="k">if</span> <span class="n">agent_no</span> <span class="o">==</span> <span class="s1">&#39;A&#39;</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">agentA</span><span class="o">.</span><span class="n">preference</span><span class="o">.</span><span class="n">reservation_value</span>
+        <span class="n">agentB_utility</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="k">if</span> <span class="n">agent_no</span> <span class="o">==</span> <span class="s1">&#39;B&#39;</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">agentB</span><span class="o">.</span><span class="n">preference</span><span class="o">.</span><span class="n">reservation_value</span>
+
+        <span class="c1"># Tournament log</span>
+
+        <span class="n">row</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;AgentA&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">agentA</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;AgentB&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">agentB</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s2">&quot;Round&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">round</span><span class="p">,</span>
+            <span class="s2">&quot;Time&quot;</span><span class="p">:</span> <span class="n">t</span><span class="p">,</span>
+            <span class="s2">&quot;NumOffer&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_number_of_offers</span><span class="p">(),</span>
+            <span class="s2">&quot;Who&quot;</span><span class="p">:</span> <span class="n">agent_no</span><span class="p">,</span>
+            <span class="s2">&quot;Result&quot;</span><span class="p">:</span> <span class="s2">&quot;TimedOut&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;AgentAUtility&quot;</span><span class="p">:</span> <span class="n">agentA_utility</span><span class="p">,</span>
+            <span class="s2">&quot;AgentBUtility&quot;</span><span class="p">:</span> <span class="n">agentB_utility</span><span class="p">,</span>
+            <span class="s2">&quot;ProductScore&quot;</span><span class="p">:</span> <span class="n">agentA_utility</span> <span class="o">*</span> <span class="n">agentB_utility</span><span class="p">,</span>
+            <span class="s2">&quot;SocialWelfare&quot;</span><span class="p">:</span> <span class="n">agentA_utility</span> <span class="o">+</span> <span class="n">agentB_utility</span><span class="p">,</span>
+            <span class="s2">&quot;BidContent&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;ElapsedTime&quot;</span><span class="p">:</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span>
+        <span class="p">}}</span>
+
+        <span class="k">for</span> <span class="n">logger</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loggers</span><span class="p">:</span>
+            <span class="n">update</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">logger</span><span class="o">.</span><span class="n">on_fail</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">row</span></div>
+
+
+    <span class="k">def</span> <span class="nf">_run_process_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_no</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">process_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">call_events</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> \
+            <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="n">Action</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method calls the corresponding process with the process manager. If any exception is occurred,</span>
+<span class="sd">            or the initiation process is timed out, this method returns a corresponding tournament log to end the</span>
+<span class="sd">            negotiation session. Otherwise, it provides the return value of the process.</span>
+
+<span class="sd">            :param agent_no: Agent no</span>
+<span class="sd">            :param process_name: Process name</span>
+<span class="sd">            :param call_events: If calling on_error or on_timed_out methods, or not</span>
+<span class="sd">            :param kwargs: Required arguments</span>
+<span class="sd">            :return: Return value of the process, or corresponding tournament log to end the negotiation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;agent&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">agentA</span> <span class="k">if</span> <span class="n">agent_no</span> <span class="o">==</span> <span class="s1">&#39;A&#39;</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">agentB</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;process_name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">process_name</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">process_manager</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">session_operation</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_out</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_manager</span><span class="o">.</span><span class="n">has_exception</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Exception occurs in </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">agentA</span><span class="o">.</span><span class="n">name</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">agent_no</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;A&#39;</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">agentB</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> while </span><span class="si">{</span><span class="n">process_name</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">process_manager</span><span class="o">.</span><span class="n">exception</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">call_events</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_error</span><span class="p">(</span><span class="n">agent_no</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{}</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_manager</span><span class="o">.</span><span class="n">time_outed</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Timed Out: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">agentA</span><span class="o">.</span><span class="n">name</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">agent_no</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;A&#39;</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="bp">self</span><span class="o">.</span><span class="n">agentB</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> while </span><span class="si">{</span><span class="n">process_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">call_events</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_timed_out</span><span class="p">(</span><span class="n">agent_no</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="p">{}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_manager</span><span class="o">.</span><span class="n">return_val</span>
+
+<div class="viewcode-block" id="Session.start">
+<a class="viewcode-back" href="../../nenv.html#nenv.Session.Session.start">[docs]</a>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LogRow</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method starts the negotiation.</span>
+
+<span class="sd">            :return: Log row for tournament</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Initiate agentA</span>
+        <span class="n">initiating_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_process_manager</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;Initiate&#39;</span><span class="p">,</span> <span class="n">opponent_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">agentB</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">initiating_result</span><span class="p">:</span>  <span class="c1"># If any problem occurs, end the session</span>
+            <span class="k">return</span> <span class="n">initiating_result</span>
+
+        <span class="c1"># Initiate agentA</span>
+        <span class="n">initiating_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_process_manager</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;Initiate&#39;</span><span class="p">,</span> <span class="n">opponent_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">agentA</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">initiating_result</span><span class="p">:</span>  <span class="c1"># If any problem occurs, end the session</span>
+            <span class="k">return</span> <span class="n">initiating_result</span>
+
+        <span class="n">action</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">round</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span>
+
+        <span class="k">while</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="mf">1.</span><span class="p">:</span>  <span class="c1"># Until deadline</span>
+            <span class="c1"># AgentA</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">round</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">receiving_bid_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_process_manager</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;Receive Bid&#39;</span><span class="p">,</span> <span class="n">bid</span><span class="o">=</span><span class="n">action</span><span class="o">.</span><span class="n">bid</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">receiving_bid_result</span><span class="p">:</span>  <span class="c1"># If any problem occurs, end the session</span>
+                    <span class="k">return</span> <span class="n">receiving_bid_result</span>
+
+            <span class="n">act_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_process_manager</span><span class="p">(</span><span class="s1">&#39;A&#39;</span><span class="p">,</span> <span class="s1">&#39;Act&#39;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">act_result</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>  <span class="c1"># If any problem occurs, end the session</span>
+                <span class="k">return</span> <span class="n">act_result</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">action</span> <span class="o">=</span> <span class="n">act_result</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">Accept</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">round</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># Forbidden action</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_error</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">Accept</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_acceptance</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">on_offer</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+
+            <span class="c1"># time.sleep(random.random() * 0.09 + 0.01)</span>
+
+            <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="n">t</span> <span class="o">&gt;=</span> <span class="mf">1.</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_fail</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+
+            <span class="c1"># AgentB</span>
+            <span class="n">receiving_bid_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_process_manager</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;Receive Bid&#39;</span><span class="p">,</span> <span class="n">bid</span><span class="o">=</span><span class="n">action</span><span class="o">.</span><span class="n">bid</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">receiving_bid_result</span><span class="p">:</span>  <span class="c1"># If any problem occurs, end the session</span>
+                <span class="k">return</span> <span class="n">receiving_bid_result</span>
+
+            <span class="n">act_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_process_manager</span><span class="p">(</span><span class="s1">&#39;B&#39;</span><span class="p">,</span> <span class="s1">&#39;Act&#39;</span><span class="p">,</span> <span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">act_result</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>  <span class="c1"># If any problem occurs, end the session</span>
+                <span class="k">return</span> <span class="n">act_result</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">action</span> <span class="o">=</span> <span class="n">act_result</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">Accept</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_acceptance</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">on_offer</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">round</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_time</span><span class="p">()</span>
+
+            <span class="c1"># time.sleep(random.random() * 0.09 + 0.01)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_fail</span><span class="p">(</span><span class="n">t</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Session.get_number_of_offers">
+<a class="viewcode-back" href="../../nenv.html#nenv.Session.Session.get_number_of_offers">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_number_of_offers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method provides the number of offered bid.</span>
+
+<span class="sd">            :return: Number of offers</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_history</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">Accept</span><span class="p">):</span>
+                <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="n">counter</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, aniltrue.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

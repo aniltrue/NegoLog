@@ -1,0 +1,38 @@
+{
+ "Name": "Domain26",
+ "NumberOfBids": 3125,
+ "NumberOfIssues": 5,
+ "IssueValues": [
+  5,
+  5,
+  5,
+  5,
+  5
+ ],
+ "Opposition": 0.19885130122782696,
+ "BalanceScore": 0.04656000000000014,
+ "Nash Product": 0.7402938,
+ "Social Welfare": 1.7212,
+ "Nash_A": 0.8422000000000001,
+ "Nash_B": 0.879,
+ "Kalai_A": 0.8422000000000001,
+ "Kalai_B": 0.879,
+ "NashBid": {
+  "issueA": "valueA",
+  "issueB": "valueA",
+  "issueC": "valueC",
+  "issueD": "valueE",
+  "issueE": "valueB"
+ },
+ "KalaiBid": {
+  "issueA": "valueA",
+  "issueB": "valueA",
+  "issueC": "valueC",
+  "issueD": "valueE",
+  "issueE": "valueB"
+ },
+ "ReservationValueProfileA": 0.0,
+ "ReservationValueProfileB": 0.0,
+ "MinUtility": 0.19999999999999998,
+ "MaxUtility": 1.0
+}

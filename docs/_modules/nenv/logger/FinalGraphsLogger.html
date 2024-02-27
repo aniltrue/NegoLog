@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nenv.logger.FinalGraphsLogger &mdash; NegoLog 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            NegoLog
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">NegoLog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">NegoLog</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">nenv.logger.FinalGraphsLogger</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for nenv.logger.FinalGraphsLogger</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">nenv.logger.AbstractLogger</span> <span class="kn">import</span> <span class="n">AbstractLogger</span><span class="p">,</span> <span class="n">ExcelLog</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">nenv.utils.tournament_graphs</span> <span class="kn">import</span> <span class="n">draw_heatmap</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+
+<div class="viewcode-block" id="FinalGraphsLogger">
+<a class="viewcode-back" href="../../../nenv.logger.html#nenv.logger.FinalGraphsLogger.FinalGraphsLogger">[docs]</a>
+<span class="k">class</span> <span class="nc">FinalGraphsLogger</span><span class="p">(</span><span class="n">AbstractLogger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        FinalGraphsLogger draw plots and Confusion Matrix for the evaluation of the Agent performance at the end of the</span>
+<span class="sd">        negotiation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">domain_sep</span><span class="p">:</span> <span class="nb">int</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log_dir</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">domain_sep</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">15</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">log_dir</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">domain_sep</span> <span class="o">=</span> <span class="n">domain_sep</span>
+
+<div class="viewcode-block" id="FinalGraphsLogger.on_tournament_end">
+<a class="viewcode-back" href="../../../nenv.logger.html#nenv.logger.FinalGraphsLogger.FinalGraphsLogger.on_tournament_end">[docs]</a>
+    <span class="k">def</span> <span class="nf">on_tournament_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tournament_logs</span><span class="p">:</span> <span class="n">ExcelLog</span><span class="p">,</span> <span class="n">agent_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">domain_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                          <span class="n">estimator_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+        <span class="n">tournament_results</span> <span class="o">=</span> <span class="n">tournament_logs</span><span class="o">.</span><span class="n">to_data_frame</span><span class="p">(</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;tournament_graphs/&quot;</span><span class="p">)):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;tournament_graphs/&quot;</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw_opponent_based</span><span class="p">(</span><span class="n">tournament_results</span><span class="p">,</span> <span class="n">agent_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;tournament_graphs/&quot;</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">domain_names</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain_sep</span><span class="p">):</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">domain_names</span><span class="p">),</span> <span class="n">i</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain_sep</span><span class="p">)</span>
+
+            <span class="n">idx</span> <span class="o">=</span> <span class="n">domain_names</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_domain_based</span><span class="p">(</span><span class="n">tournament_results</span><span class="p">,</span> <span class="n">agent_names</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;tournament_graphs/&quot;</span><span class="p">),</span>
+                                   <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">end</span><span class="si">}</span><span class="s2">)&quot;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">domain_names</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain_sep</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="FinalGraphsLogger.draw_opponent_based">
+<a class="viewcode-back" href="../../../nenv.logger.html#nenv.logger.FinalGraphsLogger.FinalGraphsLogger.draw_opponent_based">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_opponent_based</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tournament_results</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">agent_names</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="n">data_utility</span> <span class="o">=</span> <span class="p">[[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">agent_names</span><span class="p">))]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">agent_names</span><span class="p">))]</span>
+        <span class="n">data_opp_utility</span> <span class="o">=</span> <span class="p">[[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">agent_names</span><span class="p">))]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">agent_names</span><span class="p">))]</span>
+        <span class="n">data_product_score</span> <span class="o">=</span> <span class="p">[[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">agent_names</span><span class="p">))]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">agent_names</span><span class="p">))]</span>
+        <span class="n">data_nash_distances</span> <span class="o">=</span> <span class="p">[[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">agent_names</span><span class="p">))]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">agent_names</span><span class="p">))]</span>
+        <span class="n">data_social_welfare</span> <span class="o">=</span> <span class="p">[[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">agent_names</span><span class="p">))]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">agent_names</span><span class="p">))]</span>
+        <span class="n">data_time</span> <span class="o">=</span> <span class="p">[[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">agent_names</span><span class="p">))]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">agent_names</span><span class="p">))]</span>
+        <span class="n">data_acceptance_rate</span> <span class="o">=</span> <span class="p">[[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">agent_names</span><span class="p">))]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">agent_names</span><span class="p">))]</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">agent_name_a</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">agent_names</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">agent_name_b</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">agent_names</span><span class="p">):</span>
+                <span class="c1"># Individual Utility</span>
+                <span class="n">rows_utility</span> <span class="o">=</span> <span class="n">tournament_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentA&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name_a</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                      <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentB&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name_b</span><span class="p">),</span>
+                <span class="s2">&quot;AgentAUtility&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+
+                <span class="n">rows_utility</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">tournament_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentA&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name_b</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                           <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentB&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name_a</span><span class="p">),</span>
+                <span class="s2">&quot;AgentBUtility&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+
+                <span class="c1"># Opponent Utility</span>
+
+                <span class="n">rows_opp_utility</span> <span class="o">=</span> <span class="n">tournament_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentA&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name_a</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                          <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentB&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name_b</span><span class="p">),</span>
+                <span class="s2">&quot;AgentBUtility&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+
+                <span class="n">rows_opp_utility</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">tournament_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentA&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name_b</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                               <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentB&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name_a</span><span class="p">),</span>
+                <span class="s2">&quot;AgentAUtility&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+
+                <span class="c1"># Nash Distance</span>
+
+                <span class="n">row_nash_distances</span> <span class="o">=</span> <span class="n">tournament_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentA&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name_a</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                            <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentB&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name_b</span><span class="p">),</span>
+                <span class="s2">&quot;NashDistance&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+
+                <span class="n">row_nash_distances</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">tournament_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentA&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name_b</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                                 <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentB&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name_a</span><span class="p">),</span>
+                <span class="s2">&quot;NashDistance&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+
+                <span class="c1"># Acceptance Time</span>
+
+                <span class="n">rows_acceptance</span> <span class="o">=</span> <span class="n">tournament_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentA&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name_a</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                         <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentB&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name_b</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                         <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;Result&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Acceptance&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;Time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+
+                <span class="n">rows_acceptance</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">tournament_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentA&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name_b</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                              <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentB&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name_a</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                              <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;Result&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Acceptance&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;Time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rows_utility</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">data_utility</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">rows_utility</span><span class="p">)</span>
+
+                    <span class="n">data_opp_utility</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">rows_opp_utility</span><span class="p">)</span>
+
+                    <span class="n">data_product_score</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span>
+                        <span class="p">[</span><span class="n">rows_utility</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">rows_opp_utility</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rows_utility</span><span class="p">))])</span>
+
+                    <span class="n">data_social_welfare</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span>
+                        <span class="p">[</span><span class="n">rows_utility</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">rows_opp_utility</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rows_utility</span><span class="p">))])</span>
+
+                    <span class="n">data_nash_distances</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">row_nash_distances</span><span class="p">)</span>
+
+                    <span class="n">data_time</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">rows_acceptance</span><span class="p">)</span>
+
+                    <span class="n">data_acceptance_rate</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rows_acceptance</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">rows_utility</span><span class="p">)</span>
+
+        <span class="n">sorted_agent_names</span><span class="p">,</span> <span class="n">sorted_map</span> <span class="o">=</span> <span class="n">sort_y_axis</span><span class="p">(</span><span class="n">agent_names</span><span class="p">,</span> <span class="n">agent_names</span><span class="p">,</span> <span class="n">data_utility</span><span class="p">)</span>
+
+        <span class="n">draw_heatmap</span><span class="p">(</span><span class="n">sorted_map</span><span class="p">,</span> <span class="n">sorted_agent_names</span><span class="p">,</span> <span class="n">sorted_agent_names</span><span class="p">,</span>
+                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s2">&quot;opponent_based_individual_utility&quot;</span><span class="p">),</span> <span class="s2">&quot;Opponent&quot;</span><span class="p">,</span> <span class="s2">&quot;Agent&quot;</span><span class="p">)</span>
+
+        <span class="n">sorted_agent_names</span><span class="p">,</span> <span class="n">sorted_map</span> <span class="o">=</span> <span class="n">sort_y_axis</span><span class="p">(</span><span class="n">agent_names</span><span class="p">,</span> <span class="n">agent_names</span><span class="p">,</span> <span class="n">data_opp_utility</span><span class="p">)</span>
+
+        <span class="n">draw_heatmap</span><span class="p">(</span><span class="n">sorted_map</span><span class="p">,</span> <span class="n">sorted_agent_names</span><span class="p">,</span> <span class="n">sorted_agent_names</span><span class="p">,</span>
+                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s2">&quot;opponent_based_opponent_utility&quot;</span><span class="p">),</span> <span class="s2">&quot;Opponent&quot;</span><span class="p">,</span> <span class="s2">&quot;Agent&quot;</span><span class="p">)</span>
+
+        <span class="n">sorted_agent_names</span><span class="p">,</span> <span class="n">sorted_map</span> <span class="o">=</span> <span class="n">sort_y_axis</span><span class="p">(</span><span class="n">agent_names</span><span class="p">,</span> <span class="n">agent_names</span><span class="p">,</span> <span class="n">data_product_score</span><span class="p">)</span>
+
+        <span class="n">draw_heatmap</span><span class="p">(</span><span class="n">sorted_map</span><span class="p">,</span> <span class="n">sorted_agent_names</span><span class="p">,</span> <span class="n">sorted_agent_names</span><span class="p">,</span>
+                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s2">&quot;opponent_based_product_score&quot;</span><span class="p">),</span> <span class="s2">&quot;Opponent&quot;</span><span class="p">,</span> <span class="s2">&quot;Agent&quot;</span><span class="p">)</span>
+
+        <span class="n">sorted_agent_names</span><span class="p">,</span> <span class="n">sorted_map</span> <span class="o">=</span> <span class="n">sort_y_axis</span><span class="p">(</span><span class="n">agent_names</span><span class="p">,</span> <span class="n">agent_names</span><span class="p">,</span> <span class="n">data_social_welfare</span><span class="p">)</span>
+
+        <span class="n">draw_heatmap</span><span class="p">(</span><span class="n">sorted_map</span><span class="p">,</span> <span class="n">sorted_agent_names</span><span class="p">,</span> <span class="n">sorted_agent_names</span><span class="p">,</span>
+                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s2">&quot;opponent_based_social_welfare&quot;</span><span class="p">),</span> <span class="s2">&quot;Opponent&quot;</span><span class="p">,</span> <span class="s2">&quot;Agent&quot;</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">sorted_agent_names</span><span class="p">,</span> <span class="n">sorted_map</span> <span class="o">=</span> <span class="n">sort_y_axis</span><span class="p">(</span><span class="n">agent_names</span><span class="p">,</span> <span class="n">agent_names</span><span class="p">,</span> <span class="n">data_nash_distances</span><span class="p">,</span> <span class="n">descending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">draw_heatmap</span><span class="p">(</span><span class="n">sorted_map</span><span class="p">,</span> <span class="n">sorted_agent_names</span><span class="p">,</span> <span class="n">sorted_agent_names</span><span class="p">,</span>
+                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s2">&quot;opponent_based_nash_distances&quot;</span><span class="p">),</span> <span class="s2">&quot;Opponent&quot;</span><span class="p">,</span> <span class="s2">&quot;Agent&quot;</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                     <span class="n">vmax</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">sorted_agent_names</span><span class="p">,</span> <span class="n">sorted_map</span> <span class="o">=</span> <span class="n">sort_y_axis</span><span class="p">(</span><span class="n">agent_names</span><span class="p">,</span> <span class="n">agent_names</span><span class="p">,</span> <span class="n">data_time</span><span class="p">)</span>
+
+        <span class="n">draw_heatmap</span><span class="p">(</span><span class="n">sorted_map</span><span class="p">,</span> <span class="n">sorted_agent_names</span><span class="p">,</span> <span class="n">sorted_agent_names</span><span class="p">,</span>
+                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s2">&quot;opponent_based_agreement_time&quot;</span><span class="p">),</span> <span class="s2">&quot;Opponent&quot;</span><span class="p">,</span> <span class="s2">&quot;Agent&quot;</span><span class="p">)</span>
+
+        <span class="n">sorted_agent_names</span><span class="p">,</span> <span class="n">sorted_map</span> <span class="o">=</span> <span class="n">sort_y_axis</span><span class="p">(</span><span class="n">agent_names</span><span class="p">,</span> <span class="n">agent_names</span><span class="p">,</span> <span class="n">data_acceptance_rate</span><span class="p">)</span>
+
+        <span class="n">draw_heatmap</span><span class="p">(</span><span class="n">sorted_map</span><span class="p">,</span> <span class="n">sorted_agent_names</span><span class="p">,</span> <span class="n">sorted_agent_names</span><span class="p">,</span>
+                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s2">&quot;opponent_based_agreement_rate&quot;</span><span class="p">),</span> <span class="s2">&quot;Opponent&quot;</span><span class="p">,</span> <span class="s2">&quot;Agent&quot;</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;.0%&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="FinalGraphsLogger.draw_domain_based">
+<a class="viewcode-back" href="../../../nenv.logger.html#nenv.logger.FinalGraphsLogger.FinalGraphsLogger.draw_domain_based">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw_domain_based</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tournament_results</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">agent_names</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">domain_names</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">directory</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                          <span class="n">domain_set</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="n">data_utility</span> <span class="o">=</span> <span class="p">[[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">domain_names</span><span class="p">))]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">agent_names</span><span class="p">))]</span>
+        <span class="n">data_opp_utility</span> <span class="o">=</span> <span class="p">[[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">domain_names</span><span class="p">))]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">agent_names</span><span class="p">))]</span>
+        <span class="n">data_product_score</span> <span class="o">=</span> <span class="p">[[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">domain_names</span><span class="p">))]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">agent_names</span><span class="p">))]</span>
+        <span class="n">data_nash_distances</span> <span class="o">=</span> <span class="p">[[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">domain_names</span><span class="p">))]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">agent_names</span><span class="p">))]</span>
+        <span class="n">data_social_welfare</span> <span class="o">=</span> <span class="p">[[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">domain_names</span><span class="p">))]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">agent_names</span><span class="p">))]</span>
+        <span class="n">data_time</span> <span class="o">=</span> <span class="p">[[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">domain_names</span><span class="p">))]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">agent_names</span><span class="p">))]</span>
+        <span class="n">data_acceptance_rate</span> <span class="o">=</span> <span class="p">[[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">domain_names</span><span class="p">))]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">agent_names</span><span class="p">))]</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">agent_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">agent_names</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">domain_name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">domain_names</span><span class="p">):</span>
+                <span class="c1"># Individual Utility</span>
+                <span class="n">rows_utility</span> <span class="o">=</span> <span class="n">tournament_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentA&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                      <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;DomainName&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">domain_name</span><span class="p">),</span>
+                <span class="s2">&quot;AgentAUtility&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+
+                <span class="n">rows_utility</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">tournament_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentB&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                           <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;DomainName&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">domain_name</span><span class="p">),</span>
+                <span class="s2">&quot;AgentBUtility&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+
+                <span class="c1"># Opponent Utility</span>
+
+                <span class="n">rows_opp_utility</span> <span class="o">=</span> <span class="n">tournament_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentB&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                          <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span>
+                                                               <span class="s2">&quot;DomainName&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">domain_name</span><span class="p">),</span> <span class="s2">&quot;AgentAUtility&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+
+                <span class="n">rows_opp_utility</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">tournament_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentA&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                               <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;DomainName&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">domain_name</span><span class="p">),</span>
+                <span class="s2">&quot;AgentBUtility&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+
+                <span class="c1"># Nash Distance</span>
+
+                <span class="n">row_nash_distances</span> <span class="o">=</span> <span class="n">tournament_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentA&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                            <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;DomainName&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">domain_name</span><span class="p">),</span>
+                <span class="s2">&quot;NashDistance&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+
+                <span class="n">row_nash_distances</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">tournament_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentB&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                                 <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;DomainName&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">domain_name</span><span class="p">),</span>
+                <span class="s2">&quot;NashDistance&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+
+                <span class="c1"># Acceptance Times</span>
+
+                <span class="n">rows_time</span> <span class="o">=</span> <span class="n">tournament_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentA&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                   <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentB&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">agent_name</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                   <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;DomainName&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">domain_name</span><span class="p">),</span>
+                <span class="s2">&quot;Time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+
+                <span class="n">rows_time</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">tournament_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentB&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                        <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentA&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">agent_name</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                        <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;DomainName&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">domain_name</span><span class="p">),</span>
+                <span class="s2">&quot;Time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+
+                <span class="n">rows_time</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">tournament_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentB&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                        <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentA&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                        <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;DomainName&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">domain_name</span><span class="p">),</span>
+                <span class="s2">&quot;Time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+
+                <span class="c1"># Number of acceptance</span>
+
+                <span class="n">rows_acceptance</span> <span class="o">=</span> <span class="n">tournament_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentA&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                         <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentB&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">agent_name</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                         <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;DomainName&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">domain_name</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                         <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;Result&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Acceptance&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;Time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">()</span>
+
+                <span class="n">rows_acceptance</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">tournament_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentB&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                              <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentA&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">agent_name</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                              <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;DomainName&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">domain_name</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                              <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;Result&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Acceptance&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;Time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+
+                <span class="n">rows_acceptance</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">tournament_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentB&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                              <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;AgentA&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">agent_name</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                              <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;DomainName&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">domain_name</span><span class="p">)</span> <span class="o">&amp;</span>
+                                                              <span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;Result&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Acceptance&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;Time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rows_utility</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">data_utility</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">rows_utility</span><span class="p">)</span>
+                    <span class="n">data_opp_utility</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">rows_opp_utility</span><span class="p">)</span>
+                    <span class="n">data_product_score</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span>
+                        <span class="p">[</span><span class="n">rows_utility</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">rows_opp_utility</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rows_utility</span><span class="p">))])</span>
+                    <span class="n">data_nash_distances</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">row_nash_distances</span><span class="p">)</span>
+                    <span class="n">data_social_welfare</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span>
+                        <span class="p">[</span><span class="n">rows_utility</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">rows_opp_utility</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rows_utility</span><span class="p">))])</span>
+                    <span class="n">data_time</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">rows_time</span><span class="p">)</span>
+                    <span class="n">data_acceptance_rate</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rows_acceptance</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">rows_time</span><span class="p">)</span>
+
+        <span class="n">domain_names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Domain</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">domain_name</span> <span class="k">for</span> <span class="n">domain_name</span> <span class="ow">in</span> <span class="n">domain_names</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">domain_set</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="n">domain_set</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="n">domain_set</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="n">sorted_agent_names</span><span class="p">,</span> <span class="n">sorted_map</span> <span class="o">=</span> <span class="n">sort_y_axis</span><span class="p">(</span><span class="n">agent_names</span><span class="p">,</span> <span class="n">domain_names</span><span class="p">,</span> <span class="n">data_utility</span><span class="p">)</span>
+
+        <span class="n">draw_heatmap</span><span class="p">(</span><span class="n">sorted_map</span><span class="p">,</span> <span class="n">domain_names</span><span class="p">,</span> <span class="n">sorted_agent_names</span><span class="p">,</span>
+                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;domain_based_individual_utility</span><span class="si">{</span><span class="n">domain_set</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span> <span class="s2">&quot;Domains&quot;</span><span class="p">,</span> <span class="s2">&quot;Agents&quot;</span><span class="p">)</span>
+
+        <span class="n">sorted_agent_names</span><span class="p">,</span> <span class="n">sorted_map</span> <span class="o">=</span> <span class="n">sort_y_axis</span><span class="p">(</span><span class="n">agent_names</span><span class="p">,</span> <span class="n">domain_names</span><span class="p">,</span> <span class="n">data_opp_utility</span><span class="p">)</span>
+
+        <span class="n">draw_heatmap</span><span class="p">(</span><span class="n">sorted_map</span><span class="p">,</span> <span class="n">domain_names</span><span class="p">,</span> <span class="n">sorted_agent_names</span><span class="p">,</span>
+                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;domain_based_opponent_utility</span><span class="si">{</span><span class="n">domain_set</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span> <span class="s2">&quot;Domains&quot;</span><span class="p">,</span> <span class="s2">&quot;Agents&quot;</span><span class="p">)</span>
+
+        <span class="n">sorted_agent_names</span><span class="p">,</span> <span class="n">sorted_map</span> <span class="o">=</span> <span class="n">sort_y_axis</span><span class="p">(</span><span class="n">agent_names</span><span class="p">,</span> <span class="n">domain_names</span><span class="p">,</span> <span class="n">data_product_score</span><span class="p">)</span>
+
+        <span class="n">draw_heatmap</span><span class="p">(</span><span class="n">sorted_map</span><span class="p">,</span> <span class="n">domain_names</span><span class="p">,</span> <span class="n">sorted_agent_names</span><span class="p">,</span>
+                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;domain_based_product_score</span><span class="si">{</span><span class="n">domain_set</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span> <span class="s2">&quot;Domains&quot;</span><span class="p">,</span> <span class="s2">&quot;Agents&quot;</span><span class="p">)</span>
+
+        <span class="n">sorted_agent_names</span><span class="p">,</span> <span class="n">sorted_map</span> <span class="o">=</span> <span class="n">sort_y_axis</span><span class="p">(</span><span class="n">agent_names</span><span class="p">,</span> <span class="n">domain_names</span><span class="p">,</span> <span class="n">data_nash_distances</span><span class="p">,</span> <span class="n">descending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">draw_heatmap</span><span class="p">(</span><span class="n">sorted_map</span><span class="p">,</span> <span class="n">domain_names</span><span class="p">,</span> <span class="n">sorted_agent_names</span><span class="p">,</span>
+                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;domain_based_nash_distance</span><span class="si">{</span><span class="n">domain_set</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span> <span class="s2">&quot;Domains&quot;</span><span class="p">,</span> <span class="s2">&quot;Agents&quot;</span><span class="p">,</span>
+                     <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">auto_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">sorted_agent_names</span><span class="p">,</span> <span class="n">sorted_map</span> <span class="o">=</span> <span class="n">sort_y_axis</span><span class="p">(</span><span class="n">agent_names</span><span class="p">,</span> <span class="n">domain_names</span><span class="p">,</span> <span class="n">data_social_welfare</span><span class="p">)</span>
+
+        <span class="n">draw_heatmap</span><span class="p">(</span><span class="n">sorted_map</span><span class="p">,</span> <span class="n">domain_names</span><span class="p">,</span> <span class="n">sorted_agent_names</span><span class="p">,</span>
+                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;domain_based_social_welfare</span><span class="si">{</span><span class="n">domain_set</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span> <span class="s2">&quot;Domains&quot;</span><span class="p">,</span> <span class="s2">&quot;Agents&quot;</span><span class="p">,</span>
+                     <span class="n">auto_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">sorted_agent_names</span><span class="p">,</span> <span class="n">sorted_map</span> <span class="o">=</span> <span class="n">sort_y_axis</span><span class="p">(</span><span class="n">agent_names</span><span class="p">,</span> <span class="n">domain_names</span><span class="p">,</span> <span class="n">data_time</span><span class="p">)</span>
+
+        <span class="n">draw_heatmap</span><span class="p">(</span><span class="n">sorted_map</span><span class="p">,</span> <span class="n">domain_names</span><span class="p">,</span> <span class="n">sorted_agent_names</span><span class="p">,</span>
+                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;domain_based_agreement_time</span><span class="si">{</span><span class="n">domain_set</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span> <span class="s2">&quot;Domains&quot;</span><span class="p">,</span> <span class="s2">&quot;Agents&quot;</span><span class="p">)</span>
+
+        <span class="n">sorted_agent_names</span><span class="p">,</span> <span class="n">sorted_map</span> <span class="o">=</span> <span class="n">sort_y_axis</span><span class="p">(</span><span class="n">agent_names</span><span class="p">,</span> <span class="n">domain_names</span><span class="p">,</span> <span class="n">data_acceptance_rate</span><span class="p">)</span>
+
+        <span class="n">draw_heatmap</span><span class="p">(</span><span class="n">sorted_map</span><span class="p">,</span> <span class="n">domain_names</span><span class="p">,</span> <span class="n">sorted_agent_names</span><span class="p">,</span>
+                     <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;domain_based_agreement_rate</span><span class="si">{</span><span class="n">domain_set</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">),</span> <span class="s2">&quot;Domains&quot;</span><span class="p">,</span> <span class="s2">&quot;Agents&quot;</span><span class="p">,</span>
+                     <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;.0%&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="sort_y_axis">
+<a class="viewcode-back" href="../../../nenv.logger.html#nenv.logger.FinalGraphsLogger.sort_y_axis">[docs]</a>
+<span class="k">def</span> <span class="nf">sort_y_axis</span><span class="p">(</span><span class="n">labels_y</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">labels_x</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">map_values</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="kc">None</span><span class="p">]]],</span>
+                <span class="n">descending</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method sorts the map based on the mean of row.</span>
+
+<span class="sd">        :param labels_y: y-axis Labels</span>
+<span class="sd">        :param labels_x: x-axis Labels</span>
+<span class="sd">        :param map_values: Map that will be sorted.</span>
+<span class="sd">        :param descending: Whether the order is descending or not</span>
+<span class="sd">        :return: Sorted list of y-axis labels and map</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">means</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">map_values</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels_x</span><span class="p">))</span> <span class="k">if</span> <span class="n">map_values</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels_y</span><span class="p">))])</span>
+
+    <span class="n">indices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels_y</span><span class="p">)))</span>
+
+    <span class="n">indices</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">means</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="n">descending</span><span class="p">)</span>
+
+    <span class="n">sorted_labels</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">:</span>
+        <span class="n">sorted_labels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">labels_y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+    <span class="n">sorted_map</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">both_axis</span> <span class="o">=</span> <span class="n">labels_y</span> <span class="o">==</span> <span class="n">labels_x</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">indices</span><span class="p">:</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">indices</span> <span class="k">if</span> <span class="n">both_axis</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels_x</span><span class="p">)))</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">:</span>
+            <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">map_values</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">])</span>
+
+        <span class="n">sorted_map</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">sorted_labels</span><span class="p">,</span> <span class="n">sorted_map</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, aniltrue.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

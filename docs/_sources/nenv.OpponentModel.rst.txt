@@ -1,0 +1,61 @@
+nenv.OpponentModel package
+==========================
+
+Submodules
+----------
+
+nenv.OpponentModel.AbstractOpponentModel module
+-----------------------------------------------
+
+.. automodule:: nenv.OpponentModel.AbstractOpponentModel
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nenv.OpponentModel.BayesianOpponentModel module
+-----------------------------------------------
+
+.. automodule:: nenv.OpponentModel.BayesianOpponentModel
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nenv.OpponentModel.ClassicFrequencyOpponentModel module
+-------------------------------------------------------
+
+.. automodule:: nenv.OpponentModel.ClassicFrequencyOpponentModel
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nenv.OpponentModel.ConflictBasedOpponentModel module
+----------------------------------------------------
+
+.. automodule:: nenv.OpponentModel.ConflictBasedOpponentModel
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nenv.OpponentModel.EstimatedPreference module
+---------------------------------------------
+
+.. automodule:: nenv.OpponentModel.EstimatedPreference
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nenv.OpponentModel.WindowedFrequencyOpponentModel module
+--------------------------------------------------------
+
+.. automodule:: nenv.OpponentModel.WindowedFrequencyOpponentModel
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: nenv.OpponentModel
+   :members:
+   :undoc-members:
+   :show-inheritance:

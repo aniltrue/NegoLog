@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nenv.SessionLogs &mdash; NegoLog 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            NegoLog
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">NegoLog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NegoLog</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">nenv.SessionLogs</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for nenv.SessionLogs</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+
+<span class="kn">import</span> <span class="nn">nenv</span>
+<span class="kn">from</span> <span class="nn">nenv.Action</span> <span class="kn">import</span> <span class="n">Action</span>
+<span class="kn">from</span> <span class="nn">nenv.Agent</span> <span class="kn">import</span> <span class="n">AbstractAgent</span>
+<span class="kn">from</span> <span class="nn">nenv.Bid</span> <span class="kn">import</span> <span class="n">Bid</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">nenv.utils.ExcelLog</span> <span class="kn">import</span> <span class="n">ExcelLog</span><span class="p">,</span> <span class="n">LogRow</span><span class="p">,</span> <span class="n">update</span>
+
+
+<div class="viewcode-block" id="SessionLogs">
+<a class="viewcode-back" href="../../nenv.html#nenv.SessionLogs.SessionLogs">[docs]</a>
+<span class="k">class</span> <span class="nc">SessionLogs</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        SessionEstimator simulates the negotiation to generate additional logs after the tournament.</span>
+<span class="sd">        It takes the previous session logs and simulates for the loggers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">agentA</span><span class="p">:</span> <span class="n">AbstractAgent</span>               <span class="c1">#: AgentA object</span>
+    <span class="n">agentB</span><span class="p">:</span> <span class="n">AbstractAgent</span>               <span class="c1">#: AgentB object</span>
+    <span class="n">session_log</span><span class="p">:</span> <span class="n">ExcelLog</span>               <span class="c1">#: Session log</span>
+    <span class="n">loggers</span><span class="p">:</span> <span class="nb">list</span>                       <span class="c1">#: List of Loggers</span>
+    <span class="n">log_path</span><span class="p">:</span> <span class="nb">str</span>                       <span class="c1">#: Session Log csv path</span>
+    <span class="n">action_history</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Action</span><span class="p">]</span>        <span class="c1">#: List of Action that the agents have taken</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agentA</span><span class="p">:</span> <span class="n">AbstractAgent</span><span class="p">,</span> <span class="n">agentB</span><span class="p">:</span> <span class="n">AbstractAgent</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">loggers</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">initiate_agents</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Constructor</span>
+
+<span class="sd">            :param agentA: AgentA object</span>
+<span class="sd">            :param agentB: AgentB object</span>
+<span class="sd">            :param path: Session log file path</span>
+<span class="sd">            :param loggers: List of logger</span>
+<span class="sd">            :param initiate_agents: Whether call *initiate* method of the agents, or not. *Default*: *False*</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agentA</span> <span class="o">=</span> <span class="n">agentA</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">agentB</span> <span class="o">=</span> <span class="n">agentB</span>
+
+        <span class="k">if</span> <span class="n">initiate_agents</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">agentA</span><span class="o">.</span><span class="n">initiate</span><span class="p">(</span><span class="s2">&quot;Opponent&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">agentB</span><span class="o">.</span><span class="n">initiate</span><span class="p">(</span><span class="s2">&quot;Opponent&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_path</span> <span class="o">=</span> <span class="n">path</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">loggers</span> <span class="o">=</span> <span class="n">loggers</span>
+
+        <span class="n">sheet_names</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Session&quot;</span><span class="p">}</span>
+        <span class="k">for</span> <span class="n">estimator</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agentA</span><span class="o">.</span><span class="n">estimators</span><span class="p">:</span>
+            <span class="n">sheet_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">estimator</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_history</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">logger</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loggers</span><span class="p">:</span>
+            <span class="n">logger_sheet_names</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">before_session_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">sheet_name</span> <span class="ow">in</span> <span class="n">logger_sheet_names</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">sheet_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sheet_names</span><span class="p">:</span>
+                    <span class="n">sheet_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">sheet_name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">session_log</span> <span class="o">=</span> <span class="n">ExcelLog</span><span class="p">(</span><span class="n">sheet_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_path</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SessionLogs.parse_bid">
+<a class="viewcode-back" href="../../nenv.html#nenv.SessionLogs.SessionLogs.parse_bid">[docs]</a>
+    <span class="k">def</span> <span class="nf">parse_bid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bid_content</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Bid</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method converts string to Bid object</span>
+
+<span class="sd">            :param bid_content: String</span>
+<span class="sd">            :return: Bid object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">bid_content</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Bid</span><span class="p">({})</span>
+
+        <span class="n">bid_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">bid_content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">Bid</span><span class="p">(</span><span class="n">bid_dict</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SessionLogs.process_row">
+<a class="viewcode-back" href="../../nenv.html#nenv.SessionLogs.SessionLogs.process_row">[docs]</a>
+    <span class="k">def</span> <span class="nf">process_row</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">row_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">row_tournament</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method simulates the round row in the session log</span>
+
+<span class="sd">            :param row: Current log row</span>
+<span class="sd">            :param row_index: Index of the row</span>
+<span class="sd">            :param row_tournament: Tournament log row</span>
+<span class="sd">            :return: Updated log row</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">bid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_bid</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;BidContent&quot;</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;Action&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Accept&#39;</span><span class="p">:</span>
+            <span class="n">row_tournament</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;Round&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;Round&quot;</span><span class="p">])</span>
+            <span class="n">row_tournament</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;Time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;Time&quot;</span><span class="p">])</span>
+            <span class="n">row_tournament</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;NumOffer&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_history</span><span class="p">)</span>
+            <span class="n">row_tournament</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;Who&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;Who&quot;</span><span class="p">]</span>
+            <span class="n">row_tournament</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;Result&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Acceptance&#39;</span>
+            <span class="n">row_tournament</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;AgentAUtility&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;AgentAUtility&quot;</span><span class="p">]</span>
+            <span class="n">row_tournament</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;AgentBUtility&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;AgentBUtility&quot;</span><span class="p">]</span>
+            <span class="n">row_tournament</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;ProductScore&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;ProductScore&quot;</span><span class="p">]</span>
+            <span class="n">row_tournament</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;SocialWelfare&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;SocialWelfare&quot;</span><span class="p">]</span>
+            <span class="n">row_tournament</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;BidContent&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;BidContent&quot;</span><span class="p">]</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">action_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nenv</span><span class="o">.</span><span class="n">Accept</span><span class="p">(</span><span class="n">bid</span><span class="p">))</span>
+
+            <span class="k">return</span> <span class="n">row</span>
+
+
+        <span class="n">estimators</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">agentB</span><span class="o">.</span><span class="n">estimators</span> <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;Who&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;A&#39;</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">agentA</span><span class="o">.</span><span class="n">estimators</span>
+
+        <span class="n">t</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;Time&quot;</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Action</span><span class="p">(</span><span class="n">bid</span><span class="p">))</span>
+
+        <span class="c1"># Update estimators</span>
+        <span class="k">for</span> <span class="n">estimator</span> <span class="ow">in</span> <span class="n">estimators</span><span class="p">:</span>
+            <span class="n">estimator</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">bid</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+
+        <span class="c1"># Update each sheet with loggers</span>
+        <span class="k">for</span> <span class="n">logger</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loggers</span><span class="p">:</span>
+            <span class="n">logger_row</span> <span class="o">=</span> <span class="n">logger</span><span class="o">.</span><span class="n">on_offer</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;Who&quot;</span><span class="p">],</span> <span class="n">bid</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">session_log</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">logger_row</span><span class="p">,</span> <span class="n">row_index</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">row</span></div>
+
+
+<div class="viewcode-block" id="SessionLogs.process_end">
+<a class="viewcode-back" href="../../nenv.html#nenv.SessionLogs.SessionLogs.process_end">[docs]</a>
+    <span class="k">def</span> <span class="nf">process_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">:</span> <span class="n">LogRow</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LogRow</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method is called when simulated session ends.</span>
+
+<span class="sd">            :param row: Current tournament row</span>
+<span class="sd">            :return: Updated tournament row</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">logger</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loggers</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;Result&#39;</span> <span class="ow">in</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;Result&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Acceptance&#39;</span><span class="p">:</span>
+                <span class="n">update</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">logger</span><span class="o">.</span><span class="n">on_accept</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;Who&quot;</span><span class="p">],</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">parse_bid</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;BidContent&quot;</span><span class="p">]),</span>
+                                             <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;Time&quot;</span><span class="p">]),</span>
+                                             <span class="bp">self</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">agent_a_utility</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">agentA</span><span class="o">.</span><span class="n">preference</span><span class="o">.</span><span class="n">reservation_value</span>
+                <span class="n">agent_b_utility</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">agentB</span><span class="o">.</span><span class="n">preference</span><span class="o">.</span><span class="n">reservation_value</span>
+
+                <span class="n">row</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;Round&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_history</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+                <span class="n">row</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;Time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+                <span class="n">row</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;NumOffer&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_history</span><span class="p">)</span>
+                <span class="n">row</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;Who&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;-&quot;</span>
+                <span class="n">row</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;Result&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Failed&#39;</span>
+                <span class="n">row</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;AgentAUtility&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">agent_a_utility</span>
+                <span class="n">row</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;AgentBUtility&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">agent_b_utility</span>
+                <span class="n">row</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;ProductScore&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">agent_a_utility</span> <span class="o">*</span> <span class="n">agent_b_utility</span>
+                <span class="n">row</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;SocialWelfare&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">agent_a_utility</span> <span class="o">+</span> <span class="n">agent_b_utility</span>
+                <span class="n">row</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;BidContent&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+                <span class="n">update</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">logger</span><span class="o">.</span><span class="n">on_fail</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;Time&quot;</span><span class="p">]),</span> <span class="bp">self</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">row</span></div>
+
+
+<div class="viewcode-block" id="SessionLogs.start">
+<a class="viewcode-back" href="../../nenv.html#nenv.SessionLogs.SessionLogs.start">[docs]</a>
+    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row_tournament</span><span class="p">:</span> <span class="n">LogRow</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LogRow</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method simulates the all rounds for the estimators. Then, it updates the session log file.</span>
+
+<span class="sd">            :return: LogRow of current session</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">session_row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_log</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="s2">&quot;Session&quot;</span><span class="p">]):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">process_row</span><span class="p">(</span><span class="n">session_row</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">row_tournament</span><span class="p">)</span>
+
+        <span class="c1"># Save log</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session_log</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_path</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">process_end</span><span class="p">(</span><span class="n">row_tournament</span><span class="p">)</span>
+
+        <span class="c1"># End session logs</span>
+        <span class="k">for</span> <span class="n">logger</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loggers</span><span class="p">:</span>
+            <span class="n">update</span><span class="p">(</span><span class="n">row_tournament</span><span class="p">,</span> <span class="n">logger</span><span class="o">.</span><span class="n">on_session_end</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="bp">self</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">row_tournament</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, aniltrue.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

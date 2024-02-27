@@ -1,0 +1,85 @@
+nenv.utils package
+==================
+
+Submodules
+----------
+
+nenv.utils.DynamicImport module
+-------------------------------
+
+.. automodule:: nenv.utils.DynamicImport
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nenv.utils.ExcelLog module
+--------------------------
+
+.. automodule:: nenv.utils.ExcelLog
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nenv.utils.KillableThread module
+--------------------------------
+
+.. automodule:: nenv.utils.KillableThread
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nenv.utils.Move module
+----------------------
+
+.. automodule:: nenv.utils.Move
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nenv.utils.ProcessManager module
+--------------------------------
+
+.. automodule:: nenv.utils.ProcessManager
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nenv.utils.SessionOps module
+----------------------------
+
+.. automodule:: nenv.utils.SessionOps
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nenv.utils.TournamentProcessMonitor module
+------------------------------------------
+
+.. automodule:: nenv.utils.TournamentProcessMonitor
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nenv.utils.TypeCheck module
+---------------------------
+
+.. automodule:: nenv.utils.TypeCheck
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nenv.utils.tournament\_graphs module
+------------------------------------
+
+.. automodule:: nenv.utils.tournament_graphs
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: nenv.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:

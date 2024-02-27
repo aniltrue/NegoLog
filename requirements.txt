@@ -1,0 +1,12 @@
+numpy~=1.26.3
+pandas~=2.2.0
+matplotlib~=3.8.2
+seaborn~=0.13.1
+scipy~=1.12.0
+scikit-learn~=1.4.0
+openpyxl~=3.1.2
+numba~=0.58.0
+PyYAML~=6.0.1
+plotly~=5.18.0
+Flask~=3.0.2
+Flask-Cors~=4.0.0

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nenv.Agent &mdash; NegoLog 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            NegoLog
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">NegoLog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NegoLog</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">nenv.Agent</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for nenv.Agent</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">nenv</span>
+<span class="kn">from</span> <span class="nn">nenv.Preference</span> <span class="kn">import</span> <span class="n">Preference</span>
+<span class="kn">from</span> <span class="nn">nenv.Bid</span> <span class="kn">import</span> <span class="n">Bid</span>
+<span class="kn">from</span> <span class="nn">nenv.Action</span> <span class="kn">import</span> <span class="n">Action</span><span class="p">,</span> <span class="n">Accept</span>
+<span class="kn">from</span> <span class="nn">nenv.OpponentModel</span> <span class="kn">import</span> <span class="n">AbstractOpponentModel</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span><span class="p">,</span> <span class="n">ABC</span>
+
+
+<div class="viewcode-block" id="AbstractAgent">
+<a class="viewcode-back" href="../../nenv.html#nenv.Agent.AbstractAgent">[docs]</a>
+<span class="k">class</span> <span class="nc">AbstractAgent</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Agents aim to reach a joint decision within a limited time through negotiation without fully revealing their</span>
+<span class="sd">        preferences. During negotiation, agents must decide what to offer and when to accept the opponent&#39;s offer. To</span>
+<span class="sd">        facilitate this process, this abstract class provides a framework for developing negotiating agents. Each agent</span>
+<span class="sd">        must extend this abstract class to implement its specific negotiation strategy.</span>
+
+<span class="sd">        **Components**:</span>
+<span class="sd">            Negotiating agents can be formulated as consisting of three main components [BOAComponents]_.</span>
+<span class="sd">                - **Bidding Strategy**:  Determines what to offer.</span>
+<span class="sd">                - **Acceptance Strategy**: Decides when to accept the opponent&#39;s offer</span>
+<span class="sd">                - **Opponent Model**: Estimates the preferences of the opponent.</span>
+
+<span class="sd">            By extending this class, *bidding strategy* and *acceptance strategy* are implemented to develop an agent.</span>
+<span class="sd">            To implement an opponent model, see also *AbstractOpponentModel* class.</span>
+
+<span class="sd">        **Methods**:</span>
+<span class="sd">            To extend this abstract class, following methods must be implemented.</span>
+<span class="sd">                - **initiate**: Use this method to initialize required variables instead of the constructor.</span>
+<span class="sd">                - **name**: Each agent must have a unique name for logging purposes.</span>
+<span class="sd">                - **receive_offer**: This method is called when an offer is received. Generally, the opponent model can be updated in this method.</span>
+<span class="sd">                - **act**: This method determines the action that the agent takes. It should include the *bidding strategy* and *acceptance strategy*.</span>
+<span class="sd">                - **terminate**: This method is called at the end of the negotiation session.</span>
+
+<span class="sd">        .. [BOAComponents] Tim Baarslag, Koen Hindriks, Mark Hendrikx, Alexander Dirkzwager, and Catholijn Jonker. 2014. Decoupling Negotiating Agents to Explore the Space of Negotiation Strategies. Springer Japan, Tokyo, 61–83. &lt;https://doi.org/10.1007/978-4-431-54758-7_4&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">preference</span><span class="p">:</span> <span class="n">Preference</span>                      <span class="c1">#: Provided preferences for the agent</span>
+    <span class="n">last_received_bids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Bid</span><span class="p">]</span>               <span class="c1">#: The history of received bids from the opponent</span>
+    <span class="n">estimators</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AbstractOpponentModel</span><span class="p">]</span>     <span class="c1">#: The list of Provided Opponent Model by the tournament settings</span>
+    <span class="n">session_time</span><span class="p">:</span> <span class="nb">int</span>                           <span class="c1">#: The maximum time (in terms of seconds) of the current session</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preference</span><span class="p">:</span> <span class="n">Preference</span><span class="p">,</span> <span class="n">session_time</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">estimators</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AbstractOpponentModel</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Constructor of AbstractAgent class</span>
+<span class="sd">            Agent must be a subclass of AbstractAgent. Each Agent implements necessary methods to run.</span>
+
+<span class="sd">            :param preference: Agent&#39;s preference</span>
+<span class="sd">            :param session_time: Maximum time (in terms of seconds) in that negotiation session.</span>
+<span class="sd">            :param estimators: THe list of provided estimators.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preference</span> <span class="o">=</span> <span class="n">preference</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_received_bids</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estimators</span> <span class="o">=</span> <span class="n">estimators</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session_time</span> <span class="o">=</span> <span class="n">session_time</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Each agent must have a unique name for the loggers.</span>
+
+<span class="sd">            :return: The name of Agent as string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span>
+
+<div class="viewcode-block" id="AbstractAgent.initiate">
+<a class="viewcode-back" href="../../nenv.html#nenv.Agent.AbstractAgent.initiate">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">initiate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">opponent_name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method is called before the negotiation session starts.</span>
+<span class="sd">            You should initiate your agent in this method. Do not use constructor.</span>
+
+<span class="sd">            :param opponent_name: Opponent name if learning is available, otherwise None</span>
+<span class="sd">            :return: Nothing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="AbstractAgent.receive_bid">
+<a class="viewcode-back" href="../../nenv.html#nenv.Agent.AbstractAgent.receive_bid">[docs]</a>
+    <span class="k">def</span> <span class="nf">receive_bid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bid</span><span class="p">:</span> <span class="n">Bid</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method is called when a bid received from the opponent. This method add the received bid into the</span>
+<span class="sd">            history. Then, it calls the receive_offer method.</span>
+
+<span class="sd">            For the agent implementation, implement your strategy in **receive_offer** method instead of this method.</span>
+
+<span class="sd">            :param bid: Received bid from the opponent</span>
+<span class="sd">            :param t: Current negotiation time</span>
+<span class="sd">            :return: Nothing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_bid</span> <span class="o">=</span> <span class="n">bid</span><span class="o">.</span><span class="n">copy_without_utility</span><span class="p">()</span>
+        <span class="n">_bid</span><span class="o">.</span><span class="n">utility</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preference</span><span class="o">.</span><span class="n">get_utility</span><span class="p">(</span><span class="n">_bid</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_received_bids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_bid</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">estimator</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">estimators</span><span class="p">:</span>
+            <span class="n">estimator</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_bid</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">receive_offer</span><span class="p">(</span><span class="n">_bid</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AbstractAgent.receive_offer">
+<a class="viewcode-back" href="../../nenv.html#nenv.Agent.AbstractAgent.receive_offer">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">receive_offer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bid</span><span class="p">:</span> <span class="n">Bid</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method is called when a bid received from the opponent. Implement your strategy in this method.</span>
+
+<span class="sd">            :param bid: Received bid from the opponent</span>
+<span class="sd">            :param t: Current negotiation time</span>
+<span class="sd">            :return: Nothing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="AbstractAgent.act">
+<a class="viewcode-back" href="../../nenv.html#nenv.Agent.AbstractAgent.act">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">act</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Action</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method is called by the negotiation session object to get the decision of the agent. The decision must</span>
+<span class="sd">            be an Action object. The decision can be making offer or accepting the opponent&#39;s offer:\n</span>
+<span class="sd">            - **Making offer**: You should return an **Offer** object such as: *nenv.Offer(bid)*</span>
+<span class="sd">            - **Accepting offer**: You should return an **Accept** object such as *nevn.Accept(bid)*, or in a simpler manner: *self.accept_action*</span>
+
+<span class="sd">            *Note* Do not forget to check whether the agent can accept the offer. Therefore, you can use **can_accept**</span>
+<span class="sd">            method to check. Otherwise, your agent will be failed and penalized.</span>
+
+<span class="sd">            :Example:</span>
+<span class="sd">                This example belongs to time-based linear bidding strategy and AC_Next acceptance strategy.</span>
+
+<span class="sd">                &gt;&gt;&gt; target_utility = max(self.preference.reservation_value, t)  # Do not offer a bid with the utility lower than reservation value</span>
+<span class="sd">                &gt;&gt;&gt; bid = self.preference.get_bid_at(target_utility)    # Select the closest bid to the target utility</span>
+<span class="sd">                &gt;&gt;&gt; if self.can_accept() and bid &lt;= self.last_received_bids[-1]:    # AC_Next acceptance strategy</span>
+<span class="sd">                &gt;&gt;&gt;     return self.accept_action   # Accept the opponent&#39;s offer</span>
+<span class="sd">                &gt;&gt;&gt;</span>
+<span class="sd">                &gt;&gt;&gt; return nenv.Offer(bid)  # Make an offer</span>
+
+<span class="sd">            :param t: Current negotiation time</span>
+<span class="sd">            :return: The decision of the agent as an Action object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="AbstractAgent.terminate">
+<a class="viewcode-back" href="../../nenv.html#nenv.Agent.AbstractAgent.terminate">[docs]</a>
+    <span class="k">def</span> <span class="nf">terminate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_accept</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">opponent_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method is called when the negotiation session end.</span>
+
+<span class="sd">            :param is_accept: Whether the negotiation is end with an acceptance, or not</span>
+<span class="sd">            :param opponent_name: The name of the opponent agent.</span>
+<span class="sd">            :param t: Current negotiation time</span>
+<span class="sd">            :return: Nothing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="AbstractAgent.can_accept">
+<a class="viewcode-back" href="../../nenv.html#nenv.Agent.AbstractAgent.can_accept">[docs]</a>
+    <span class="k">def</span> <span class="nf">can_accept</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method tells if the agent can accept the opponent&#39;s offer, or not.</span>
+<span class="sd">            Please, call this method to check before accepting the offer.</span>
+
+<span class="sd">            :return: Whether the agent can accept the opponent&#39;s offer, or not.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">last_received_bids</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">accept_action</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Accept</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method creates an Accept object in an easier manner.</span>
+
+<span class="sd">            :return: Accept object to accept the opponent&#39;s offer.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Accept</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">last_received_bids</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span></div>
+
+
+
+<span class="n">AgentClass</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;AgentClass&#39;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">AbstractAgent</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Type variable of AbstractAgent class to declare a type for a variable</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, aniltrue.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

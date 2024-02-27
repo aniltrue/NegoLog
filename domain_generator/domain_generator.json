@@ -1,0 +1,35 @@
+{
+ "0": {
+  "NUMBER_OF_DOMAIN": 1,
+  "issue_size_range": "3-6",
+  "value_size_range": "3-6",
+  "utility_range": "0.2:1",
+  "has_randomness": false
+ },
+ "1": {
+  "NUMBER_OF_DOMAIN": 1,
+  "issue_size_range": "3-6",
+  "value_size_range": "3-6",
+  "utility_range": "0.2:1"
+ },
+ "2": {
+  "NUMBER_OF_DOMAIN": 1,
+  "issue_size_range": "3-6",
+  "value_size_range": "3-6",
+  "value_boost": 0.5,
+  "balance_score_range": "0.1:1",
+  "utility_range": "0.2:1"
+ },
+ "3": {
+  "NUMBER_OF_DOMAIN": 1,
+  "issue_size_range": "3",
+  "value_size_range": "20",
+  "utility_range": "0.2:1"
+ },
+ "4": {
+  "NUMBER_OF_DOMAIN": 1,
+  "issue_size_range": "9",
+  "value_size_range": "3",
+  "utility_range": "0.2:1"
+ }
+}

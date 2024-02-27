@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nenv.utils.ExcelLog &mdash; NegoLog 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            NegoLog
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">NegoLog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">NegoLog</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">nenv.utils.ExcelLog</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for nenv.utils.ExcelLog</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">nenv.utils.TypeCheck</span> <span class="kn">import</span> <span class="n">TypeCheck</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">LogRow</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;LogRow&#39;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Type variable of log row</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="update">
+<a class="viewcode-back" href="../../../nenv.utils.html#nenv.utils.ExcelLog.update">[docs]</a>
+<span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="n">source</span><span class="p">:</span> <span class="n">LogRow</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">LogRow</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method updates the **`Source`** with given **`Target`**</span>
+
+<span class="sd">        :param source: Source to be updated</span>
+<span class="sd">        :param target: Target</span>
+<span class="sd">        :return: Nothing</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">sheet_name</span> <span class="ow">in</span> <span class="n">target</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">sheet_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">source</span><span class="p">:</span>
+            <span class="n">source</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">target</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">source</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">target</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">])</span></div>
+
+
+
+<div class="viewcode-block" id="LogRowIterator">
+<a class="viewcode-back" href="../../../nenv.utils.html#nenv.utils.ExcelLog.LogRowIterator">[docs]</a>
+<span class="k">class</span> <span class="nc">LogRowIterator</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This class helps to iterate over log rows index by index. You can iterate over ExcelLog object.</span>
+
+<span class="sd">        :Example:</span>
+<span class="sd">            Example for a loop in logs</span>
+
+<span class="sd">            &gt;&gt;&gt; for index, row : log:</span>
+<span class="sd">            &gt;&gt;&gt;     ...</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log_rows</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span> <span class="o">=</span> <span class="n">log_rows</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="fm">__next__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">LogRow</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span><span class="p">):</span>
+
+            <span class="n">row</span><span class="p">:</span> <span class="n">LogRow</span> <span class="o">=</span> <span class="p">{}</span>
+
+            <span class="k">for</span> <span class="n">sheet_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">:</span>
+                    <span class="n">row</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">row</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">row</span>
+
+        <span class="k">raise</span> <span class="ne">StopIteration</span></div>
+
+
+
+<div class="viewcode-block" id="ExcelLog">
+<a class="viewcode-back" href="../../../nenv.utils.html#nenv.utils.ExcelLog.ExcelLog">[docs]</a>
+<span class="k">class</span> <span class="nc">ExcelLog</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This class helps to logging into Excel file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">log_rows</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]]</span>  <span class="c1">#: Log rows for each sheet</span>
+    <span class="n">sheet_names</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>                      <span class="c1">#: List of sheet names</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sheet_names</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Constructor</span>
+
+<span class="sd">            :param sheet_names: Set of sheet names</span>
+<span class="sd">            :param file_path: File path to read, default None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sheet_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">sheet_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">sheet_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">sheet_names</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span> <span class="o">=</span> <span class="p">{</span><span class="n">sheet_name</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">sheet_name</span> <span class="ow">in</span> <span class="n">sheet_names</span><span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">file_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ExcelLog.load">
+<a class="viewcode-back" href="../../../nenv.utils.html#nenv.utils.ExcelLog.ExcelLog.load">[docs]</a>
+    <span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Load from file</span>
+
+<span class="sd">            :param file_path: File path</span>
+<span class="sd">            :return: Nothing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">xlsx</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">ExcelFile</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sheet_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">xlsx</span><span class="o">.</span><span class="n">sheet_names</span><span class="p">)</span>
+
+        <span class="n">xlsx</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">sheet_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sheet_names</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">sheet_name</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span></div>
+
+
+<div class="viewcode-block" id="ExcelLog.save">
+<a class="viewcode-back" href="../../../nenv.utils.html#nenv.utils.ExcelLog.ExcelLog.save">[docs]</a>
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Save to file</span>
+
+<span class="sd">            :param file_path: File path</span>
+<span class="sd">            :return: Nothing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">pd</span><span class="o">.</span><span class="n">ExcelWriter</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">writer</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">sheet_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sheet_names</span><span class="p">:</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">])</span>
+
+                <span class="n">df</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="n">sheet_name</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ExcelLog.to_data_frame">
+<a class="viewcode-back" href="../../../nenv.utils.html#nenv.utils.ExcelLog.ExcelLog.to_data_frame">[docs]</a>
+    <span class="k">def</span> <span class="nf">to_data_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sheet_name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Convert log rows to dictionary of data frames</span>
+
+<span class="sd">            :return: Dictionary of data frames</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">sheet_name</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="n">sheet_name</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">])</span> <span class="k">for</span> <span class="n">sheet_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span>
+        <span class="p">}</span></div>
+
+
+    <span class="k">def</span> <span class="nf">__update_sheet_names</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">:</span> <span class="n">LogRow</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Create sheets if not exists</span>
+
+<span class="sd">            :param row: Log row</span>
+<span class="sd">            :return: Nothing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">sheet_name</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">sheet_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sheet_names</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sheet_names</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">sheet_name</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="ExcelLog.append">
+<a class="viewcode-back" href="../../../nenv.utils.html#nenv.utils.ExcelLog.ExcelLog.append">[docs]</a>
+    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">:</span> <span class="n">LogRow</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Append into logs</span>
+
+<span class="sd">            :param row: Log row</span>
+<span class="sd">            :return: Nothing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__update_sheet_names</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">sheet_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sheet_names</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">sheet_name</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({})</span></div>
+
+
+<div class="viewcode-block" id="ExcelLog.update">
+<a class="viewcode-back" href="../../../nenv.utils.html#nenv.utils.ExcelLog.ExcelLog.update">[docs]</a>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">:</span> <span class="n">LogRow</span><span class="p">,</span> <span class="n">row_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Update a log row</span>
+
+<span class="sd">            :param row: New log row</span>
+<span class="sd">            :param row_index: Index of row</span>
+<span class="sd">            :return: Nothing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__update_sheet_names</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">row_index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">sheet_name</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
+                <span class="n">row_index</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">row_index</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">])</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">sheet_name</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">row_index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">]):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">][</span><span class="n">row_index</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">while</span> <span class="n">row_index</span> <span class="o">&gt;=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">]):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({})</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">][</span><span class="n">row_index</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">])</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            You can iterate over log rows index by index.</span>
+
+<span class="sd">            :Example:</span>
+<span class="sd">                Example for a loop in logs</span>
+
+<span class="sd">                &gt;&gt;&gt; for index, row : log:</span>
+<span class="sd">                &gt;&gt;&gt;     ...</span>
+
+<span class="sd">            :return: LogRowIterator that will be called in for-loop.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">LogRowIterator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">LogRow</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="n">row</span><span class="p">:</span> <span class="n">LogRow</span> <span class="o">=</span> <span class="p">{}</span>
+
+            <span class="k">for</span> <span class="n">sheet_name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="n">key</span><span class="p">:</span>
+                    <span class="n">row</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">row</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">][</span><span class="n">key</span><span class="p">]</span>
+
+            <span class="k">return</span> <span class="n">row</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+
+    <span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]],</span> <span class="n">value</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">LogRow</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">Any</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="n">TypeCheck</span><span class="p">[</span><span class="n">LogRow</span><span class="p">]()</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="s2">&quot;If `key` is Integer, `value` must be LogRow&quot;</span>
+
+            <span class="k">for</span> <span class="n">sheet_name</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">][</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">value</span><span class="p">[</span><span class="n">sheet_name</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">TypeCheck</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]()</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="n">TypeCheck</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]()</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="s2">&quot;If `key` is (int, str), `value` must be Dict[str, Any]&quot;</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">TypeCheck</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]()</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="n">key</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">key</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Unknown `key` Type.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method provides the number of log rows.</span>
+
+<span class="sd">            :return: The number of log rows</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_rows</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="mi">0</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, aniltrue.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

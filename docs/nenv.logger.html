@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nenv.logger package &mdash; NegoLog 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8d563738"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="nenv.utils package" href="nenv.utils.html" />
+    <link rel="prev" title="nenv.OpponentModel package" href="nenv.OpponentModel.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            NegoLog
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">NegoLog</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="nenv.html">nenv package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.Action">nenv.Action module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.Agent">nenv.Agent module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.Bid">nenv.Bid module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.BidSpace">nenv.BidSpace module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.EditablePreference">nenv.EditablePreference module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.Issue">nenv.Issue module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.Preference">nenv.Preference module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.Session">nenv.Session module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.SessionLogs">nenv.SessionLogs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.SessionManager">nenv.SessionManager module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.Tournament">nenv.Tournament module</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="nenv.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="nenv.OpponentModel.html">nenv.OpponentModel package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">nenv.logger package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.utils.html">nenv.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="agents.html">agents package</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NegoLog</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">NegoLog</a></li>
+          <li class="breadcrumb-item"><a href="nenv.html">nenv package</a></li>
+      <li class="breadcrumb-item active">nenv.logger package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/nenv.logger.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="nenv-logger-package">
+<h1>nenv.logger package<a class="headerlink" href="#nenv-logger-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-nenv.logger.AbstractLogger">
+<span id="nenv-logger-abstractlogger-module"></span><h2>nenv.logger.AbstractLogger module<a class="headerlink" href="#module-nenv.logger.AbstractLogger" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.logger.AbstractLogger.AbstractLogger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.logger.AbstractLogger.</span></span><span class="sig-name descname"><span class="pre">AbstractLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/AbstractLogger.html#AbstractLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.AbstractLogger.AbstractLogger" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>NegoLog provides customizable <strong>Analytics and Visualization Modules</strong> called <em>logger</em> for advanced analysis,
+comprehensive logs and statistical graphs. <strong>AbstractLogger</strong> class, employing callback mechanisms, empowers
+researchers and developers to easily implement their own <em>loggers</em> within NegoLog.</p>
+<p><strong>Note</strong>: Each <em>logger</em> must be a sub-class of <strong>AbstractLogger</strong> class.</p>
+<dl class="simple">
+<dt><strong>Methods &amp; Callbacks</strong>:</dt><dd><ul class="simple">
+<li><p><strong>initiate</strong>: Use this method to initialize required variables instead of the constructor.</p></li>
+<li><p><strong>before_session_start</strong>: This callback is invoked before each session starts.</p></li>
+<li><p><strong>on_offer</strong>: This callback is invoked when an offer is proposed. <strong>Round-based</strong> logs and analysis can be conducted in this method. This method should return logs as a dictionary for <em>session</em> log file.</p></li>
+<li><p><strong>on_accept</strong>:: This callback is invoked when the negotiation session ends <strong>with</strong> an agreement. This method should return logs as a dictionary for <em>session</em> log file.</p></li>
+<li><p><strong>on_fail</strong>: This callback is invoked when the negotiation session ends <strong>without</strong> any agreement. This method should return logs as a dictionary for <em>session</em> log file.</p></li>
+<li><p><strong>on_session_end</strong>: This callback is invoked after the negotiation session ends. <strong>Session-based</strong> logs and analysis can be conducted in this method. This method should return logs as a dictionary for <em>tournament</em> log file.</p></li>
+<li><p><strong>on_tournament_end</strong>: This callback is invoked after the tournament ends. <strong>Tournament-based</strong> logs, analysis and graph generation can be conducted in this method.</p></li>
+<li><p><strong>get_path</strong>: The directory path for logs &amp; results.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.AbstractLogger.AbstractLogger.before_session_start">
+<span class="sig-name descname"><span class="pre">before_session_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Session.Session" title="nenv.Session.Session"><span class="pre">Session</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs" title="nenv.SessionLogs.SessionLogs"><span class="pre">SessionLogs</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/nenv/logger/AbstractLogger.html#AbstractLogger.before_session_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.AbstractLogger.AbstractLogger.before_session_start" title="Link to this definition"></a></dt>
+<dd><p>This method is for initiating the logger with the given negotiation session information.</p>
+<p>Also, this method provides the required sheet names
+:param session: Current negotiation session
+:return: List of sheet names</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.AbstractLogger.AbstractLogger.get_path">
+<span class="sig-name descname"><span class="pre">get_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/nenv/logger/AbstractLogger.html#AbstractLogger.get_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.AbstractLogger.AbstractLogger.get_path" title="Link to this definition"></a></dt>
+<dd><p>This method generates the full path for given file name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_name</strong> – File name in log directory</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The full path</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.AbstractLogger.AbstractLogger.initiate">
+<span class="sig-name descname"><span class="pre">initiate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/AbstractLogger.html#AbstractLogger.initiate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.AbstractLogger.AbstractLogger.initiate" title="Link to this definition"></a></dt>
+<dd><p>This method is for initiating the logger before the tournament starts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.logger.AbstractLogger.AbstractLogger.log_dir">
+<span class="sig-name descname"><span class="pre">log_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#nenv.logger.AbstractLogger.AbstractLogger.log_dir" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.AbstractLogger.AbstractLogger.on_accept">
+<span class="sig-name descname"><span class="pre">on_accept</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Session.Session" title="nenv.Session.Session"><span class="pre">Session</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs" title="nenv.SessionLogs.SessionLogs"><span class="pre">SessionLogs</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/logger/AbstractLogger.html#AbstractLogger.on_accept"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.AbstractLogger.AbstractLogger.on_accept" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when an agent accept an offer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent</strong> – The agent who accepted</p></li>
+<li><p><strong>offer</strong> – The accepted bid</p></li>
+<li><p><strong>time</strong> – Acceptance time</p></li>
+<li><p><strong>session</strong> – Current negotiation session</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>LogRow to append into the session log file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.AbstractLogger.AbstractLogger.on_fail">
+<span class="sig-name descname"><span class="pre">on_fail</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Session.Session" title="nenv.Session.Session"><span class="pre">Session</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs" title="nenv.SessionLogs.SessionLogs"><span class="pre">SessionLogs</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/logger/AbstractLogger.html#AbstractLogger.on_fail"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.AbstractLogger.AbstractLogger.on_fail" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when the negotiation ends without any acceptance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> – End time</p></li>
+<li><p><strong>session</strong> – Current negotiation session</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>LogRow to append into the session log file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.AbstractLogger.AbstractLogger.on_offer">
+<span class="sig-name descname"><span class="pre">on_offer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Session.Session" title="nenv.Session.Session"><span class="pre">Session</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs" title="nenv.SessionLogs.SessionLogs"><span class="pre">SessionLogs</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/logger/AbstractLogger.html#AbstractLogger.on_offer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.AbstractLogger.AbstractLogger.on_offer" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when an agent offers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent</strong> – The agent who offered</p></li>
+<li><p><strong>offer</strong> – The offered bid</p></li>
+<li><p><strong>time</strong> – Current negotiation time</p></li>
+<li><p><strong>session</strong> – Current negotiation session</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>LogRow to append into the session log file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.AbstractLogger.AbstractLogger.on_session_end">
+<span class="sig-name descname"><span class="pre">on_session_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">final_row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Session.Session" title="nenv.Session.Session"><span class="pre">Session</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs" title="nenv.SessionLogs.SessionLogs"><span class="pre">SessionLogs</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/logger/AbstractLogger.html#AbstractLogger.on_session_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.AbstractLogger.AbstractLogger.on_session_end" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when the negotiation session ends.</p>
+<p>This method generate a log for tournament log file.
+:param final_row: The final log file. It includes the failure or acceptance logs.
+:param session: Current negotiation session
+:return: LogRow to append into the tournament log file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.AbstractLogger.AbstractLogger.on_tournament_end">
+<span class="sig-name descname"><span class="pre">on_tournament_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tournament_logs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.ExcelLog" title="nenv.utils.ExcelLog.ExcelLog"><span class="pre">ExcelLog</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/AbstractLogger.html#AbstractLogger.on_tournament_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.AbstractLogger.AbstractLogger.on_tournament_end" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when the tournament ends.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tournament_logs</strong> – Whole tournament logs</p></li>
+<li><p><strong>agent_names</strong> – List of agent name in the tournament</p></li>
+<li><p><strong>domain_names</strong> – List of domain names in the tournament</p></li>
+<li><p><strong>estimator_names</strong> – List of estimator name (i.e., opponent model) in the tournament</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nenv.logger.BidSpaceLogger">
+<span id="nenv-logger-bidspacelogger-module"></span><h2>nenv.logger.BidSpaceLogger module<a class="headerlink" href="#module-nenv.logger.BidSpaceLogger" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.logger.BidSpaceLogger.BidSpaceLogger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.logger.BidSpaceLogger.</span></span><span class="sig-name descname"><span class="pre">BidSpaceLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/BidSpaceLogger.html#BidSpaceLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.BidSpaceLogger.BidSpaceLogger" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nenv.logger.AbstractLogger.AbstractLogger" title="nenv.logger.AbstractLogger.AbstractLogger"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractLogger</span></code></a></p>
+<p>BidSpaceLogger logs the distances from the Kalai and Nash points in the bid space.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.BidSpaceLogger.BidSpaceLogger.before_session_start">
+<span class="sig-name descname"><span class="pre">before_session_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Session.Session" title="nenv.Session.Session"><span class="pre">Session</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs" title="nenv.SessionLogs.SessionLogs"><span class="pre">SessionLogs</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/nenv/logger/BidSpaceLogger.html#BidSpaceLogger.before_session_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.BidSpaceLogger.BidSpaceLogger.before_session_start" title="Link to this definition"></a></dt>
+<dd><p>Initiate bid space of the domain of the given session.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>session</strong> – Current negotiation session</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Empty list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.logger.BidSpaceLogger.BidSpaceLogger.bidSpace">
+<span class="sig-name descname"><span class="pre">bidSpace</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="nenv.html#nenv.BidSpace.BidSpace" title="nenv.BidSpace.BidSpace"><span class="pre">BidSpace</span></a></em><a class="headerlink" href="#nenv.logger.BidSpaceLogger.BidSpaceLogger.bidSpace" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.BidSpaceLogger.BidSpaceLogger.initiate">
+<span class="sig-name descname"><span class="pre">initiate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/BidSpaceLogger.html#BidSpaceLogger.initiate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.BidSpaceLogger.BidSpaceLogger.initiate" title="Link to this definition"></a></dt>
+<dd><p>This method is for initiating the logger before the tournament starts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.BidSpaceLogger.BidSpaceLogger.on_accept">
+<span class="sig-name descname"><span class="pre">on_accept</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Session.Session" title="nenv.Session.Session"><span class="pre">Session</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs" title="nenv.SessionLogs.SessionLogs"><span class="pre">SessionLogs</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/logger/BidSpaceLogger.html#BidSpaceLogger.on_accept"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.BidSpaceLogger.BidSpaceLogger.on_accept" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when an agent accept an offer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent</strong> – The agent who accepted</p></li>
+<li><p><strong>offer</strong> – The accepted bid</p></li>
+<li><p><strong>time</strong> – Acceptance time</p></li>
+<li><p><strong>session</strong> – Current negotiation session</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>LogRow to append into the session log file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.BidSpaceLogger.BidSpaceLogger.on_fail">
+<span class="sig-name descname"><span class="pre">on_fail</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Session.Session" title="nenv.Session.Session"><span class="pre">Session</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs" title="nenv.SessionLogs.SessionLogs"><span class="pre">SessionLogs</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/logger/BidSpaceLogger.html#BidSpaceLogger.on_fail"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.BidSpaceLogger.BidSpaceLogger.on_fail" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when the negotiation ends without any acceptance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> – End time</p></li>
+<li><p><strong>session</strong> – Current negotiation session</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>LogRow to append into the session log file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.BidSpaceLogger.BidSpaceLogger.on_offer">
+<span class="sig-name descname"><span class="pre">on_offer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Session.Session" title="nenv.Session.Session"><span class="pre">Session</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs" title="nenv.SessionLogs.SessionLogs"><span class="pre">SessionLogs</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/logger/BidSpaceLogger.html#BidSpaceLogger.on_offer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.BidSpaceLogger.BidSpaceLogger.on_offer" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when an agent offers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent</strong> – The agent who offered</p></li>
+<li><p><strong>offer</strong> – The offered bid</p></li>
+<li><p><strong>time</strong> – Current negotiation time</p></li>
+<li><p><strong>session</strong> – Current negotiation session</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>LogRow to append into the session log file</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nenv.logger.DomainGraphsLogger">
+<span id="nenv-logger-domaingraphslogger-module"></span><h2>nenv.logger.DomainGraphsLogger module<a class="headerlink" href="#module-nenv.logger.DomainGraphsLogger" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.logger.DomainGraphsLogger.DomainGraphsLogger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.logger.DomainGraphsLogger.</span></span><span class="sig-name descname"><span class="pre">DomainGraphsLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain_sep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">15</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/DomainGraphsLogger.html#DomainGraphsLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.DomainGraphsLogger.DomainGraphsLogger" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nenv.logger.FinalGraphsLogger.FinalGraphsLogger" title="nenv.logger.FinalGraphsLogger.FinalGraphsLogger"><code class="xref py py-class docutils literal notranslate"><span class="pre">FinalGraphsLogger</span></code></a></p>
+<p>DomainGraphsLogger is a variant of FinalGraphsLogger. The difference is that DomainGraphsLogger draw the
+corresponding graphs domain-by-domain.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.DomainGraphsLogger.DomainGraphsLogger.on_tournament_end">
+<span class="sig-name descname"><span class="pre">on_tournament_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tournament_logs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.ExcelLog" title="nenv.utils.ExcelLog.ExcelLog"><span class="pre">ExcelLog</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/DomainGraphsLogger.html#DomainGraphsLogger.on_tournament_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.DomainGraphsLogger.DomainGraphsLogger.on_tournament_end" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when the tournament ends.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tournament_logs</strong> – Whole tournament logs</p></li>
+<li><p><strong>agent_names</strong> – List of agent name in the tournament</p></li>
+<li><p><strong>domain_names</strong> – List of domain names in the tournament</p></li>
+<li><p><strong>estimator_names</strong> – List of estimator name (i.e., opponent model) in the tournament</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nenv.logger.EstimatedBidSpaceLogger">
+<span id="nenv-logger-estimatedbidspacelogger-module"></span><h2>nenv.logger.EstimatedBidSpaceLogger module<a class="headerlink" href="#module-nenv.logger.EstimatedBidSpaceLogger" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.logger.EstimatedBidSpaceLogger.EstimatedBidSpaceLogger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.logger.EstimatedBidSpaceLogger.</span></span><span class="sig-name descname"><span class="pre">EstimatedBidSpaceLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/EstimatedBidSpaceLogger.html#EstimatedBidSpaceLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatedBidSpaceLogger.EstimatedBidSpaceLogger" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nenv.logger.AbstractLogger.AbstractLogger" title="nenv.logger.AbstractLogger.AbstractLogger"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractLogger</span></code></a></p>
+<p>EstimatedBidSpaceLogger logs the distances from the Kalai and Nash points in the estimated bid space.
+It iterates over all provided Estimators of the agents to generate the estimated bid space.
+Then, it logs the estimated Kalai and Nash distances for each Estimator of each agent.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatedBidSpaceLogger.EstimatedBidSpaceLogger.on_offer">
+<span class="sig-name descname"><span class="pre">on_offer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Session.Session" title="nenv.Session.Session"><span class="pre">Session</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs" title="nenv.SessionLogs.SessionLogs"><span class="pre">SessionLogs</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/logger/EstimatedBidSpaceLogger.html#EstimatedBidSpaceLogger.on_offer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatedBidSpaceLogger.EstimatedBidSpaceLogger.on_offer" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when an agent offers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent</strong> – The agent who offered</p></li>
+<li><p><strong>offer</strong> – The offered bid</p></li>
+<li><p><strong>time</strong> – Current negotiation time</p></li>
+<li><p><strong>session</strong> – Current negotiation session</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>LogRow to append into the session log file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatedBidSpaceLogger.EstimatedBidSpaceLogger.on_session_end">
+<span class="sig-name descname"><span class="pre">on_session_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">final_row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Session.Session" title="nenv.Session.Session"><span class="pre">Session</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs" title="nenv.SessionLogs.SessionLogs"><span class="pre">SessionLogs</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/logger/EstimatedBidSpaceLogger.html#EstimatedBidSpaceLogger.on_session_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatedBidSpaceLogger.EstimatedBidSpaceLogger.on_session_end" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when the negotiation session ends.</p>
+<p>This method generate a log for tournament log file.
+:param final_row: The final log file. It includes the failure or acceptance logs.
+:param session: Current negotiation session
+:return: LogRow to append into the tournament log file</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nenv.logger.EstimatedUtilityLogger">
+<span id="nenv-logger-estimatedutilitylogger-module"></span><h2>nenv.logger.EstimatedUtilityLogger module<a class="headerlink" href="#module-nenv.logger.EstimatedUtilityLogger" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.logger.EstimatedUtilityLogger.EstimatedUtilityLogger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.logger.EstimatedUtilityLogger.</span></span><span class="sig-name descname"><span class="pre">EstimatedUtilityLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/EstimatedUtilityLogger.html#EstimatedUtilityLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatedUtilityLogger.EstimatedUtilityLogger" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nenv.logger.AbstractLogger.AbstractLogger" title="nenv.logger.AbstractLogger.AbstractLogger"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractLogger</span></code></a></p>
+<p><em>EstimatedUtilityLogger</em> logs some estimated utility-based information extracted via Estimators,
+as listed below:</p>
+<ul class="simple">
+<li><p>Estimated Opponent Utility.</p></li>
+<li><p>Estimated Product Score</p></li>
+<li><p>Estimated Social Welfare</p></li>
+</ul>
+<p><strong>Note</strong>: It iterates over all <em>Estimators</em> of all agents to extract the necessary log.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatedUtilityLogger.EstimatedUtilityLogger.extract_estimator_names">
+<span class="sig-name descname"><span class="pre">extract_estimator_names</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/EstimatedUtilityLogger.html#EstimatedUtilityLogger.extract_estimator_names"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatedUtilityLogger.EstimatedUtilityLogger.extract_estimator_names" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatedUtilityLogger.EstimatedUtilityLogger.on_accept">
+<span class="sig-name descname"><span class="pre">on_accept</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Session.Session" title="nenv.Session.Session"><span class="pre">Session</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs" title="nenv.SessionLogs.SessionLogs"><span class="pre">SessionLogs</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/logger/EstimatedUtilityLogger.html#EstimatedUtilityLogger.on_accept"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatedUtilityLogger.EstimatedUtilityLogger.on_accept" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when an agent accept an offer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent</strong> – The agent who accepted</p></li>
+<li><p><strong>offer</strong> – The accepted bid</p></li>
+<li><p><strong>time</strong> – Acceptance time</p></li>
+<li><p><strong>session</strong> – Current negotiation session</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>LogRow to append into the session log file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatedUtilityLogger.EstimatedUtilityLogger.on_fail">
+<span class="sig-name descname"><span class="pre">on_fail</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Session.Session" title="nenv.Session.Session"><span class="pre">Session</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs" title="nenv.SessionLogs.SessionLogs"><span class="pre">SessionLogs</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/logger/EstimatedUtilityLogger.html#EstimatedUtilityLogger.on_fail"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatedUtilityLogger.EstimatedUtilityLogger.on_fail" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when the negotiation ends without any acceptance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> – End time</p></li>
+<li><p><strong>session</strong> – Current negotiation session</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>LogRow to append into the session log file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatedUtilityLogger.EstimatedUtilityLogger.on_offer">
+<span class="sig-name descname"><span class="pre">on_offer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Session.Session" title="nenv.Session.Session"><span class="pre">Session</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs" title="nenv.SessionLogs.SessionLogs"><span class="pre">SessionLogs</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/logger/EstimatedUtilityLogger.html#EstimatedUtilityLogger.on_offer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatedUtilityLogger.EstimatedUtilityLogger.on_offer" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when an agent offers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent</strong> – The agent who offered</p></li>
+<li><p><strong>offer</strong> – The offered bid</p></li>
+<li><p><strong>time</strong> – Current negotiation time</p></li>
+<li><p><strong>session</strong> – Current negotiation session</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>LogRow to append into the session log file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatedUtilityLogger.EstimatedUtilityLogger.on_tournament_end">
+<span class="sig-name descname"><span class="pre">on_tournament_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tournament_logs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.ExcelLog" title="nenv.utils.ExcelLog.ExcelLog"><span class="pre">ExcelLog</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/EstimatedUtilityLogger.html#EstimatedUtilityLogger.on_tournament_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatedUtilityLogger.EstimatedUtilityLogger.on_tournament_end" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when the tournament ends.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tournament_logs</strong> – Whole tournament logs</p></li>
+<li><p><strong>agent_names</strong> – List of agent name in the tournament</p></li>
+<li><p><strong>domain_names</strong> – List of domain names in the tournament</p></li>
+<li><p><strong>estimator_names</strong> – List of estimator name (i.e., opponent model) in the tournament</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nenv.logger.EstimatedMoveLogger">
+<span id="nenv-logger-estimatedmovelogger-module"></span><h2>nenv.logger.EstimatedMoveLogger module<a class="headerlink" href="#module-nenv.logger.EstimatedMoveLogger" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.logger.EstimatedMoveLogger.EstimatedMoveLogger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.logger.EstimatedMoveLogger.</span></span><span class="sig-name descname"><span class="pre">EstimatedMoveLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/EstimatedMoveLogger.html#EstimatedMoveLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatedMoveLogger.EstimatedMoveLogger" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nenv.logger.AbstractLogger.AbstractLogger" title="nenv.logger.AbstractLogger.AbstractLogger"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractLogger</span></code></a></p>
+<p><em>EstimatedUtilityLogger</em> logs estimated move extracted via Estimators. At the end of the tournament, this logger
+measures the performance of the <em>Estimators</em> on the move prediction. Move prediction task can be considered as
+a move classification task. Thus, some metrics (e.g., Accuracy, F1) which are commonly used for classification
+tasks are applied for the evaluation. Additionally, this logger also creates a Confusion Matrix for each
+estimator.</p>
+<p><strong>Note</strong>: It iterates over all <em>Estimators</em> of all agents to extract the necessary log.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatedMoveLogger.EstimatedMoveLogger.calculate">
+<span class="sig-name descname"><span class="pre">calculate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">confusion_matrices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/EstimatedMoveLogger.html#EstimatedMoveLogger.calculate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatedMoveLogger.EstimatedMoveLogger.calculate" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatedMoveLogger.EstimatedMoveLogger.get_accuracy_and_confusion_matrix">
+<span class="sig-name descname"><span class="pre">get_accuracy_and_confusion_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tournament_logs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.ExcelLog" title="nenv.utils.ExcelLog.ExcelLog"><span class="pre">ExcelLog</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/EstimatedMoveLogger.html#EstimatedMoveLogger.get_accuracy_and_confusion_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatedMoveLogger.EstimatedMoveLogger.get_accuracy_and_confusion_matrix" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatedMoveLogger.EstimatedMoveLogger.get_move_list">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_move_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/nenv/logger/EstimatedMoveLogger.html#EstimatedMoveLogger.get_move_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatedMoveLogger.EstimatedMoveLogger.get_move_list" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatedMoveLogger.EstimatedMoveLogger.on_offer">
+<span class="sig-name descname"><span class="pre">on_offer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Session.Session" title="nenv.Session.Session"><span class="pre">Session</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs" title="nenv.SessionLogs.SessionLogs"><span class="pre">SessionLogs</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/logger/EstimatedMoveLogger.html#EstimatedMoveLogger.on_offer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatedMoveLogger.EstimatedMoveLogger.on_offer" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when an agent offers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent</strong> – The agent who offered</p></li>
+<li><p><strong>offer</strong> – The offered bid</p></li>
+<li><p><strong>time</strong> – Current negotiation time</p></li>
+<li><p><strong>session</strong> – Current negotiation session</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>LogRow to append into the session log file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatedMoveLogger.EstimatedMoveLogger.on_tournament_end">
+<span class="sig-name descname"><span class="pre">on_tournament_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tournament_logs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.ExcelLog" title="nenv.utils.ExcelLog.ExcelLog"><span class="pre">ExcelLog</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/EstimatedMoveLogger.html#EstimatedMoveLogger.on_tournament_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatedMoveLogger.EstimatedMoveLogger.on_tournament_end" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when the tournament ends.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tournament_logs</strong> – Whole tournament logs</p></li>
+<li><p><strong>agent_names</strong> – List of agent name in the tournament</p></li>
+<li><p><strong>domain_names</strong> – List of domain names in the tournament</p></li>
+<li><p><strong>estimator_names</strong> – List of estimator name (i.e., opponent model) in the tournament</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nenv.logger.EstimatorMetricLogger">
+<span id="nenv-logger-estimatormetriclogger-module"></span><h2>nenv.logger.EstimatorMetricLogger module<a class="headerlink" href="#module-nenv.logger.EstimatorMetricLogger" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.logger.EstimatorMetricLogger.</span></span><span class="sig-name descname"><span class="pre">EstimatorMetricLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/EstimatorMetricLogger.html#EstimatorMetricLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nenv.logger.AbstractLogger.AbstractLogger" title="nenv.logger.AbstractLogger.AbstractLogger"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractLogger</span></code></a></p>
+<p>EstimatorMetricLogger logs the performance analysis of each Estimator round by round. RMSE, Spearman and
+Kendal-Tau metrics which are commonly used for the evaluation of an Opponent Model are applied
+<a class="reference internal" href="nenv.OpponentModel.html#baarslag2013" id="id1"><span>[Baarslag2013]</span></a> <a class="reference internal" href="nenv.OpponentModel.html#keskin2023" id="id2"><span>[Keskin2023]</span></a></p>
+<p>At the end of tournament, it generates overall results containing these metric results. It also draws the
+necessary plots.</p>
+<p><strong>Note</strong>: This logger increases the computational time due to the expensive calculation of the metrics. If you
+have strict time for the tournament run, you can look <em>EstimatorOnlyFinalMetricLogger</em> which is a cheaper
+version of this logger.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rmse</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spearman</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kendall</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/EstimatorMetricLogger.html#EstimatorMetricLogger.draw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.draw" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.extract_estimator_summary">
+<span class="sig-name descname"><span class="pre">extract_estimator_summary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tournament_logs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.ExcelLog" title="nenv.utils.ExcelLog.ExcelLog"><span class="pre">ExcelLog</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/EstimatorMetricLogger.html#EstimatorMetricLogger.extract_estimator_summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.extract_estimator_summary" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.get_estimator_results">
+<span class="sig-name descname"><span class="pre">get_estimator_results</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tournament_logs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.ExcelLog" title="nenv.utils.ExcelLog.ExcelLog"><span class="pre">ExcelLog</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/nenv/logger/EstimatorMetricLogger.html#EstimatorMetricLogger.get_estimator_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.get_estimator_results" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.get_mean_std">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_mean_std</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/nenv/logger/EstimatorMetricLogger.html#EstimatorMetricLogger.get_mean_std"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.get_mean_std" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.get_median_round">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_median_round</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/nenv/logger/EstimatorMetricLogger.html#EstimatorMetricLogger.get_median_round"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.get_median_round" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.get_metrics">
+<span class="sig-name descname"><span class="pre">get_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Agent.AbstractAgent" title="nenv.Agent.AbstractAgent"><span class="pre">AbstractAgent</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Agent.AbstractAgent" title="nenv.Agent.AbstractAgent"><span class="pre">AbstractAgent</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/logger/EstimatorMetricLogger.html#EstimatorMetricLogger.get_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.get_metrics" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.on_accept">
+<span class="sig-name descname"><span class="pre">on_accept</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Session.Session" title="nenv.Session.Session"><span class="pre">Session</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs" title="nenv.SessionLogs.SessionLogs"><span class="pre">SessionLogs</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/logger/EstimatorMetricLogger.html#EstimatorMetricLogger.on_accept"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.on_accept" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when an agent accept an offer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent</strong> – The agent who accepted</p></li>
+<li><p><strong>offer</strong> – The accepted bid</p></li>
+<li><p><strong>time</strong> – Acceptance time</p></li>
+<li><p><strong>session</strong> – Current negotiation session</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>LogRow to append into the session log file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.on_fail">
+<span class="sig-name descname"><span class="pre">on_fail</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Session.Session" title="nenv.Session.Session"><span class="pre">Session</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs" title="nenv.SessionLogs.SessionLogs"><span class="pre">SessionLogs</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/logger/EstimatorMetricLogger.html#EstimatorMetricLogger.on_fail"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.on_fail" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when the negotiation ends without any acceptance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> – End time</p></li>
+<li><p><strong>session</strong> – Current negotiation session</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>LogRow to append into the session log file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.on_offer">
+<span class="sig-name descname"><span class="pre">on_offer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Session.Session" title="nenv.Session.Session"><span class="pre">Session</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs" title="nenv.SessionLogs.SessionLogs"><span class="pre">SessionLogs</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/logger/EstimatorMetricLogger.html#EstimatorMetricLogger.on_offer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.on_offer" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when an agent offers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent</strong> – The agent who offered</p></li>
+<li><p><strong>offer</strong> – The offered bid</p></li>
+<li><p><strong>time</strong> – Current negotiation time</p></li>
+<li><p><strong>session</strong> – Current negotiation session</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>LogRow to append into the session log file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.on_tournament_end">
+<span class="sig-name descname"><span class="pre">on_tournament_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tournament_logs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.ExcelLog" title="nenv.utils.ExcelLog.ExcelLog"><span class="pre">ExcelLog</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/EstimatorMetricLogger.html#EstimatorMetricLogger.on_tournament_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.on_tournament_end" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when the tournament ends.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tournament_logs</strong> – Whole tournament logs</p></li>
+<li><p><strong>agent_names</strong> – List of agent name in the tournament</p></li>
+<li><p><strong>domain_names</strong> – List of domain names in the tournament</p></li>
+<li><p><strong>estimator_names</strong> – List of estimator name (i.e., opponent model) in the tournament</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nenv.logger.EstimatorOnlyFinalMetricLogger">
+<span id="nenv-logger-estimatoronlyfinalmetriclogger-module"></span><h2>nenv.logger.EstimatorOnlyFinalMetricLogger module<a class="headerlink" href="#module-nenv.logger.EstimatorOnlyFinalMetricLogger" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.logger.EstimatorOnlyFinalMetricLogger.EstimatorOnlyFinalMetricLogger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.logger.EstimatorOnlyFinalMetricLogger.</span></span><span class="sig-name descname"><span class="pre">EstimatorOnlyFinalMetricLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/EstimatorOnlyFinalMetricLogger.html#EstimatorOnlyFinalMetricLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatorOnlyFinalMetricLogger.EstimatorOnlyFinalMetricLogger" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nenv.logger.AbstractLogger.AbstractLogger" title="nenv.logger.AbstractLogger.AbstractLogger"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractLogger</span></code></a></p>
+<p>EstimatorOnlyFinalMetricLogger is a cheaper (in terms of computational time) version of EstimatorMetricLogger.
+It logs <em>RMSE</em>, <em>Kendall-Tau</em> and <em>Spearman</em> results of all Estimators only when the session ends instead of
+round by round. Therefore, it cannot plot metric results round by round.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatorOnlyFinalMetricLogger.EstimatorOnlyFinalMetricLogger.extract_estimator_summary">
+<span class="sig-name descname"><span class="pre">extract_estimator_summary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tournament_logs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.ExcelLog" title="nenv.utils.ExcelLog.ExcelLog"><span class="pre">ExcelLog</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/EstimatorOnlyFinalMetricLogger.html#EstimatorOnlyFinalMetricLogger.extract_estimator_summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatorOnlyFinalMetricLogger.EstimatorOnlyFinalMetricLogger.extract_estimator_summary" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatorOnlyFinalMetricLogger.EstimatorOnlyFinalMetricLogger.get_metrics">
+<span class="sig-name descname"><span class="pre">get_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Agent.AbstractAgent" title="nenv.Agent.AbstractAgent"><span class="pre">AbstractAgent</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Agent.AbstractAgent" title="nenv.Agent.AbstractAgent"><span class="pre">AbstractAgent</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/logger/EstimatorOnlyFinalMetricLogger.html#EstimatorOnlyFinalMetricLogger.get_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatorOnlyFinalMetricLogger.EstimatorOnlyFinalMetricLogger.get_metrics" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatorOnlyFinalMetricLogger.EstimatorOnlyFinalMetricLogger.on_accept">
+<span class="sig-name descname"><span class="pre">on_accept</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Session.Session" title="nenv.Session.Session"><span class="pre">Session</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs" title="nenv.SessionLogs.SessionLogs"><span class="pre">SessionLogs</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/logger/EstimatorOnlyFinalMetricLogger.html#EstimatorOnlyFinalMetricLogger.on_accept"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatorOnlyFinalMetricLogger.EstimatorOnlyFinalMetricLogger.on_accept" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when an agent accept an offer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent</strong> – The agent who accepted</p></li>
+<li><p><strong>offer</strong> – The accepted bid</p></li>
+<li><p><strong>time</strong> – Acceptance time</p></li>
+<li><p><strong>session</strong> – Current negotiation session</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>LogRow to append into the session log file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatorOnlyFinalMetricLogger.EstimatorOnlyFinalMetricLogger.on_fail">
+<span class="sig-name descname"><span class="pre">on_fail</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Session.Session" title="nenv.Session.Session"><span class="pre">Session</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs" title="nenv.SessionLogs.SessionLogs"><span class="pre">SessionLogs</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/logger/EstimatorOnlyFinalMetricLogger.html#EstimatorOnlyFinalMetricLogger.on_fail"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatorOnlyFinalMetricLogger.EstimatorOnlyFinalMetricLogger.on_fail" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when the negotiation ends without any acceptance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> – End time</p></li>
+<li><p><strong>session</strong> – Current negotiation session</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>LogRow to append into the session log file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatorOnlyFinalMetricLogger.EstimatorOnlyFinalMetricLogger.on_tournament_end">
+<span class="sig-name descname"><span class="pre">on_tournament_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tournament_logs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.ExcelLog" title="nenv.utils.ExcelLog.ExcelLog"><span class="pre">ExcelLog</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/EstimatorOnlyFinalMetricLogger.html#EstimatorOnlyFinalMetricLogger.on_tournament_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatorOnlyFinalMetricLogger.EstimatorOnlyFinalMetricLogger.on_tournament_end" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when the tournament ends.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tournament_logs</strong> – Whole tournament logs</p></li>
+<li><p><strong>agent_names</strong> – List of agent name in the tournament</p></li>
+<li><p><strong>domain_names</strong> – List of domain names in the tournament</p></li>
+<li><p><strong>estimator_names</strong> – List of estimator name (i.e., opponent model) in the tournament</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nenv.logger.EstimatedParetoLogger">
+<span id="nenv-logger-estimatedparetologger-module"></span><h2>nenv.logger.EstimatedParetoLogger module<a class="headerlink" href="#module-nenv.logger.EstimatedParetoLogger" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.logger.EstimatedParetoLogger.EstimatedParetoLogger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.logger.EstimatedParetoLogger.</span></span><span class="sig-name descname"><span class="pre">EstimatedParetoLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/EstimatedParetoLogger.html#EstimatedParetoLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatedParetoLogger.EstimatedParetoLogger" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nenv.logger.AbstractLogger.AbstractLogger" title="nenv.logger.AbstractLogger.AbstractLogger"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractLogger</span></code></a></p>
+<p><em>EstimatedParetoLogger</em> evaluate the pareto frontier estimation performance of opponent models as a binary
+classification task.</p>
+<p><strong>Note</strong>: It iterates over all <em>Estimators</em> of all agents to extract the necessary log.</p>
+<p><strong>Note</strong>: This logger increases the computational time due to the expensive process of the pareto estimation.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatedParetoLogger.EstimatedParetoLogger.before_session_start">
+<span class="sig-name descname"><span class="pre">before_session_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Session.Session" title="nenv.Session.Session"><span class="pre">Session</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs" title="nenv.SessionLogs.SessionLogs"><span class="pre">SessionLogs</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/nenv/logger/EstimatedParetoLogger.html#EstimatedParetoLogger.before_session_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatedParetoLogger.EstimatedParetoLogger.before_session_start" title="Link to this definition"></a></dt>
+<dd><p>This method is for initiating the logger with the given negotiation session information.</p>
+<p>Also, this method provides the required sheet names
+:param session: Current negotiation session
+:return: List of sheet names</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatedParetoLogger.EstimatedParetoLogger.calculate_error">
+<span class="sig-name descname"><span class="pre">calculate_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">estimated_pareto:</span> <span class="pre">~typing.List[~nenv.BidSpace.BidPoint])</span> <span class="pre">-&gt;</span> <span class="pre">(&lt;class</span> <span class="pre">'float'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'float'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'float'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/EstimatedParetoLogger.html#EstimatedParetoLogger.calculate_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatedParetoLogger.EstimatedParetoLogger.calculate_error" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatedParetoLogger.EstimatedParetoLogger.on_offer">
+<span class="sig-name descname"><span class="pre">on_offer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Session.Session" title="nenv.Session.Session"><span class="pre">Session</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs" title="nenv.SessionLogs.SessionLogs"><span class="pre">SessionLogs</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/logger/EstimatedParetoLogger.html#EstimatedParetoLogger.on_offer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatedParetoLogger.EstimatedParetoLogger.on_offer" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when an agent offers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent</strong> – The agent who offered</p></li>
+<li><p><strong>offer</strong> – The offered bid</p></li>
+<li><p><strong>time</strong> – Current negotiation time</p></li>
+<li><p><strong>session</strong> – Current negotiation session</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>LogRow to append into the session log file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatedParetoLogger.EstimatedParetoLogger.on_session_end">
+<span class="sig-name descname"><span class="pre">on_session_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">final_row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Session.Session" title="nenv.Session.Session"><span class="pre">Session</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs" title="nenv.SessionLogs.SessionLogs"><span class="pre">SessionLogs</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/logger/EstimatedParetoLogger.html#EstimatedParetoLogger.on_session_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatedParetoLogger.EstimatedParetoLogger.on_session_end" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when the negotiation session ends.</p>
+<p>This method generate a log for tournament log file.
+:param final_row: The final log file. It includes the failure or acceptance logs.
+:param session: Current negotiation session
+:return: LogRow to append into the tournament log file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.EstimatedParetoLogger.EstimatedParetoLogger.on_tournament_end">
+<span class="sig-name descname"><span class="pre">on_tournament_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tournament_logs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.ExcelLog" title="nenv.utils.ExcelLog.ExcelLog"><span class="pre">ExcelLog</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/EstimatedParetoLogger.html#EstimatedParetoLogger.on_tournament_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.EstimatedParetoLogger.EstimatedParetoLogger.on_tournament_end" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when the tournament ends.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tournament_logs</strong> – Whole tournament logs</p></li>
+<li><p><strong>agent_names</strong> – List of agent name in the tournament</p></li>
+<li><p><strong>domain_names</strong> – List of domain names in the tournament</p></li>
+<li><p><strong>estimator_names</strong> – List of estimator name (i.e., opponent model) in the tournament</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.logger.EstimatedParetoLogger.EstimatedParetoLogger.real_pareto">
+<span class="sig-name descname"><span class="pre">real_pareto</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">None</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="nenv.html#nenv.BidSpace.BidPoint" title="nenv.BidSpace.BidPoint"><span class="pre">BidPoint</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#nenv.logger.EstimatedParetoLogger.EstimatedParetoLogger.real_pareto" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nenv.logger.FinalGraphsLogger">
+<span id="nenv-logger-finalgraphslogger-module"></span><h2>nenv.logger.FinalGraphsLogger module<a class="headerlink" href="#module-nenv.logger.FinalGraphsLogger" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.logger.FinalGraphsLogger.FinalGraphsLogger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.logger.FinalGraphsLogger.</span></span><span class="sig-name descname"><span class="pre">FinalGraphsLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain_sep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">15</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/FinalGraphsLogger.html#FinalGraphsLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.FinalGraphsLogger.FinalGraphsLogger" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nenv.logger.AbstractLogger.AbstractLogger" title="nenv.logger.AbstractLogger.AbstractLogger"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractLogger</span></code></a></p>
+<p>FinalGraphsLogger draw plots and Confusion Matrix for the evaluation of the Agent performance at the end of the
+negotiation.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.logger.FinalGraphsLogger.FinalGraphsLogger.domain_sep">
+<span class="sig-name descname"><span class="pre">domain_sep</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#nenv.logger.FinalGraphsLogger.FinalGraphsLogger.domain_sep" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.FinalGraphsLogger.FinalGraphsLogger.draw_domain_based">
+<span class="sig-name descname"><span class="pre">draw_domain_based</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tournament_results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain_set</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/FinalGraphsLogger.html#FinalGraphsLogger.draw_domain_based"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.FinalGraphsLogger.FinalGraphsLogger.draw_domain_based" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.FinalGraphsLogger.FinalGraphsLogger.draw_opponent_based">
+<span class="sig-name descname"><span class="pre">draw_opponent_based</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tournament_results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/FinalGraphsLogger.html#FinalGraphsLogger.draw_opponent_based"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.FinalGraphsLogger.FinalGraphsLogger.draw_opponent_based" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.FinalGraphsLogger.FinalGraphsLogger.on_tournament_end">
+<span class="sig-name descname"><span class="pre">on_tournament_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tournament_logs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.ExcelLog" title="nenv.utils.ExcelLog.ExcelLog"><span class="pre">ExcelLog</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/FinalGraphsLogger.html#FinalGraphsLogger.on_tournament_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.FinalGraphsLogger.FinalGraphsLogger.on_tournament_end" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when the tournament ends.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tournament_logs</strong> – Whole tournament logs</p></li>
+<li><p><strong>agent_names</strong> – List of agent name in the tournament</p></li>
+<li><p><strong>domain_names</strong> – List of domain names in the tournament</p></li>
+<li><p><strong>estimator_names</strong> – List of estimator name (i.e., opponent model) in the tournament</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nenv.logger.FinalGraphsLogger.sort_y_axis">
+<span class="sig-prename descclassname"><span class="pre">nenv.logger.FinalGraphsLogger.</span></span><span class="sig-name descname"><span class="pre">sort_y_axis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">map_values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">descending</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/FinalGraphsLogger.html#sort_y_axis"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.FinalGraphsLogger.sort_y_axis" title="Link to this definition"></a></dt>
+<dd><p>This method sorts the map based on the mean of row.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>labels_y</strong> – y-axis Labels</p></li>
+<li><p><strong>labels_x</strong> – x-axis Labels</p></li>
+<li><p><strong>map_values</strong> – Map that will be sorted.</p></li>
+<li><p><strong>descending</strong> – Whether the order is descending or not</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Sorted list of y-axis labels and map</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-nenv.logger.MoveAnalyzeLogger">
+<span id="nenv-logger-moveanalyzelogger-module"></span><h2>nenv.logger.MoveAnalyzeLogger module<a class="headerlink" href="#module-nenv.logger.MoveAnalyzeLogger" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.logger.MoveAnalyzeLogger.MoveAnalyzeLogger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.logger.MoveAnalyzeLogger.</span></span><span class="sig-name descname"><span class="pre">MoveAnalyzeLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/MoveAnalyzeLogger.html#MoveAnalyzeLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.MoveAnalyzeLogger.MoveAnalyzeLogger" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nenv.logger.AbstractLogger.AbstractLogger" title="nenv.logger.AbstractLogger.AbstractLogger"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractLogger</span></code></a></p>
+<p>MoveAnalyzeLogger logs some move analysis at the end of each negotiation session. These analysis are listed
+below. These analysis are applied for each agent.</p>
+<ul class="simple">
+<li><p>Behavior Sensitivity</p></li>
+<li><p>Awareness</p></li>
+<li><p>Move Correlation</p></li>
+</ul>
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.MoveAnalyzeLogger.MoveAnalyzeLogger.analyze_moves">
+<span class="sig-name descname"><span class="pre">analyze_moves</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Session.Session" title="nenv.Session.Session"><span class="pre">Session</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/nenv/logger/MoveAnalyzeLogger.html#MoveAnalyzeLogger.analyze_moves"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.MoveAnalyzeLogger.MoveAnalyzeLogger.analyze_moves" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.MoveAnalyzeLogger.MoveAnalyzeLogger.on_offer">
+<span class="sig-name descname"><span class="pre">on_offer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Session.Session" title="nenv.Session.Session"><span class="pre">Session</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs" title="nenv.SessionLogs.SessionLogs"><span class="pre">SessionLogs</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/logger/MoveAnalyzeLogger.html#MoveAnalyzeLogger.on_offer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.MoveAnalyzeLogger.MoveAnalyzeLogger.on_offer" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when an agent offers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent</strong> – The agent who offered</p></li>
+<li><p><strong>offer</strong> – The offered bid</p></li>
+<li><p><strong>time</strong> – Current negotiation time</p></li>
+<li><p><strong>session</strong> – Current negotiation session</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>LogRow to append into the session log file</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.MoveAnalyzeLogger.MoveAnalyzeLogger.on_session_end">
+<span class="sig-name descname"><span class="pre">on_session_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">final_row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Session.Session" title="nenv.Session.Session"><span class="pre">Session</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs" title="nenv.SessionLogs.SessionLogs"><span class="pre">SessionLogs</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/logger/MoveAnalyzeLogger.html#MoveAnalyzeLogger.on_session_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.MoveAnalyzeLogger.MoveAnalyzeLogger.on_session_end" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when the negotiation session ends.</p>
+<p>This method generate a log for tournament log file.
+:param final_row: The final log file. It includes the failure or acceptance logs.
+:param session: Current negotiation session
+:return: LogRow to append into the tournament log file</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nenv.logger.TournamentSummaryLogger">
+<span id="nenv-logger-tournamentsummarylogger-module"></span><h2>nenv.logger.TournamentSummaryLogger module<a class="headerlink" href="#module-nenv.logger.TournamentSummaryLogger" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.logger.TournamentSummaryLogger.TournamentSummaryLogger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.logger.TournamentSummaryLogger.</span></span><span class="sig-name descname"><span class="pre">TournamentSummaryLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/TournamentSummaryLogger.html#TournamentSummaryLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.TournamentSummaryLogger.TournamentSummaryLogger" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nenv.logger.AbstractLogger.AbstractLogger" title="nenv.logger.AbstractLogger.AbstractLogger"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractLogger</span></code></a></p>
+<p>TournamentSummaryLogger summarize the tournament results for the performance analysis of agents.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.TournamentSummaryLogger.TournamentSummaryLogger.get_row">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_row</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tournament_results</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataFrame</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/nenv/logger/TournamentSummaryLogger.html#TournamentSummaryLogger.get_row"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.TournamentSummaryLogger.TournamentSummaryLogger.get_row" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.TournamentSummaryLogger.TournamentSummaryLogger.on_tournament_end">
+<span class="sig-name descname"><span class="pre">on_tournament_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tournament_logs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.ExcelLog" title="nenv.utils.ExcelLog.ExcelLog"><span class="pre">ExcelLog</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/TournamentSummaryLogger.html#TournamentSummaryLogger.on_tournament_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.TournamentSummaryLogger.TournamentSummaryLogger.on_tournament_end" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when the tournament ends.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tournament_logs</strong> – Whole tournament logs</p></li>
+<li><p><strong>agent_names</strong> – List of agent name in the tournament</p></li>
+<li><p><strong>domain_names</strong> – List of domain names in the tournament</p></li>
+<li><p><strong>estimator_names</strong> – List of estimator name (i.e., opponent model) in the tournament</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nenv.logger.UtilityDistributionLogger">
+<span id="nenv-logger-utilitydistributionlogger-module"></span><h2>nenv.logger.UtilityDistributionLogger module<a class="headerlink" href="#module-nenv.logger.UtilityDistributionLogger" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.logger.UtilityDistributionLogger.UtilityDistributionLogger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.logger.UtilityDistributionLogger.</span></span><span class="sig-name descname"><span class="pre">UtilityDistributionLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/UtilityDistributionLogger.html#UtilityDistributionLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.UtilityDistributionLogger.UtilityDistributionLogger" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nenv.logger.AbstractLogger.AbstractLogger" title="nenv.logger.AbstractLogger.AbstractLogger"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractLogger</span></code></a></p>
+<p>UtilityDistributionLogger logs the offered utility distribution and draws them.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.UtilityDistributionLogger.UtilityDistributionLogger.draw_agent_opponent_utility">
+<span class="sig-name descname"><span class="pre">draw_agent_opponent_utility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tournament_logs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.ExcelLog" title="nenv.utils.ExcelLog.ExcelLog"><span class="pre">ExcelLog</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">draw_pareto</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_domain_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/UtilityDistributionLogger.html#UtilityDistributionLogger.draw_agent_opponent_utility"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.UtilityDistributionLogger.UtilityDistributionLogger.draw_agent_opponent_utility" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.UtilityDistributionLogger.UtilityDistributionLogger.get_pareto_nash_kalai">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_pareto_nash_kalai</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">domain_no:</span> <span class="pre">str)</span> <span class="pre">-&gt;</span> <span class="pre">(&lt;class</span> <span class="pre">'numpy.ndarray'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'nenv.BidSpace.BidPoint'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">&lt;class</span> <span class="pre">'nenv.BidSpace.BidPoint'&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/UtilityDistributionLogger.html#UtilityDistributionLogger.get_pareto_nash_kalai"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.UtilityDistributionLogger.UtilityDistributionLogger.get_pareto_nash_kalai" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.UtilityDistributionLogger.UtilityDistributionLogger.on_session_end">
+<span class="sig-name descname"><span class="pre">on_session_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">final_row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Session.Session" title="nenv.Session.Session"><span class="pre">Session</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs" title="nenv.SessionLogs.SessionLogs"><span class="pre">SessionLogs</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></span><a class="reference internal" href="_modules/nenv/logger/UtilityDistributionLogger.html#UtilityDistributionLogger.on_session_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.UtilityDistributionLogger.UtilityDistributionLogger.on_session_end" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when the negotiation session ends.</p>
+<p>This method generate a log for tournament log file.
+:param final_row: The final log file. It includes the failure or acceptance logs.
+:param session: Current negotiation session
+:return: LogRow to append into the tournament log file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.logger.UtilityDistributionLogger.UtilityDistributionLogger.on_tournament_end">
+<span class="sig-name descname"><span class="pre">on_tournament_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tournament_logs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.utils.html#nenv.utils.ExcelLog.ExcelLog" title="nenv.utils.ExcelLog.ExcelLog"><span class="pre">ExcelLog</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">agent_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimator_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/logger/UtilityDistributionLogger.html#UtilityDistributionLogger.on_tournament_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.logger.UtilityDistributionLogger.UtilityDistributionLogger.on_tournament_end" title="Link to this definition"></a></dt>
+<dd><p>This method will be called when the tournament ends.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tournament_logs</strong> – Whole tournament logs</p></li>
+<li><p><strong>agent_names</strong> – List of agent name in the tournament</p></li>
+<li><p><strong>domain_names</strong> – List of domain names in the tournament</p></li>
+<li><p><strong>estimator_names</strong> – List of estimator name (i.e., opponent model) in the tournament</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nenv.logger">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-nenv.logger" title="Link to this heading"></a></h2>
+<p>This module contains whole components of Logger in Negotiation ENVironment.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.logger.LoggerClass">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.logger.</span></span><span class="sig-name descname"><span class="pre">LoggerClass</span></span><a class="headerlink" href="#nenv.logger.LoggerClass" title="Link to this definition"></a></dt>
+<dd><p>Type variable of AbstractLogger class to declare a type for a variable</p>
+<p>alias of TypeVar(‘LoggerClass’, bound=<code class="xref py py-class docutils literal notranslate"><span class="pre">ABCMeta</span></code>)</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="nenv.OpponentModel.html" class="btn btn-neutral float-left" title="nenv.OpponentModel package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nenv.utils.html" class="btn btn-neutral float-right" title="nenv.utils package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, aniltrue.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

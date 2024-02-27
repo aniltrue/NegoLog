@@ -1,0 +1,26 @@
+{
+ "Name": "DomainBalancedHighOpp",
+ "NumberOfBids": 625,
+ "NumberOfIssues": 4,
+ "IssueValues": [
+  5,
+  5,
+  5,
+  5
+ ],
+ "Opposition": 0.6072890580275591,
+ "BalanceScore": -4.929390229335695e-18,
+ "NormalizedBalanceScore": -6.142040281387007e-16,
+ "Product Score": 0.3844,
+ "Social Welfare": 1.2400000000000002,
+ "Nash_A": 0.62,
+ "Nash_B": 0.62,
+ "Kalai_A": 0.8200000000000001,
+ "Kalai_B": 0.42000000000000004,
+ "NashBid": "{'IssueA': 'ValueC', 'IssueB': 'ValueE', 'IssueC': 'ValueA', 'IssueD': 'ValueC'}",
+ "KalaiBid": "{'IssueA': 'ValueA', 'IssueB': 'ValueE', 'IssueC': 'ValueA', 'IssueD': 'ValueA'}",
+ "ReservationValueProfileA": 0,
+ "ReservationValueProfileB": 0,
+ "MinUtility": 0.15000000000000002,
+ "MaxUtility": 1.0
+}

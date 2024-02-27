@@ -1,0 +1,25 @@
+{
+ "reservationValue": 0.0,
+ "issueWeights": {
+  "issueA": 0.1,
+  "issueB": 0.37,
+  "issueC": 0.53
+ },
+ "issues": {
+  "issueA": {
+   "valueA": 0.2,
+   "valueB": 0.36,
+   "valueC": 1.0
+  },
+  "issueB": {
+   "valueA": 0.2,
+   "valueB": 1.0,
+   "valueC": 0.66
+  },
+  "issueC": {
+   "valueA": 0.2,
+   "valueB": 0.91,
+   "valueC": 1.0
+  }
+ }
+}

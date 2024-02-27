@@ -1,0 +1,41 @@
+{
+ "Name": "Domain46",
+ "NumberOfBids": 15625,
+ "NumberOfIssues": 6,
+ "IssueValues": [
+  5,
+  5,
+  5,
+  5,
+  5,
+  5
+ ],
+ "Opposition": 0.2695977188330791,
+ "BalanceScore": 0.12835999999999934,
+ "Nash Product": 0.6601603400000001,
+ "Social Welfare": 1.6269,
+ "Nash_A": 0.7742,
+ "Nash_B": 0.8527000000000001,
+ "Kalai_A": 0.7742,
+ "Kalai_B": 0.8527000000000001,
+ "NashBid": {
+  "issueA": "valueB",
+  "issueB": "valueC",
+  "issueC": "valueB",
+  "issueD": "valueD",
+  "issueE": "valueD",
+  "issueF": "valueC"
+ },
+ "KalaiBid": {
+  "issueA": "valueB",
+  "issueB": "valueC",
+  "issueC": "valueB",
+  "issueD": "valueD",
+  "issueE": "valueD",
+  "issueF": "valueC"
+ },
+ "ReservationValueProfileA": 0.0,
+ "ReservationValueProfileB": 0.0,
+ "MinUtility": 0.2,
+ "MaxUtility": 1.0
+}

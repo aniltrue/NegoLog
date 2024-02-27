@@ -1,0 +1,38 @@
+{
+ "Name": "Domain27",
+ "NumberOfBids": 7776,
+ "NumberOfIssues": 5,
+ "IssueValues": [
+  6,
+  6,
+  6,
+  6,
+  6
+ ],
+ "Opposition": 0.28570509270924793,
+ "BalanceScore": 0.008199999999999963,
+ "Nash Product": 0.6378687200000001,
+ "Social Welfare": 1.5978,
+ "Nash_A": 0.8182,
+ "Nash_B": 0.7796000000000001,
+ "Kalai_A": 0.8182,
+ "Kalai_B": 0.7796000000000001,
+ "NashBid": {
+  "issueA": "valueB",
+  "issueB": "valueA",
+  "issueC": "valueD",
+  "issueD": "valueF",
+  "issueE": "valueF"
+ },
+ "KalaiBid": {
+  "issueA": "valueB",
+  "issueB": "valueA",
+  "issueC": "valueD",
+  "issueD": "valueF",
+  "issueE": "valueF"
+ },
+ "ReservationValueProfileA": 0.0,
+ "ReservationValueProfileB": 0.0,
+ "MinUtility": 0.2,
+ "MaxUtility": 1.0
+}

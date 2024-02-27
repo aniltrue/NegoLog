@@ -1,0 +1,51 @@
+{
+ "Name": "Domain58",
+ "NumberOfBids": 19683,
+ "NumberOfIssues": 9,
+ "IssueValues": [
+  3,
+  3,
+  3,
+  3,
+  3,
+  3,
+  3,
+  3,
+  3
+ ],
+ "Opposition": 0.18867792663690158,
+ "BalanceScore": -0.044000000000000324,
+ "NormalizedBalanceScore": -0.014865660090619449,
+ "Nash Product": 0.751872,
+ "Social Welfare": 1.7344,
+ "Nash_A": 0.88,
+ "Nash_B": 0.8543999999999999,
+ "Kalai_A": 0.88,
+ "Kalai_B": 0.8543999999999999,
+ "NashBid": {
+  "issueA": "valueB",
+  "issueB": "valueB",
+  "issueC": "valueA",
+  "issueD": "valueB",
+  "issueE": "valueA",
+  "issueF": "valueA",
+  "issueG": "valueC",
+  "issueH": "valueC",
+  "issueI": "valueC"
+ },
+ "KalaiBid": {
+  "issueA": "valueB",
+  "issueB": "valueB",
+  "issueC": "valueA",
+  "issueD": "valueB",
+  "issueE": "valueA",
+  "issueF": "valueA",
+  "issueG": "valueC",
+  "issueH": "valueC",
+  "issueI": "valueC"
+ },
+ "ReservationValueProfileA": 0.0,
+ "ReservationValueProfileB": 0.0,
+ "MinUtility": 0.2,
+ "MaxUtility": 1.0
+}

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nenv.Tournament &mdash; NegoLog 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            NegoLog
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">NegoLog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NegoLog</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">nenv.Tournament</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for nenv.Tournament</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">nenv.Agent</span> <span class="kn">import</span> <span class="n">AgentClass</span>
+<span class="kn">from</span> <span class="nn">nenv.logger</span> <span class="kn">import</span> <span class="n">AbstractLogger</span><span class="p">,</span> <span class="n">LoggerClass</span>
+<span class="kn">from</span> <span class="nn">nenv.OpponentModel</span> <span class="kn">import</span> <span class="n">OpponentModelClass</span>
+<span class="kn">from</span> <span class="nn">nenv.SessionManager</span> <span class="kn">import</span> <span class="n">SessionManager</span>
+<span class="kn">from</span> <span class="nn">nenv.utils</span> <span class="kn">import</span> <span class="n">ExcelLog</span><span class="p">,</span> <span class="n">TournamentProcessMonitor</span>
+
+
+<div class="viewcode-block" id="Tournament">
+<a class="viewcode-back" href="../../nenv.html#nenv.Tournament.Tournament">[docs]</a>
+<span class="k">class</span> <span class="nc">Tournament</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This class conducts a tournament based on given settings.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">agent_classes</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">AgentClass</span><span class="p">]</span>                 <span class="c1">#: List of Agent classes</span>
+    <span class="n">loggers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AbstractLogger</span><span class="p">]</span>                  <span class="c1">#: List of Logger classes</span>
+    <span class="n">domains</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>                             <span class="c1">#: List of domains</span>
+    <span class="n">estimators</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">OpponentModelClass</span><span class="p">]</span>            <span class="c1">#: List of opponent models</span>
+    <span class="n">deadline_time</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>                <span class="c1">#: Time-based deadline in terms of seconds</span>
+    <span class="n">deadline_round</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>               <span class="c1">#: Round-based deadline in terms of number of rounds</span>
+    <span class="n">result_dir</span><span class="p">:</span> <span class="nb">str</span>                                <span class="c1">#: The directory where the result logs will be extracted</span>
+    <span class="n">seed</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>                         <span class="c1">#: Random seed for whole tournament</span>
+    <span class="n">shuffle</span><span class="p">:</span> <span class="nb">bool</span>                                  <span class="c1">#: Whether the combinations will be shuffled, or not</span>
+    <span class="n">repeat</span><span class="p">:</span> <span class="nb">int</span>                                    <span class="c1">#: Number of repetition for each combination</span>
+    <span class="n">self_negotiation</span><span class="p">:</span> <span class="nb">bool</span>                         <span class="c1">#: Whether the agents negotiate with itself, or not</span>
+    <span class="n">tournament_process</span><span class="p">:</span> <span class="n">TournamentProcessMonitor</span>   <span class="c1">#: Process monitor</span>
+    <span class="n">killed</span><span class="p">:</span> <span class="nb">bool</span>                                   <span class="c1">#: Whether the tournament process is killed, or not</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_classes</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">AgentClass</span><span class="p">],</span> <span class="n">Set</span><span class="p">[</span><span class="n">AgentClass</span><span class="p">]],</span>
+                 <span class="n">domains</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                 <span class="n">logger_classes</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">LoggerClass</span><span class="p">],</span> <span class="n">Set</span><span class="p">[</span><span class="n">LoggerClass</span><span class="p">]],</span>
+                 <span class="n">estimator_classes</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">OpponentModelClass</span><span class="p">],</span> <span class="n">Set</span><span class="p">[</span><span class="n">OpponentModelClass</span><span class="p">]],</span>
+                 <span class="n">deadline_time</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+                 <span class="n">deadline_round</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span>
+                 <span class="n">self_negotiation</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                 <span class="n">repeat</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                 <span class="n">result_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;results/&quot;</span><span class="p">,</span>
+                 <span class="n">seed</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">shuffle</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+                 <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This class conducts a negotiation tournament.</span>
+
+<span class="sd">            :param agent_classes: List of agent classes (i.e., subclass of AbstractAgent class)</span>
+<span class="sd">            :param domains: List of domains</span>
+<span class="sd">            :param logger_classes: List of loggers classes (i.e., subclass of AbstractLogger class)</span>
+<span class="sd">            :param estimator_classes: List of estimator classes (i.e, subclass of AbstractOpponentModel class)</span>
+<span class="sd">            :param deadline_time: Time-based deadline in terms of seconds</span>
+<span class="sd">            :param deadline_round: Round-based deadline in terms of number of rounds</span>
+<span class="sd">            :param self_negotiation: Whether the agents negotiate with itself. *Default false*.</span>
+<span class="sd">            :param repeat: Number of repetition for each combination. *Default 1*</span>
+<span class="sd">            :param result_dir: The result directory that the tournament logs will be created. *Default &#39;results/&#39;*</span>
+<span class="sd">            :param seed: Setting seed for whole tournament. *Default None*.</span>
+<span class="sd">            :param shuffle: Whether shuffle negotiation combinations. *Default False*</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="n">deadline_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">deadline_round</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;No deadline type is specified.&quot;</span>
+        <span class="k">assert</span> <span class="n">deadline_time</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">deadline_time</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Deadline must be positive.&quot;</span>
+        <span class="k">assert</span> <span class="n">deadline_round</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">deadline_round</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Deadline must be positive.&quot;</span>
+
+        <span class="k">if</span> <span class="n">repeat</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;repeat is set to 1.&quot;</span><span class="p">)</span>
+            <span class="n">repeat</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">agent_classes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Empty list of agent classes.&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">domains</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Empty list of domains.&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">agent_classes</span> <span class="o">=</span> <span class="n">agent_classes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">domains</span> <span class="o">=</span> <span class="n">domains</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">estimators</span> <span class="o">=</span> <span class="n">estimator_classes</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deadline_time</span> <span class="o">=</span> <span class="n">deadline_time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deadline_round</span> <span class="o">=</span> <span class="n">deadline_round</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loggers</span> <span class="o">=</span> <span class="p">[</span><span class="n">logger_class</span><span class="p">(</span><span class="n">result_dir</span><span class="p">)</span> <span class="k">for</span> <span class="n">logger_class</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">logger_classes</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result_dir</span> <span class="o">=</span> <span class="n">result_dir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">repeat</span> <span class="o">=</span> <span class="n">repeat</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">self_negotiation</span> <span class="o">=</span> <span class="n">self_negotiation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shuffle</span> <span class="o">=</span> <span class="n">shuffle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tournament_process</span> <span class="o">=</span> <span class="n">TournamentProcessMonitor</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">killed</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="Tournament.run">
+<a class="viewcode-back" href="../../nenv.html#nenv.Tournament.Tournament.run">[docs]</a>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method starts the tournament</span>
+
+<span class="sd">            :return: Nothing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Set seed</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seed</span><span class="p">)</span>
+
+        <span class="c1"># Create directory</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result_dir</span><span class="p">):</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result_dir</span><span class="p">)</span>
+
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result_dir</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result_dir</span><span class="p">,</span> <span class="s2">&quot;sessions/&quot;</span><span class="p">)))</span>
+
+        <span class="c1"># Set killed flag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">killed</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="c1"># Extract domain information into the result directory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extract_domains</span><span class="p">()</span>
+
+        <span class="c1"># Get all combinations</span>
+        <span class="n">negotiations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_combinations</span><span class="p">()</span>
+
+        <span class="c1"># Names for logger</span>
+        <span class="n">agent_names</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">estimator_names</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Tournament log file</span>
+        <span class="n">tournament_logs</span> <span class="o">=</span> <span class="n">ExcelLog</span><span class="p">([</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">])</span>
+
+        <span class="n">tournament_logs</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result_dir</span><span class="p">,</span> <span class="s2">&quot;results.xlsx&quot;</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tournament_process</span><span class="o">.</span><span class="n">initiate</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">negotiations</span><span class="p">))</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Started at </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">))</span><span class="si">}</span><span class="s1">.&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total negotiation:&quot;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">negotiations</span><span class="p">))</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">agent_class_1</span><span class="p">,</span> <span class="n">agent_class_2</span><span class="p">,</span> <span class="n">domain_name</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">negotiations</span><span class="p">):</span>
+            <span class="c1"># Start session</span>
+            <span class="n">session_runner</span> <span class="o">=</span> <span class="n">SessionManager</span><span class="p">(</span><span class="n">agent_class_1</span><span class="p">,</span> <span class="n">agent_class_2</span><span class="p">,</span> <span class="n">domain_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">deadline_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">deadline_round</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">estimators</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">loggers</span><span class="p">)</span>
+
+            <span class="n">session_path</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_</span><span class="si">%s</span><span class="s2">_Domain</span><span class="si">%s</span><span class="s2">.xlsx&quot;</span> <span class="o">%</span> \
+                           <span class="p">(</span><span class="n">session_runner</span><span class="o">.</span><span class="n">agentA</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">session_runner</span><span class="o">.</span><span class="n">agentB</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">domain_name</span><span class="p">)</span>
+
+            <span class="n">session_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+            <span class="n">tournament_logs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">session_runner</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result_dir</span><span class="p">,</span> <span class="s2">&quot;sessions/&quot;</span><span class="p">,</span> <span class="n">session_path</span><span class="p">)))</span>
+            <span class="n">session_end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+            <span class="c1"># Update total elapsed time</span>
+            <span class="n">session_elapsed_time</span> <span class="o">=</span> <span class="n">session_end_time</span> <span class="o">-</span> <span class="n">session_start_time</span>
+
+            <span class="n">tournament_logs</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;SessionRealTime&quot;</span><span class="p">:</span> <span class="n">session_elapsed_time</span><span class="p">}})</span>
+
+            <span class="c1"># Get list of name for loggers</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">estimator_names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">estimator_names</span> <span class="o">=</span> <span class="p">[</span><span class="n">estimator</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">estimator</span> <span class="ow">in</span> <span class="n">session_runner</span><span class="o">.</span><span class="n">agentA</span><span class="o">.</span><span class="n">estimators</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">session_runner</span><span class="o">.</span><span class="n">agentA</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">agent_names</span><span class="p">:</span>
+                <span class="n">agent_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">session_runner</span><span class="o">.</span><span class="n">agentA</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">session_runner</span><span class="o">.</span><span class="n">agentB</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">agent_names</span><span class="p">:</span>
+                <span class="n">agent_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">session_runner</span><span class="o">.</span><span class="n">agentB</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tournament_process</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">session_runner</span><span class="o">.</span><span class="n">agentA</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> vs. </span><span class="si">{</span><span class="n">session_runner</span><span class="o">.</span><span class="n">agentB</span><span class="o">.</span><span class="n">name</span><span class="w"> </span><span class="si">}</span><span class="s2"> in Domain: </span><span class="si">{</span><span class="n">domain_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">session_elapsed_time</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">killed</span><span class="p">:</span>  <span class="c1"># Check for kill signal</span>
+                <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tournament_process</span><span class="o">.</span><span class="n">end</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Tournament has been done. Please, wait for analysis...&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Backup</span>
+        <span class="n">tournament_logs</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result_dir</span><span class="p">,</span> <span class="s2">&quot;results_backup.xlsx&quot;</span><span class="p">))</span>
+
+        <span class="c1"># On tournament end</span>
+        <span class="k">for</span> <span class="n">logger</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loggers</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">on_tournament_end</span><span class="p">(</span><span class="n">tournament_logs</span><span class="p">,</span> <span class="n">agent_names</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domains</span><span class="p">,</span> <span class="n">estimator_names</span><span class="p">)</span>
+
+        <span class="c1"># Save tournament logs</span>
+        <span class="n">tournament_logs</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result_dir</span><span class="p">,</span> <span class="s2">&quot;results.xlsx&quot;</span><span class="p">))</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Analysis have been completed.&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;*&quot;</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total Elapsed Time:&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tournament_process</span><span class="o">.</span><span class="n">close</span><span class="p">()))</span>
+
+        <span class="c1"># Open folder</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">result_dir</span><span class="p">))</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">startfile</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Tournament.generate_combinations">
+<a class="viewcode-back" href="../../nenv.html#nenv.Tournament.Tournament.generate_combinations">[docs]</a>
+    <span class="k">def</span> <span class="nf">generate_combinations</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">AgentClass</span><span class="p">,</span> <span class="n">AgentClass</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method generates all combinations of negotiations.</span>
+
+<span class="sd">            :return: Nothing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">combinations</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">domain</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">domains</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">agent_class_1</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent_classes</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">agent_class_2</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">agent_classes</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">self_negotiation</span> <span class="ow">and</span> <span class="n">agent_class_1</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">==</span> <span class="n">agent_class_2</span><span class="o">.</span><span class="vm">__name__</span><span class="p">:</span>
+                        <span class="k">continue</span>
+
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">repeat</span><span class="p">):</span>
+                        <span class="n">combinations</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">agent_class_1</span><span class="p">,</span> <span class="n">agent_class_2</span><span class="p">,</span> <span class="n">domain</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">shuffle</span><span class="p">:</span>
+            <span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">combinations</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">combinations</span></div>
+
+
+<div class="viewcode-block" id="Tournament.extract_domains">
+<a class="viewcode-back" href="../../nenv.html#nenv.Tournament.Tournament.extract_domains">[docs]</a>
+    <span class="k">def</span> <span class="nf">extract_domains</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method extracts the domain information into the result directory.</span>
+
+<span class="sd">            :return: Nothing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">full_domains</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s2">&quot;domains/domains.xlsx&quot;</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s2">&quot;domains&quot;</span><span class="p">)</span>
+
+        <span class="n">domains</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">full_domains</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+        <span class="n">domain_counter</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">full_domains</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;DomainName&quot;</span><span class="p">])</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">domains</span><span class="p">:</span>
+                <span class="n">domains</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">domain_counter</span><span class="p">]</span> <span class="o">=</span> <span class="n">row</span>
+
+                <span class="n">domain_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="n">domains</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">result_dir</span><span class="p">,</span> <span class="s2">&quot;domains.xlsx&quot;</span><span class="p">),</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s2">&quot;domains&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, aniltrue.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

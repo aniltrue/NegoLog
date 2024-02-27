@@ -1,0 +1,112 @@
+nenv package
+============
+
+Submodules
+----------
+
+nenv.Action module
+------------------
+
+.. automodule:: nenv.Action
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nenv.Agent module
+-----------------
+
+.. automodule:: nenv.Agent
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nenv.Bid module
+---------------
+
+.. automodule:: nenv.Bid
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nenv.BidSpace module
+--------------------
+
+.. automodule:: nenv.BidSpace
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nenv.EditablePreference module
+------------------------------
+
+.. automodule:: nenv.EditablePreference
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nenv.Issue module
+-----------------
+
+.. automodule:: nenv.Issue
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nenv.Preference module
+----------------------
+
+.. automodule:: nenv.Preference
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nenv.Session module
+-------------------
+
+.. automodule:: nenv.Session
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nenv.SessionLogs module
+-----------------------
+
+.. automodule:: nenv.SessionLogs
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nenv.SessionManager module
+--------------------------
+
+.. automodule:: nenv.SessionManager
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+nenv.Tournament module
+----------------------
+
+.. automodule:: nenv.Tournament
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 2
+
+   nenv.OpponentModel
+   nenv.logger
+   nenv.utils
+
+Module contents
+---------------
+
+.. automodule:: nenv
+   :members:
+   :undoc-members:
+   :show-inheritance:

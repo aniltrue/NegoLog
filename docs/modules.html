@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NegoLog &mdash; NegoLog 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8d563738"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="nenv package" href="nenv.html" />
+    <link rel="prev" title="Welcome to NegoLog’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            NegoLog
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">NegoLog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nenv.html">nenv package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="agents.html">agents package</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NegoLog</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">NegoLog</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/modules.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="negolog">
+<h1>NegoLog<a class="headerlink" href="#negolog" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="nenv.html">nenv package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="nenv.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.html#module-nenv.Action">nenv.Action module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#nenv.Action.Accept"><code class="docutils literal notranslate"><span class="pre">Accept</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#nenv.Action.Action"><code class="docutils literal notranslate"><span class="pre">Action</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Action.Action.bid"><code class="docutils literal notranslate"><span class="pre">Action.bid</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#nenv.Action.Offer"><code class="docutils literal notranslate"><span class="pre">Offer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.html#module-nenv.Agent">nenv.Agent module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#nenv.Agent.AbstractAgent"><code class="docutils literal notranslate"><span class="pre">AbstractAgent</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Agent.AbstractAgent.accept_action"><code class="docutils literal notranslate"><span class="pre">AbstractAgent.accept_action</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Agent.AbstractAgent.act"><code class="docutils literal notranslate"><span class="pre">AbstractAgent.act()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Agent.AbstractAgent.can_accept"><code class="docutils literal notranslate"><span class="pre">AbstractAgent.can_accept()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Agent.AbstractAgent.estimators"><code class="docutils literal notranslate"><span class="pre">AbstractAgent.estimators</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Agent.AbstractAgent.initiate"><code class="docutils literal notranslate"><span class="pre">AbstractAgent.initiate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Agent.AbstractAgent.last_received_bids"><code class="docutils literal notranslate"><span class="pre">AbstractAgent.last_received_bids</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Agent.AbstractAgent.name"><code class="docutils literal notranslate"><span class="pre">AbstractAgent.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Agent.AbstractAgent.preference"><code class="docutils literal notranslate"><span class="pre">AbstractAgent.preference</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Agent.AbstractAgent.receive_bid"><code class="docutils literal notranslate"><span class="pre">AbstractAgent.receive_bid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Agent.AbstractAgent.receive_offer"><code class="docutils literal notranslate"><span class="pre">AbstractAgent.receive_offer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Agent.AbstractAgent.session_time"><code class="docutils literal notranslate"><span class="pre">AbstractAgent.session_time</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Agent.AbstractAgent.terminate"><code class="docutils literal notranslate"><span class="pre">AbstractAgent.terminate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#nenv.Agent.AgentClass"><code class="docutils literal notranslate"><span class="pre">AgentClass</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.html#module-nenv.Bid">nenv.Bid module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#nenv.Bid.Bid"><code class="docutils literal notranslate"><span class="pre">Bid</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Bid.Bid.content"><code class="docutils literal notranslate"><span class="pre">Bid.content</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Bid.Bid.copy"><code class="docutils literal notranslate"><span class="pre">Bid.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Bid.Bid.copy_without_utility"><code class="docutils literal notranslate"><span class="pre">Bid.copy_without_utility()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Bid.Bid.utility"><code class="docutils literal notranslate"><span class="pre">Bid.utility</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#nenv.Bid.IssueIterator"><code class="docutils literal notranslate"><span class="pre">IssueIterator</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.html#module-nenv.BidSpace">nenv.BidSpace module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#nenv.BidSpace.BidPoint"><code class="docutils literal notranslate"><span class="pre">BidPoint</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.BidSpace.BidPoint.bid"><code class="docutils literal notranslate"><span class="pre">BidPoint.bid</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.BidSpace.BidPoint.distance"><code class="docutils literal notranslate"><span class="pre">BidPoint.distance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.BidSpace.BidPoint.product_score"><code class="docutils literal notranslate"><span class="pre">BidPoint.product_score</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.BidSpace.BidPoint.social_welfare"><code class="docutils literal notranslate"><span class="pre">BidPoint.social_welfare</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.BidSpace.BidPoint.utility_a"><code class="docutils literal notranslate"><span class="pre">BidPoint.utility_a</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.BidSpace.BidPoint.utility_b"><code class="docutils literal notranslate"><span class="pre">BidPoint.utility_b</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#nenv.BidSpace.BidSpace"><code class="docutils literal notranslate"><span class="pre">BidSpace</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.BidSpace.BidSpace.bid_points"><code class="docutils literal notranslate"><span class="pre">BidSpace.bid_points</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.BidSpace.BidSpace.calculate_balance_score"><code class="docutils literal notranslate"><span class="pre">BidSpace.calculate_balance_score()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.BidSpace.BidSpace.calculate_normalized_balance_score"><code class="docutils literal notranslate"><span class="pre">BidSpace.calculate_normalized_balance_score()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.BidSpace.BidSpace.calculate_opposition"><code class="docutils literal notranslate"><span class="pre">BidSpace.calculate_opposition()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.BidSpace.BidSpace.get_bid_point"><code class="docutils literal notranslate"><span class="pre">BidSpace.get_bid_point()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.BidSpace.BidSpace.kalai_distance"><code class="docutils literal notranslate"><span class="pre">BidSpace.kalai_distance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.BidSpace.BidSpace.kalai_point"><code class="docutils literal notranslate"><span class="pre">BidSpace.kalai_point</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.BidSpace.BidSpace.kalai_score"><code class="docutils literal notranslate"><span class="pre">BidSpace.kalai_score</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.BidSpace.BidSpace.nash_distance"><code class="docutils literal notranslate"><span class="pre">BidSpace.nash_distance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.BidSpace.BidSpace.nash_point"><code class="docutils literal notranslate"><span class="pre">BidSpace.nash_point</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.BidSpace.BidSpace.nash_score"><code class="docutils literal notranslate"><span class="pre">BidSpace.nash_score</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.BidSpace.BidSpace.pareto"><code class="docutils literal notranslate"><span class="pre">BidSpace.pareto</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.BidSpace.BidSpace.prefA"><code class="docutils literal notranslate"><span class="pre">BidSpace.prefA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.BidSpace.BidSpace.prefB"><code class="docutils literal notranslate"><span class="pre">BidSpace.prefB</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.html#module-nenv.EditablePreference">nenv.EditablePreference module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#nenv.EditablePreference.EditablePreference"><code class="docutils literal notranslate"><span class="pre">EditablePreference</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.EditablePreference.EditablePreference.get_issue_weight"><code class="docutils literal notranslate"><span class="pre">EditablePreference.get_issue_weight()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.EditablePreference.EditablePreference.get_value_weight"><code class="docutils literal notranslate"><span class="pre">EditablePreference.get_value_weight()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.EditablePreference.EditablePreference.normalize"><code class="docutils literal notranslate"><span class="pre">EditablePreference.normalize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.EditablePreference.EditablePreference.set_issue_weight"><code class="docutils literal notranslate"><span class="pre">EditablePreference.set_issue_weight()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.EditablePreference.EditablePreference.set_reservation_value"><code class="docutils literal notranslate"><span class="pre">EditablePreference.set_reservation_value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.EditablePreference.EditablePreference.set_value_weight"><code class="docutils literal notranslate"><span class="pre">EditablePreference.set_value_weight()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.html#module-nenv.Issue">nenv.Issue module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#nenv.Issue.Issue"><code class="docutils literal notranslate"><span class="pre">Issue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Issue.Issue.name"><code class="docutils literal notranslate"><span class="pre">Issue.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Issue.Issue.values"><code class="docutils literal notranslate"><span class="pre">Issue.values</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.html#module-nenv.Preference">nenv.Preference module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#nenv.Preference.Preference"><code class="docutils literal notranslate"><span class="pre">Preference</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Preference.Preference.bids"><code class="docutils literal notranslate"><span class="pre">Preference.bids</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Preference.Preference.copy"><code class="docutils literal notranslate"><span class="pre">Preference.copy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Preference.Preference.get_bid_at"><code class="docutils literal notranslate"><span class="pre">Preference.get_bid_at()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Preference.Preference.get_bids_at"><code class="docutils literal notranslate"><span class="pre">Preference.get_bids_at()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Preference.Preference.get_bids_at_range"><code class="docutils literal notranslate"><span class="pre">Preference.get_bids_at_range()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Preference.Preference.get_random_bid"><code class="docutils literal notranslate"><span class="pre">Preference.get_random_bid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Preference.Preference.get_utility"><code class="docutils literal notranslate"><span class="pre">Preference.get_utility()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Preference.Preference.issue_weights"><code class="docutils literal notranslate"><span class="pre">Preference.issue_weights</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Preference.Preference.issues"><code class="docutils literal notranslate"><span class="pre">Preference.issues</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Preference.Preference.max_util_bid"><code class="docutils literal notranslate"><span class="pre">Preference.max_util_bid</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Preference.Preference.min_util_bid"><code class="docutils literal notranslate"><span class="pre">Preference.min_util_bid</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Preference.Preference.profile_json_path"><code class="docutils literal notranslate"><span class="pre">Preference.profile_json_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Preference.Preference.reservation_value"><code class="docutils literal notranslate"><span class="pre">Preference.reservation_value</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Preference.Preference.value_weights"><code class="docutils literal notranslate"><span class="pre">Preference.value_weights</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#nenv.Preference.domain_loader"><code class="docutils literal notranslate"><span class="pre">domain_loader()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.html#module-nenv.Session">nenv.Session module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#nenv.Session.Session"><code class="docutils literal notranslate"><span class="pre">Session</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Session.Session.action_history"><code class="docutils literal notranslate"><span class="pre">Session.action_history</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Session.Session.agentA"><code class="docutils literal notranslate"><span class="pre">Session.agentA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Session.Session.agentB"><code class="docutils literal notranslate"><span class="pre">Session.agentB</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Session.Session.bidSpace"><code class="docutils literal notranslate"><span class="pre">Session.bidSpace</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Session.Session.deadline_round"><code class="docutils literal notranslate"><span class="pre">Session.deadline_round</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Session.Session.deadline_time"><code class="docutils literal notranslate"><span class="pre">Session.deadline_time</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Session.Session.get_number_of_offers"><code class="docutils literal notranslate"><span class="pre">Session.get_number_of_offers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Session.Session.get_time"><code class="docutils literal notranslate"><span class="pre">Session.get_time()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Session.Session.last_row"><code class="docutils literal notranslate"><span class="pre">Session.last_row</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Session.Session.log_path"><code class="docutils literal notranslate"><span class="pre">Session.log_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Session.Session.loggers"><code class="docutils literal notranslate"><span class="pre">Session.loggers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Session.Session.on_acceptance"><code class="docutils literal notranslate"><span class="pre">Session.on_acceptance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Session.Session.on_error"><code class="docutils literal notranslate"><span class="pre">Session.on_error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Session.Session.on_fail"><code class="docutils literal notranslate"><span class="pre">Session.on_fail()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Session.Session.on_offer"><code class="docutils literal notranslate"><span class="pre">Session.on_offer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Session.Session.on_timed_out"><code class="docutils literal notranslate"><span class="pre">Session.on_timed_out()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Session.Session.process_manager"><code class="docutils literal notranslate"><span class="pre">Session.process_manager</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Session.Session.round"><code class="docutils literal notranslate"><span class="pre">Session.round</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Session.Session.session_log"><code class="docutils literal notranslate"><span class="pre">Session.session_log</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Session.Session.start"><code class="docutils literal notranslate"><span class="pre">Session.start()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Session.Session.start_time"><code class="docutils literal notranslate"><span class="pre">Session.start_time</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Session.Session.time_out"><code class="docutils literal notranslate"><span class="pre">Session.time_out</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.html#module-nenv.SessionLogs">nenv.SessionLogs module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs"><code class="docutils literal notranslate"><span class="pre">SessionLogs</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs.action_history"><code class="docutils literal notranslate"><span class="pre">SessionLogs.action_history</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs.agentA"><code class="docutils literal notranslate"><span class="pre">SessionLogs.agentA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs.agentB"><code class="docutils literal notranslate"><span class="pre">SessionLogs.agentB</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs.log_path"><code class="docutils literal notranslate"><span class="pre">SessionLogs.log_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs.loggers"><code class="docutils literal notranslate"><span class="pre">SessionLogs.loggers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs.parse_bid"><code class="docutils literal notranslate"><span class="pre">SessionLogs.parse_bid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs.process_end"><code class="docutils literal notranslate"><span class="pre">SessionLogs.process_end()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs.process_row"><code class="docutils literal notranslate"><span class="pre">SessionLogs.process_row()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs.session_log"><code class="docutils literal notranslate"><span class="pre">SessionLogs.session_log</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.SessionLogs.SessionLogs.start"><code class="docutils literal notranslate"><span class="pre">SessionLogs.start()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.html#module-nenv.SessionManager">nenv.SessionManager module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#nenv.SessionManager.SessionManager"><code class="docutils literal notranslate"><span class="pre">SessionManager</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.SessionManager.SessionManager.agentA"><code class="docutils literal notranslate"><span class="pre">SessionManager.agentA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.SessionManager.SessionManager.agentB"><code class="docutils literal notranslate"><span class="pre">SessionManager.agentB</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.SessionManager.SessionManager.deadline_time"><code class="docutils literal notranslate"><span class="pre">SessionManager.deadline_time</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.SessionManager.SessionManager.loggers"><code class="docutils literal notranslate"><span class="pre">SessionManager.loggers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.SessionManager.SessionManager.prefA"><code class="docutils literal notranslate"><span class="pre">SessionManager.prefA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.SessionManager.SessionManager.prefB"><code class="docutils literal notranslate"><span class="pre">SessionManager.prefB</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.SessionManager.SessionManager.run"><code class="docutils literal notranslate"><span class="pre">SessionManager.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.SessionManager.SessionManager.session"><code class="docutils literal notranslate"><span class="pre">SessionManager.session</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.html#module-nenv.Tournament">nenv.Tournament module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#nenv.Tournament.Tournament"><code class="docutils literal notranslate"><span class="pre">Tournament</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Tournament.Tournament.agent_classes"><code class="docutils literal notranslate"><span class="pre">Tournament.agent_classes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Tournament.Tournament.deadline_round"><code class="docutils literal notranslate"><span class="pre">Tournament.deadline_round</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Tournament.Tournament.deadline_time"><code class="docutils literal notranslate"><span class="pre">Tournament.deadline_time</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Tournament.Tournament.domains"><code class="docutils literal notranslate"><span class="pre">Tournament.domains</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Tournament.Tournament.estimators"><code class="docutils literal notranslate"><span class="pre">Tournament.estimators</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Tournament.Tournament.extract_domains"><code class="docutils literal notranslate"><span class="pre">Tournament.extract_domains()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Tournament.Tournament.generate_combinations"><code class="docutils literal notranslate"><span class="pre">Tournament.generate_combinations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Tournament.Tournament.killed"><code class="docutils literal notranslate"><span class="pre">Tournament.killed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Tournament.Tournament.loggers"><code class="docutils literal notranslate"><span class="pre">Tournament.loggers</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Tournament.Tournament.repeat"><code class="docutils literal notranslate"><span class="pre">Tournament.repeat</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Tournament.Tournament.result_dir"><code class="docutils literal notranslate"><span class="pre">Tournament.result_dir</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Tournament.Tournament.run"><code class="docutils literal notranslate"><span class="pre">Tournament.run()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Tournament.Tournament.seed"><code class="docutils literal notranslate"><span class="pre">Tournament.seed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Tournament.Tournament.self_negotiation"><code class="docutils literal notranslate"><span class="pre">Tournament.self_negotiation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Tournament.Tournament.shuffle"><code class="docutils literal notranslate"><span class="pre">Tournament.shuffle</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.html#nenv.Tournament.Tournament.tournament_process"><code class="docutils literal notranslate"><span class="pre">Tournament.tournament_process</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="nenv.OpponentModel.html">nenv.OpponentModel package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="nenv.OpponentModel.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.OpponentModel.html#module-nenv.OpponentModel.AbstractOpponentModel">nenv.OpponentModel.AbstractOpponentModel module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.OpponentModel.html#module-nenv.OpponentModel.BayesianOpponentModel">nenv.OpponentModel.BayesianOpponentModel module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.OpponentModel.html#module-nenv.OpponentModel.ClassicFrequencyOpponentModel">nenv.OpponentModel.ClassicFrequencyOpponentModel module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.OpponentModel.html#module-nenv.OpponentModel.ConflictBasedOpponentModel">nenv.OpponentModel.ConflictBasedOpponentModel module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.OpponentModel.html#module-nenv.OpponentModel.EstimatedPreference">nenv.OpponentModel.EstimatedPreference module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.OpponentModel.html#module-nenv.OpponentModel.WindowedFrequencyOpponentModel">nenv.OpponentModel.WindowedFrequencyOpponentModel module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.OpponentModel.html#module-nenv.OpponentModel">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.logger.html">nenv.logger package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="nenv.logger.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.logger.html#module-nenv.logger.AbstractLogger">nenv.logger.AbstractLogger module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.logger.html#module-nenv.logger.BidSpaceLogger">nenv.logger.BidSpaceLogger module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.logger.html#module-nenv.logger.DomainGraphsLogger">nenv.logger.DomainGraphsLogger module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.logger.html#module-nenv.logger.EstimatedBidSpaceLogger">nenv.logger.EstimatedBidSpaceLogger module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.logger.html#module-nenv.logger.EstimatedUtilityLogger">nenv.logger.EstimatedUtilityLogger module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.logger.html#module-nenv.logger.EstimatedMoveLogger">nenv.logger.EstimatedMoveLogger module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.logger.html#module-nenv.logger.EstimatorMetricLogger">nenv.logger.EstimatorMetricLogger module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.logger.html#module-nenv.logger.EstimatorOnlyFinalMetricLogger">nenv.logger.EstimatorOnlyFinalMetricLogger module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.logger.html#module-nenv.logger.EstimatedParetoLogger">nenv.logger.EstimatedParetoLogger module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.logger.html#module-nenv.logger.FinalGraphsLogger">nenv.logger.FinalGraphsLogger module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.logger.html#module-nenv.logger.MoveAnalyzeLogger">nenv.logger.MoveAnalyzeLogger module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.logger.html#module-nenv.logger.TournamentSummaryLogger">nenv.logger.TournamentSummaryLogger module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.logger.html#module-nenv.logger.UtilityDistributionLogger">nenv.logger.UtilityDistributionLogger module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.logger.html#module-nenv.logger">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.utils.html">nenv.utils package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="nenv.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.utils.html#module-nenv.utils.DynamicImport">nenv.utils.DynamicImport module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.utils.html#module-nenv.utils.ExcelLog">nenv.utils.ExcelLog module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.utils.html#module-nenv.utils.KillableThread">nenv.utils.KillableThread module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.utils.html#module-nenv.utils.Move">nenv.utils.Move module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.utils.html#module-nenv.utils.ProcessManager">nenv.utils.ProcessManager module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.utils.html#module-nenv.utils.SessionOps">nenv.utils.SessionOps module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.utils.html#module-nenv.utils.TournamentProcessMonitor">nenv.utils.TournamentProcessMonitor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.utils.html#module-nenv.utils.TypeCheck">nenv.utils.TypeCheck module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.utils.html#module-nenv.utils.tournament_graphs">nenv.utils.tournament_graphs module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.utils.html#module-nenv.utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="nenv.html#module-nenv">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="agents.html">agents package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="agents.html#module-agents">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to NegoLog’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nenv.html" class="btn btn-neutral float-right" title="nenv package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, aniltrue.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

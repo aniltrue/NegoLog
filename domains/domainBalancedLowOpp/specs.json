@@ -1,0 +1,26 @@
+{
+ "Name": "DomainBalancedLowOpp",
+ "NumberOfBids": 625,
+ "NumberOfIssues": 4,
+ "IssueValues": [
+  5,
+  5,
+  5,
+  5
+ ],
+ "Opposition": 0.33941125496954283,
+ "BalanceScore": 4.001243780749064e-17,
+ "NormalizedBalanceScore": 4.908354424654017e-15,
+ "Product Score": 0.5776,
+ "Social Welfare": 1.52,
+ "Nash_A": 0.76,
+ "Nash_B": 0.76,
+ "Kalai_A": 0.76,
+ "Kalai_B": 0.76,
+ "NashBid": "{'IssueA': 'ValueE', 'IssueB': 'ValueE', 'IssueC': 'ValueA', 'IssueD': 'ValueA'}",
+ "KalaiBid": "{'IssueA': 'ValueE', 'IssueB': 'ValueE', 'IssueC': 'ValueA', 'IssueD': 'ValueA'}",
+ "ReservationValueProfileA": 0,
+ "ReservationValueProfileB": 0,
+ "MinUtility": 0.2,
+ "MaxUtility": 1.0
+}

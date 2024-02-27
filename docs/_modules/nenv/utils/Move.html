@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nenv.utils.Move &mdash; NegoLog 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            NegoLog
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">NegoLog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">NegoLog</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">nenv.utils.Move</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for nenv.utils.Move</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helpful functions for negotiation move processes.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span>
+
+<span class="n">POSITIVE_MOVES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Fortunate&quot;</span><span class="p">,</span> <span class="s2">&quot;Nice&quot;</span><span class="p">,</span> <span class="s2">&quot;Concession&quot;</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    List of positive moves</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">NEGATIVE_MOVES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Selfish&quot;</span><span class="p">,</span> <span class="s2">&quot;Unfortunate&quot;</span><span class="p">,</span> <span class="s2">&quot;Silent&quot;</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    List of negative moves</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="get_move">
+<a class="viewcode-back" href="../../../nenv.utils.html#nenv.utils.Move.get_move">[docs]</a>
+<span class="k">def</span> <span class="nf">get_move</span><span class="p">(</span><span class="n">prev_offered_utility</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">offered_utility</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">prev_opponent_utility</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">opponent_utility</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.03</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method provides the corresponding move</span>
+
+<span class="sd">        :param prev_offered_utility: The previous utility of the agent</span>
+<span class="sd">        :param offered_utility: The current utility of the agent</span>
+<span class="sd">        :param prev_opponent_utility: The previous utility of the opponent</span>
+<span class="sd">        :param opponent_utility: The current utility of the opponent</span>
+<span class="sd">        :param threshold: Threshold for *&#39;Silent&#39;* and *&#39;Nice&#39;* moves</span>
+<span class="sd">        :return: The name of the move</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">diff_offered</span> <span class="o">=</span> <span class="n">offered_utility</span> <span class="o">-</span> <span class="n">prev_offered_utility</span>
+    <span class="n">diff_opponent</span> <span class="o">=</span> <span class="n">opponent_utility</span> <span class="o">-</span> <span class="n">prev_opponent_utility</span>
+
+    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">diff_offered</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">threshold</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">diff_opponent</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">threshold</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;Silent&quot;</span>
+
+    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">diff_offered</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">threshold</span> <span class="ow">and</span> <span class="n">diff_opponent</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;Nice&quot;</span>
+
+    <span class="k">if</span> <span class="n">diff_offered</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">diff_opponent</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;Concession&quot;</span>
+
+    <span class="k">if</span> <span class="n">diff_offered</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">diff_opponent</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;Unfortunate&quot;</span>
+
+    <span class="k">if</span> <span class="n">diff_offered</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">diff_opponent</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;Selfish&quot;</span>
+
+    <span class="k">if</span> <span class="n">diff_offered</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">diff_opponent</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;Fortunate&quot;</span>
+
+    <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="get_move_distribution">
+<a class="viewcode-back" href="../../../nenv.utils.html#nenv.utils.Move.get_move_distribution">[docs]</a>
+<span class="k">def</span> <span class="nf">get_move_distribution</span><span class="p">(</span><span class="n">moves</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method provides the move distribution</span>
+
+<span class="sd">        :param moves: List of move names</span>
+<span class="sd">        :return: Distribution as a dictionary</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dist</span> <span class="o">=</span> <span class="p">{</span><span class="n">move</span><span class="p">:</span> <span class="mf">0.</span> <span class="k">for</span> <span class="n">move</span> <span class="ow">in</span> <span class="n">POSITIVE_MOVES</span><span class="p">}</span>
+    <span class="n">dist</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">move</span><span class="p">:</span> <span class="mf">0.</span> <span class="k">for</span> <span class="n">move</span> <span class="ow">in</span> <span class="n">NEGATIVE_MOVES</span><span class="p">})</span>
+
+    <span class="k">for</span> <span class="n">move</span> <span class="ow">in</span> <span class="n">moves</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">move</span> <span class="ow">in</span> <span class="n">dist</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">dist</span><span class="p">[</span><span class="n">move</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">dist</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">+</span> <span class="mf">1e-8</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="n">move</span><span class="p">:</span> <span class="n">count</span> <span class="o">/</span> <span class="n">total</span> <span class="k">for</span> <span class="n">move</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">dist</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span></div>
+
+
+
+<div class="viewcode-block" id="calculate_behavior_sensitivity">
+<a class="viewcode-back" href="../../../nenv.utils.html#nenv.utils.Move.calculate_behavior_sensitivity">[docs]</a>
+<span class="k">def</span> <span class="nf">calculate_behavior_sensitivity</span><span class="p">(</span><span class="n">moves</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method calculates the behavior sensitivity</span>
+
+<span class="sd">        :param moves: List of moves</span>
+<span class="sd">        :return: Behavior sensitivity</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">count_positives</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="n">count_negatives</span> <span class="o">=</span> <span class="mf">0.</span>
+
+    <span class="k">for</span> <span class="n">move</span> <span class="ow">in</span> <span class="n">moves</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">move</span> <span class="ow">in</span> <span class="n">POSITIVE_MOVES</span><span class="p">:</span>
+            <span class="n">count_positives</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">move</span> <span class="ow">in</span> <span class="n">NEGATIVE_MOVES</span><span class="p">:</span>
+            <span class="n">count_negatives</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">count_positives</span> <span class="o">/</span> <span class="p">(</span><span class="n">count_negatives</span> <span class="o">+</span> <span class="mf">1e-8</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="calculate_awareness">
+<a class="viewcode-back" href="../../../nenv.utils.html#nenv.utils.Move.calculate_awareness">[docs]</a>
+<span class="k">def</span> <span class="nf">calculate_awareness</span><span class="p">(</span><span class="n">agent_moves</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">opponent_moves</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method calculates the awareness of the Agent B.</span>
+
+<span class="sd">        If an agent has a higher awareness, it changes its move direction</span>
+<span class="sd">        (i.e., from positive to negative, or vice versa) when the opponent changes.</span>
+
+<span class="sd">        :param agent_moves: The list of the moves of the agent</span>
+<span class="sd">        :param opponent_moves: The list of the moves of the opponent</span>
+<span class="sd">        :return: Awareness</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">change_a_counter</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="n">change_b_counter</span> <span class="o">=</span> <span class="mf">0.</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">agent_moves</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">opponent_moves</span><span class="p">))):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">agent_moves</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">POSITIVE_MOVES</span> <span class="ow">and</span> <span class="n">agent_moves</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">NEGATIVE_MOVES</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">agent_moves</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">NEGATIVE_MOVES</span> <span class="ow">and</span> <span class="n">agent_moves</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">POSITIVE_MOVES</span><span class="p">):</span>
+            <span class="n">change_a_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">opponent_moves</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">POSITIVE_MOVES</span> <span class="ow">and</span> <span class="n">opponent_moves</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">NEGATIVE_MOVES</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">opponent_moves</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">NEGATIVE_MOVES</span> <span class="ow">and</span> <span class="n">opponent_moves</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">POSITIVE_MOVES</span><span class="p">):</span>
+                <span class="n">change_b_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">change_b_counter</span> <span class="o">/</span> <span class="p">(</span><span class="n">change_a_counter</span> <span class="o">+</span> <span class="mf">1e-8</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="calculate_move_correlation">
+<a class="viewcode-back" href="../../../nenv.utils.html#nenv.utils.Move.calculate_move_correlation">[docs]</a>
+<span class="k">def</span> <span class="nf">calculate_move_correlation</span><span class="p">(</span><span class="n">agent_moves</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">opponent_moves</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method calculates the move direction correlation between the agent and the opponent.</span>
+
+<span class="sd">        *Note:* Move direction correlation is calculated for the opponent.</span>
+
+<span class="sd">        If an agent has a higher move direction correlation, it changes its move direction in the same way when its</span>
+<span class="sd">        opponent changes.</span>
+
+<span class="sd">        :param agent_moves: The list of the moves of the agent</span>
+<span class="sd">        :param opponent_moves: The list of the moves of the opponent</span>
+<span class="sd">        :return: Move direction correlation</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">change_agent_counter</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="n">change_opponent_counter</span> <span class="o">=</span> <span class="mf">0.</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">agent_moves</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">opponent_moves</span><span class="p">))):</span>
+        <span class="k">if</span> <span class="n">agent_moves</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">POSITIVE_MOVES</span> <span class="ow">and</span> <span class="n">agent_moves</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">NEGATIVE_MOVES</span><span class="p">:</span>
+            <span class="n">change_agent_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">opponent_moves</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">POSITIVE_MOVES</span> <span class="ow">and</span> <span class="n">opponent_moves</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">NEGATIVE_MOVES</span><span class="p">:</span>
+                <span class="n">change_opponent_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">opponent_moves</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">NEGATIVE_MOVES</span> <span class="ow">and</span> <span class="n">opponent_moves</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">POSITIVE_MOVES</span><span class="p">:</span>
+                <span class="n">change_opponent_counter</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">agent_moves</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">NEGATIVE_MOVES</span> <span class="ow">and</span> <span class="n">agent_moves</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">POSITIVE_MOVES</span><span class="p">:</span>
+            <span class="n">change_agent_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">opponent_moves</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">NEGATIVE_MOVES</span> <span class="ow">and</span> <span class="n">opponent_moves</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">POSITIVE_MOVES</span><span class="p">:</span>
+                <span class="n">change_opponent_counter</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">opponent_moves</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">in</span> <span class="n">POSITIVE_MOVES</span> <span class="ow">and</span> <span class="n">opponent_moves</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">NEGATIVE_MOVES</span><span class="p">:</span>
+                <span class="n">change_opponent_counter</span> <span class="o">-=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">change_opponent_counter</span> <span class="o">/</span> <span class="p">(</span><span class="n">change_agent_counter</span> <span class="o">+</span> <span class="mf">1e-8</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, aniltrue.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nenv.OpponentModel.ConflictBasedOpponentModel &mdash; NegoLog 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            NegoLog
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">NegoLog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">NegoLog</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">nenv.OpponentModel.ConflictBasedOpponentModel</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for nenv.OpponentModel.ConflictBasedOpponentModel</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Set</span>
+<span class="kn">from</span> <span class="nn">nenv.OpponentModel.AbstractOpponentModel</span> <span class="kn">import</span> <span class="n">AbstractOpponentModel</span>
+<span class="kn">from</span> <span class="nn">nenv.Preference</span> <span class="kn">import</span> <span class="n">Preference</span>
+<span class="kn">from</span> <span class="nn">nenv.Bid</span> <span class="kn">import</span> <span class="n">Bid</span>
+
+
+<div class="viewcode-block" id="ConflictBasedOpponentModel">
+<a class="viewcode-back" href="../../../nenv.OpponentModel.html#nenv.OpponentModel.ConflictBasedOpponentModel.ConflictBasedOpponentModel">[docs]</a>
+<span class="k">class</span> <span class="nc">ConflictBasedOpponentModel</span><span class="p">(</span><span class="n">AbstractOpponentModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        **Conflict-based opponent model**:</span>
+<span class="sd">            It tries to extract the maximum information gained with limited interaction. It presents a conflict-based</span>
+<span class="sd">            opponent modeling technique which resolves the conflicts by ordering the issues and values.</span>
+<span class="sd">            The proposed model out-performs them despite the diversity of participants’ negotiation behaviors. Besides,</span>
+<span class="sd">            the conflict-based opponent model estimates the entire bid space much more successfully than its competitors</span>
+<span class="sd">            in automated negotiation sessions when a small portion of the outcome space was explored. [Keskin2023]_</span>
+
+<span class="sd">        .. [Keskin2023] Keskin, M.O., Buzcu, B. &amp; Aydoğan, R. Conflict-based negotiation strategy for human-agent negotiation. Appl Intell 53, 29741–29757 (2023). &lt;https://doi.org/10.1007/s10489-023-05001-9&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">opponent_history</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Bid</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference</span><span class="p">:</span> <span class="n">Preference</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">reference</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opponent_history</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;Conflict-Based Opponent Model&quot;</span>
+
+<div class="viewcode-block" id="ConflictBasedOpponentModel.update">
+<a class="viewcode-back" href="../../../nenv.OpponentModel.html#nenv.OpponentModel.ConflictBasedOpponentModel.ConflictBasedOpponentModel.update">[docs]</a>
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bid</span><span class="p">:</span> <span class="n">Bid</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">opponent_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bid</span><span class="p">)</span>
+
+        <span class="c1"># Dictionary that keeps number of same values as keys, and compared offers list as values.</span>
+        <span class="n">comparables_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opponent_history</span><span class="p">)):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opponent_history</span><span class="p">)):</span>
+                <span class="c1"># Compare current and next bid&#39;s issue values. If they are same, add to the list</span>
+
+                <span class="c1"># Create comparison variable for history offers.</span>
+                <span class="n">comparison_pair</span> <span class="o">=</span> <span class="n">ComparisonObject</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">opponent_history</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">opponent_history</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+
+                <span class="c1"># Check if this pair already exists in dict, append otherwise with same value count as a key</span>
+                <span class="n">comparing_issues_size</span> <span class="o">=</span> <span class="n">comparison_pair</span><span class="o">.</span><span class="n">comparing_issues_size</span>
+
+                <span class="c1"># If count does not exist, create new empty list to append later on.</span>
+                <span class="k">if</span> <span class="n">comparing_issues_size</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">comparables_dict</span><span class="p">:</span>
+                    <span class="n">comparables_dict</span><span class="p">[</span><span class="n">comparing_issues_size</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+                <span class="k">if</span> <span class="n">comparison_pair</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">comparables_dict</span><span class="p">[</span><span class="n">comparing_issues_size</span><span class="p">]:</span>
+                    <span class="n">comparables_dict</span><span class="p">[</span><span class="n">comparing_issues_size</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">comparison_pair</span><span class="p">)</span>
+
+        <span class="c1"># List that keeps importance of the issues in descending order.</span>
+        <span class="c1"># idx 0 is more important than idx 1</span>
+        <span class="c1"># Initially at semi-random (the order which the values were inserted)</span>
+
+        <span class="n">issues_orderings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preference</span><span class="o">.</span><span class="n">issues</span>
+        <span class="n">value_orderings</span> <span class="o">=</span> <span class="p">{</span><span class="n">issue</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">issue</span><span class="o">.</span><span class="n">values</span> <span class="k">for</span> <span class="n">issue</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">preference</span><span class="o">.</span><span class="n">issues</span><span class="p">}</span>
+        <span class="n">issue_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">issues_orderings</span><span class="p">)</span>
+
+        <span class="n">all_pairwise_comparisons</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">issues_orderings</span><span class="p">}</span>
+        <span class="c1"># &quot;issue_name&quot;: (first_value, second_value)</span>
+
+        <span class="n">ground_truths</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># list of 1 value pairwise comparisons</span>
+
+        <span class="c1"># comparison pair size 1 equals comparing only 1 value, the rest of the values are the same</span>
+        <span class="k">for</span> <span class="n">comparison_item</span> <span class="ow">in</span> <span class="n">comparables_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">[]):</span>
+            <span class="k">for</span> <span class="p">(</span><span class="n">issue_name</span><span class="p">,</span> <span class="n">first_value</span><span class="p">,</span> <span class="n">second_value</span><span class="p">)</span> <span class="ow">in</span> <span class="n">comparison_item</span><span class="p">:</span>
+                <span class="n">first_value_idx</span> <span class="o">=</span> <span class="n">value_orderings</span><span class="p">[</span><span class="n">issue_name</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">first_value</span><span class="p">)</span>
+                <span class="n">second_value_idx</span> <span class="o">=</span> <span class="n">value_orderings</span><span class="p">[</span><span class="n">issue_name</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">second_value</span><span class="p">)</span>
+
+                <span class="n">all_pairwise_comparisons</span><span class="p">[</span><span class="n">issue_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">first_value</span><span class="p">,</span> <span class="n">second_value</span><span class="p">))</span>
+                <span class="n">ground_truths</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">first_value</span><span class="p">,</span> <span class="n">second_value</span><span class="p">))</span>
+
+                <span class="n">value_orderings</span><span class="p">[</span><span class="n">issue_name</span><span class="p">][</span><span class="n">first_value_idx</span><span class="p">],</span> <span class="n">value_orderings</span><span class="p">[</span><span class="n">issue_name</span><span class="p">][</span><span class="n">second_value_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">value_orderings</span><span class="p">[</span><span class="n">issue_name</span><span class="p">][</span><span class="n">second_value_idx</span><span class="p">],</span> <span class="n">value_orderings</span><span class="p">[</span><span class="n">issue_name</span><span class="p">][</span><span class="n">first_value_idx</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">issue</span><span class="p">,</span> <span class="n">ordering</span> <span class="ow">in</span> <span class="n">value_orderings</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">first_item</span><span class="p">,</span> <span class="n">second_item</span> <span class="ow">in</span> <span class="n">all_pairwise_comparisons</span><span class="p">[</span><span class="n">issue</span><span class="p">]:</span>
+                <span class="n">first_value_idx</span> <span class="o">=</span> <span class="n">ordering</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">first_item</span><span class="p">)</span>
+                <span class="n">second_value_idx</span> <span class="o">=</span> <span class="n">ordering</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">second_item</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">first_value_idx</span> <span class="o">&gt;</span> <span class="n">second_value_idx</span><span class="p">:</span>
+                    <span class="n">ordering</span><span class="p">[</span><span class="n">first_value_idx</span><span class="p">],</span> <span class="n">ordering</span><span class="p">[</span><span class="n">second_value_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">ordering</span><span class="p">[</span><span class="n">second_value_idx</span><span class="p">],</span> <span class="n">ordering</span><span class="p">[</span><span class="n">first_value_idx</span><span class="p">]</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">prev_size</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="n">all_pairwise_comparisons</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+            <span class="k">for</span> <span class="n">comparing_amount</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">issue_size</span><span class="p">):</span>
+                <span class="n">list_of_comparisons</span> <span class="o">=</span> <span class="n">comparables_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">comparing_amount</span><span class="p">,</span> <span class="p">[])</span>
+
+                <span class="k">for</span> <span class="n">comparison_item</span> <span class="ow">in</span> <span class="n">list_of_comparisons</span><span class="p">:</span>
+                    <span class="n">conflicts</span> <span class="o">=</span> <span class="p">[]</span>
+
+                    <span class="k">for</span> <span class="p">(</span><span class="n">issue_name</span><span class="p">,</span> <span class="n">first_value</span><span class="p">,</span> <span class="n">second_value</span><span class="p">)</span> <span class="ow">in</span> <span class="n">comparison_item</span><span class="p">:</span>
+                        <span class="c1"># first condition: if the reverse of what is proposed by this comparison item</span>
+                        <span class="c1"># (e.g., the first_value &gt; second_value) see if it is contradicted by the ground truths.</span>
+                        <span class="c1"># and ignore it.</span>
+
+                        <span class="k">if</span> <span class="p">(</span><span class="n">second_value</span><span class="p">,</span> <span class="n">first_value</span><span class="p">)</span> <span class="ow">in</span> <span class="n">ground_truths</span><span class="p">:</span>
+                            <span class="k">continue</span>
+
+                        <span class="k">if</span> <span class="p">(</span><span class="n">second_value</span><span class="p">,</span> <span class="n">first_value</span><span class="p">)</span> <span class="ow">in</span> <span class="n">all_pairwise_comparisons</span><span class="p">[</span><span class="n">issue_name</span><span class="p">]:</span>
+                            <span class="n">conflicts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">issue_name</span><span class="p">)</span>
+
+                    <span class="c1"># if issue_size = 4, and we are evaluation by pairs (comparing_amount = 2)</span>
+                    <span class="c1"># then 4 - 2 - 1 = 1 conflicts means 1 conflicting value is enough to</span>
+                    <span class="c1"># determine that one value is weighted higher than the rest.</span>
+
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">conflicts</span><span class="p">)</span> <span class="o">==</span> <span class="n">issue_size</span> <span class="o">-</span> <span class="n">comparing_amount</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="n">final_issues</span> <span class="o">=</span> <span class="p">[</span><span class="n">issue</span> <span class="k">for</span> <span class="n">issue</span> <span class="ow">in</span> <span class="n">issues_orderings</span> <span class="k">if</span> <span class="n">issue</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">conflicts</span><span class="p">]</span>
+
+                        <span class="k">for</span> <span class="n">issue</span> <span class="ow">in</span> <span class="n">final_issues</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="n">issue</span> <span class="ow">in</span> <span class="n">comparison_item</span><span class="o">.</span><span class="n">comparing_issues</span><span class="p">:</span>
+                                <span class="k">if</span> <span class="n">comparison_item</span><span class="p">[</span><span class="n">issue</span><span class="p">]</span> <span class="ow">in</span> <span class="n">all_pairwise_comparisons</span><span class="p">[</span><span class="n">issue</span><span class="p">]:</span>
+                                    <span class="k">continue</span>
+
+                                <span class="n">all_pairwise_comparisons</span><span class="p">[</span><span class="n">issue</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">comparison_item</span><span class="p">[</span><span class="n">issue</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="n">prev_size</span> <span class="o">==</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">len</span><span class="p">,</span> <span class="n">all_pairwise_comparisons</span><span class="o">.</span><span class="n">values</span><span class="p">())):</span>
+                <span class="k">break</span>
+
+        <span class="k">for</span> <span class="n">issue</span><span class="p">,</span> <span class="n">ordering</span> <span class="ow">in</span> <span class="n">value_orderings</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">first_item</span><span class="p">,</span> <span class="n">second_item</span> <span class="ow">in</span> <span class="n">all_pairwise_comparisons</span><span class="p">[</span><span class="n">issue</span><span class="p">]:</span>
+                <span class="n">first_item_idx</span> <span class="o">=</span> <span class="n">ordering</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">first_item</span><span class="p">)</span>
+                <span class="n">second_item_idx</span> <span class="o">=</span> <span class="n">ordering</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">second_item</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">first_item_idx</span> <span class="o">&gt;</span> <span class="n">second_item_idx</span><span class="p">:</span>
+                    <span class="n">ordering</span><span class="p">[</span><span class="n">first_item_idx</span><span class="p">],</span> <span class="n">ordering</span><span class="p">[</span><span class="n">second_item_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">ordering</span><span class="p">[</span><span class="n">second_item_idx</span><span class="p">],</span> <span class="n">ordering</span><span class="p">[</span>
+                        <span class="n">first_item_idx</span><span class="p">]</span>
+        <span class="c1"># swap_code:</span>
+
+        <span class="c1"># value_orderings[issue_name][first_value_idx], value_orderings[issue_name][second_value_idx] = value_orderings[</span>
+        <span class="c1">#    issue_name][second_value_idx], value_orderings[issue_name][first_value_idx]</span>
+        <span class="c1"># second phase is we evaluate and gather information on the rest of the comparison sizes</span>
+
+        <span class="n">conflict_count</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">comparing_issues_size</span><span class="p">,</span> <span class="n">comparison_pair_list</span> <span class="ow">in</span> <span class="n">comparables_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">comparison_pair</span> <span class="ow">in</span> <span class="n">comparison_pair_list</span><span class="p">:</span>
+                <span class="n">comparing_issues</span> <span class="o">=</span> <span class="n">comparison_pair</span><span class="o">.</span><span class="n">comparing_issues</span>
+                <span class="n">conflict_issues</span> <span class="o">=</span> <span class="p">[]</span>
+
+                <span class="k">for</span> <span class="n">issue_name</span><span class="p">,</span> <span class="n">first_value</span><span class="p">,</span> <span class="n">second_value</span> <span class="ow">in</span> <span class="n">comparison_pair</span><span class="p">:</span>
+                    <span class="n">ordering_for_issue_values</span> <span class="o">=</span> <span class="n">value_orderings</span><span class="p">[</span><span class="n">issue_name</span><span class="p">]</span>
+
+                    <span class="c1"># given the values are held in descending order, this is a conflict</span>
+                    <span class="k">if</span> <span class="n">ordering_for_issue_values</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">second_value</span><span class="p">))</span> <span class="o">&lt;</span> <span class="n">ordering_for_issue_values</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">first_value</span><span class="p">)):</span>
+                        <span class="n">conflict_issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">issue_name</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">conflict_issues</span><span class="p">)</span> <span class="o">==</span> <span class="n">comparing_issues_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">conflict_count</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">comparing_issues</span><span class="p">)]</span> <span class="o">=</span> <span class="n">conflict_count</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">comparing_issues</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+
+        <span class="c1"># The conflicts are sorted by count, so the most count conflict will have the highest precedence</span>
+        <span class="c1"># Since they are applied in order of their counts</span>
+
+        <span class="n">conflict_count_sorted_values</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">conflict_count</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">item</span><span class="p">:</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+        <span class="k">for</span> <span class="n">conflict</span><span class="p">,</span> <span class="n">amount</span> <span class="ow">in</span> <span class="n">conflict_count_sorted_values</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">non_conflict_issues</span> <span class="o">=</span> <span class="p">[</span><span class="n">issue</span> <span class="k">for</span> <span class="n">issue</span> <span class="ow">in</span> <span class="n">issues_orderings</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="k">if</span> <span class="n">issue</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">conflict</span><span class="p">]</span>
+
+            <span class="c1"># first_value is an earlier bid than second_value</span>
+            <span class="c1"># the orderings are held in descending order</span>
+            <span class="c1"># these conflicts are captured based on the fact that the first value is supposed to be higher</span>
+            <span class="c1"># but they are actually not, therefore, the conflicting issues are the issues that should be</span>
+            <span class="c1"># lower in value given our assumption of human concession in negotiations</span>
+            <span class="c1"># code block below swaps the issue ordering based on above</span>
+            <span class="c1"># since conflicting issue is considered to be causing the lowness, it must be swapped</span>
+            <span class="c1"># with the non-conflicting comparing issues.</span>
+
+            <span class="k">for</span> <span class="n">conflict_issue</span> <span class="ow">in</span> <span class="n">conflict</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">non_conflict_issue</span> <span class="ow">in</span> <span class="n">non_conflict_issues</span><span class="p">:</span>
+                    <span class="n">conflict_idx</span> <span class="o">=</span> <span class="n">issues_orderings</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">conflict_issue</span><span class="p">)</span>
+                    <span class="n">non_conflict_idx</span> <span class="o">=</span> <span class="n">issues_orderings</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">non_conflict_issue</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">conflict_idx</span> <span class="o">&lt;</span> <span class="n">non_conflict_idx</span><span class="p">:</span>
+                        <span class="n">issues_orderings</span><span class="p">[</span><span class="n">conflict_idx</span><span class="p">],</span> <span class="n">issues_orderings</span><span class="p">[</span><span class="n">non_conflict_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">issues_orderings</span><span class="p">[</span><span class="n">non_conflict_idx</span><span class="p">],</span> <span class="n">issues_orderings</span><span class="p">[</span><span class="n">conflict_idx</span><span class="p">]</span>
+
+            <span class="n">issue_weights</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">issue_size</span>
+            <span class="n">issues_mid</span> <span class="o">=</span> <span class="p">(</span><span class="n">issue_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+            <span class="n">diff</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">issue_size</span>
+            <span class="n">issue_weights</span><span class="p">[</span><span class="n">issues_mid</span><span class="p">]</span> <span class="o">=</span> <span class="n">diff</span>
+            <span class="n">sum_diffs</span> <span class="o">=</span> <span class="n">diff</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">issue_size</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">target</span> <span class="o">=</span> <span class="n">issues_mid</span> <span class="o">+</span> <span class="n">i</span>
+                <span class="k">if</span> <span class="n">target</span> <span class="o">&lt;</span> <span class="n">issue_size</span><span class="p">:</span>
+                    <span class="n">target_next</span> <span class="o">=</span> <span class="n">issue_weights</span><span class="p">[</span><span class="n">issues_mid</span> <span class="o">+</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                    <span class="n">diff</span> <span class="o">=</span> <span class="n">target_next</span> <span class="o">+</span> <span class="n">target_next</span> <span class="o">/</span> <span class="n">issue_size</span>
+                    <span class="n">sum_diffs</span> <span class="o">+=</span> <span class="n">diff</span>
+                    <span class="n">issue_weights</span><span class="p">[</span><span class="n">target</span><span class="p">]</span> <span class="o">=</span> <span class="n">diff</span>
+
+                <span class="n">target</span> <span class="o">=</span> <span class="n">issues_mid</span> <span class="o">-</span> <span class="n">i</span>
+                <span class="k">if</span> <span class="n">target</span> <span class="o">&lt;</span> <span class="n">issue_size</span><span class="p">:</span>
+                    <span class="n">target_prev</span> <span class="o">=</span> <span class="n">issue_weights</span><span class="p">[</span><span class="n">issues_mid</span> <span class="o">-</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+                    <span class="n">diff</span> <span class="o">=</span> <span class="n">target_prev</span> <span class="o">-</span> <span class="n">target_prev</span> <span class="o">/</span> <span class="n">issue_size</span>
+                    <span class="n">sum_diffs</span> <span class="o">+=</span> <span class="n">diff</span>
+                    <span class="n">issue_weights</span><span class="p">[</span><span class="n">target</span><span class="p">]</span> <span class="o">=</span> <span class="n">diff</span>
+
+            <span class="n">issue_weights</span> <span class="o">=</span> <span class="p">[</span><span class="n">issue</span> <span class="o">/</span> <span class="n">sum_diffs</span> <span class="k">for</span> <span class="n">issue</span> <span class="ow">in</span> <span class="n">issue_weights</span><span class="p">]</span>
+            <span class="n">issue_weights</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+
+            <span class="n">value_weights</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">issue</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="n">value_orderings</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">expected</span> <span class="o">=</span> <span class="p">[]</span>
+
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">expected</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>
+
+                <span class="n">expected</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+                <span class="n">value_weights</span><span class="p">[</span><span class="n">issue</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">expected</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pref</span><span class="o">.</span><span class="n">_value_weights</span> <span class="o">=</span> <span class="n">value_weights</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pref</span><span class="o">.</span><span class="n">_issue_weights</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">issues_orderings</span><span class="p">,</span> <span class="n">issue_weights</span><span class="p">))</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ComparisonObject">
+<a class="viewcode-back" href="../../../nenv.OpponentModel.html#nenv.OpponentModel.ConflictBasedOpponentModel.ComparisonObject">[docs]</a>
+<span class="k">class</span> <span class="nc">ComparisonObject</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Helper class for Conflict-Based Opponent Model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first_offer</span><span class="p">:</span> <span class="n">Bid</span><span class="p">,</span> <span class="n">second_offer</span><span class="p">:</span> <span class="n">Bid</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comparing_issues</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">first_offer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">second_offer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduce_elements</span><span class="p">(</span>
+            <span class="n">first_offer</span><span class="p">,</span> <span class="n">second_offer</span>
+        <span class="p">)</span>
+
+        <span class="c1"># self.comparing_issues = set(self.comparing_issues)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">comparing_issues_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">comparing_issues</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">first_offer</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &gt; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">second_offer</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Takes comparison object as input as returns true if they are same otherwise false.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span><span class="o">.</span><span class="fm">__hash__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">first_offer</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">second_offer</span><span class="p">)):</span>
+            <span class="k">yield</span> <span class="p">(</span><span class="n">i</span><span class="p">,)</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">first_offer</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">second_offer</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">issue</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">first_offer</span><span class="p">[</span><span class="n">issue</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">second_offer</span><span class="p">[</span><span class="n">issue</span><span class="p">])</span>
+
+<div class="viewcode-block" id="ComparisonObject.reduce_elements">
+<a class="viewcode-back" href="../../../nenv.OpponentModel.html#nenv.OpponentModel.ConflictBasedOpponentModel.ComparisonObject.reduce_elements">[docs]</a>
+    <span class="k">def</span> <span class="nf">reduce_elements</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">first_offer</span><span class="p">:</span> <span class="n">Bid</span><span class="p">,</span> <span class="n">second_offer</span><span class="p">:</span> <span class="n">Bid</span><span class="p">):</span>  <span class="c1"># fix this with lambdas</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">full_a</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">full_b</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">first_offer</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">full_a</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">first_offer</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="n">full_b</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">second_offer</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="n">first_offer</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">!=</span> <span class="n">second_offer</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+                <span class="n">a</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">first_offer</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                <span class="n">b</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">second_offer</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">comparing_issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">comparing_issues</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">full_a</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">full_a</span><span class="p">,</span> <span class="n">full_b</span>
+
+        <span class="k">return</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span></div>
+
+
+<div class="viewcode-block" id="ComparisonObject.is_comparable">
+<a class="viewcode-back" href="../../../nenv.OpponentModel.html#nenv.OpponentModel.ConflictBasedOpponentModel.ComparisonObject.is_comparable">[docs]</a>
+    <span class="k">def</span> <span class="nf">is_comparable</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">comparing_issues</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">comparing_issues</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, aniltrue.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

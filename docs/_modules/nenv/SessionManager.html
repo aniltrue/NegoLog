@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nenv.SessionManager &mdash; NegoLog 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            NegoLog
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">NegoLog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NegoLog</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">nenv.SessionManager</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for nenv.SessionManager</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">nenv.OpponentModel</span> <span class="kn">import</span> <span class="n">OpponentModelClass</span>
+<span class="kn">from</span> <span class="nn">nenv.Agent</span> <span class="kn">import</span> <span class="n">AbstractAgent</span><span class="p">,</span> <span class="n">AgentClass</span>
+<span class="kn">from</span> <span class="nn">nenv.Session</span> <span class="kn">import</span> <span class="n">Session</span>
+<span class="kn">from</span> <span class="nn">nenv.Preference</span> <span class="kn">import</span> <span class="n">Preference</span><span class="p">,</span> <span class="n">domain_loader</span>
+<span class="kn">from</span> <span class="nn">nenv.logger</span> <span class="kn">import</span> <span class="n">AbstractLogger</span><span class="p">,</span> <span class="n">LoggerClass</span>
+<span class="kn">from</span> <span class="nn">nenv.utils</span> <span class="kn">import</span> <span class="n">LogRow</span>
+<span class="kn">from</span> <span class="nn">nenv.utils.ExcelLog</span> <span class="kn">import</span> <span class="n">update</span>
+
+
+<div class="viewcode-block" id="SessionManager">
+<a class="viewcode-back" href="../../nenv.html#nenv.SessionManager.SessionManager">[docs]</a>
+<span class="k">class</span> <span class="nc">SessionManager</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This class helps to run negotiation session.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">prefA</span><span class="p">:</span> <span class="n">Preference</span>                <span class="c1">#: Preferences of agentA</span>
+    <span class="n">prefB</span><span class="p">:</span> <span class="n">Preference</span>                <span class="c1">#: Preferences of agentB</span>
+    <span class="n">loggers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">AbstractLogger</span><span class="p">]</span>    <span class="c1">#: List of logger</span>
+    <span class="n">agentA</span><span class="p">:</span> <span class="n">AbstractAgent</span>            <span class="c1">#: AgentA object</span>
+    <span class="n">agentB</span><span class="p">:</span> <span class="n">AbstractAgent</span>            <span class="c1">#: AgentB object</span>
+    <span class="n">session</span><span class="p">:</span> <span class="n">Session</span>                 <span class="c1">#: Negotiation session object</span>
+    <span class="n">deadline_time</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>  <span class="c1">#: The time-based deadline in terms of seconds</span>
+    <span class="n">deadline_time</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>  <span class="c1">#: The round-based in terms of number of rounds</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agentA_class</span><span class="p">:</span> <span class="n">AgentClass</span><span class="p">,</span> <span class="n">agentB_class</span><span class="p">:</span> <span class="n">AgentClass</span><span class="p">,</span> <span class="n">domain_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">deadline_time</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">deadline_round</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">estimators</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">OpponentModelClass</span><span class="p">],</span> <span class="n">loggers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">LoggerClass</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Constructor</span>
+
+<span class="sd">            :param agentA_class: Class of AgentA, which is subclass of AbstractAgent class.</span>
+<span class="sd">            :param agentB_class: Class of AgentB, which is subclass of AbstractAgent class.</span>
+<span class="sd">            :param domain_name: The name of the domain</span>
+<span class="sd">            :param deadline_time: Time-based deadline in terms of seconds</span>
+<span class="sd">            :param deadline_round: Round-based deadline in terms of number of rounds</span>
+<span class="sd">            :param estimators: List of Opponent Model</span>
+<span class="sd">            :param loggers: List of logger</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">assert</span> <span class="n">deadline_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">deadline_round</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;No deadline type is specified.&quot;</span>
+        <span class="k">assert</span> <span class="n">deadline_time</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">deadline_time</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Deadline must be positive.&quot;</span>
+        <span class="k">assert</span> <span class="n">deadline_round</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">deadline_round</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Deadline must be positive.&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">prefA</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefB</span> <span class="o">=</span> <span class="n">domain_loader</span><span class="p">(</span><span class="n">domain_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">domain_no</span> <span class="o">=</span> <span class="n">domain_name</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">agentA</span> <span class="o">=</span> <span class="n">agentA_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefA</span><span class="p">,</span> <span class="n">deadline_round</span> <span class="k">if</span> <span class="n">deadline_time</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">deadline_time</span><span class="p">,</span> <span class="p">[</span><span class="n">estimator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefA</span><span class="p">)</span> <span class="k">for</span> <span class="n">estimator</span> <span class="ow">in</span> <span class="n">estimators</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agentB</span> <span class="o">=</span> <span class="n">agentB_class</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefB</span><span class="p">,</span> <span class="n">deadline_round</span> <span class="k">if</span> <span class="n">deadline_time</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">deadline_time</span><span class="p">,</span> <span class="p">[</span><span class="n">estimator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefB</span><span class="p">)</span> <span class="k">for</span> <span class="n">estimator</span> <span class="ow">in</span> <span class="n">estimators</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deadline_time</span> <span class="o">=</span> <span class="n">deadline_time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">deadline_round</span> <span class="o">=</span> <span class="n">deadline_round</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loggers</span> <span class="o">=</span> <span class="n">loggers</span>
+
+<div class="viewcode-block" id="SessionManager.run">
+<a class="viewcode-back" href="../../nenv.html#nenv.SessionManager.SessionManager.run">[docs]</a>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LogRow</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Starts the negotiation session.</span>
+
+<span class="sd">            :param save_path: Session log file</span>
+<span class="sd">            :return: Log row for tournament</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">agentA</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">agentB</span><span class="p">,</span> <span class="n">save_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">deadline_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">deadline_round</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">loggers</span><span class="p">)</span>
+
+        <span class="n">session_result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+        <span class="c1"># Update agents</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agentA</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">agentA</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">agentB</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">agentB</span>
+
+        <span class="c1"># Log some session information into tournament log</span>
+        <span class="n">session_result</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;DomainName&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain_no</span>
+        <span class="n">session_result</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;DomainSize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefA</span><span class="o">.</span><span class="n">bids</span><span class="p">)</span>
+        <span class="n">session_result</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;IssueSize&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prefA</span><span class="o">.</span><span class="n">issues</span><span class="p">)</span>
+        <span class="n">session_result</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;FilePath&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">save_path</span>
+        <span class="n">session_result</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;DeadlineTime&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">deadline_time</span>
+        <span class="n">session_result</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;DeadlineRound&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">deadline_round</span>
+
+        <span class="c1"># On Session End logs</span>
+        <span class="k">for</span> <span class="n">logger</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">loggers</span><span class="p">:</span>
+            <span class="n">update</span><span class="p">(</span><span class="n">session_result</span><span class="p">,</span> <span class="n">logger</span><span class="o">.</span><span class="n">on_session_end</span><span class="p">(</span><span class="n">session_result</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">session</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">session_result</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, aniltrue.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

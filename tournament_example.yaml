@@ -1,0 +1,54 @@
+## Deadline
+# For a time-based deadline, you need to set a deadline (sec) as an integer value. Otherwise, set 'null' value.
+deadline_time: null
+# For a round-based deadline, you need to set a deadline as an integer value. Otherwise, set 'null' value.
+deadline_round: 100
+# Note that you can also combine round-based and time-based deadline mechanism.
+
+## Agent
+# You need to define agents as a list of strings.
+# Each string represents the class name of an agent.
+# You can either write the class name from 'agents' Python module or full path to the class.
+# Note that the class must be a subclass of 'AbstractAgent' class.
+agents: ['ParsAgent',
+         'BoulwareAgent',
+         'ConcederAgent']
+
+## Domain
+# You need to define domains as a list of strings.
+# Each string represents a domain name in 'domains' directory.
+domains: ['5', '6']
+
+## Logger
+# You can define loggers as a list of strings.
+# Each string represents the class name of a logger.
+# You can either write the class name from 'nenv.logger' Python module or full path to the class.
+# Note that the class must be a subclass of 'AbstractLogger' class.
+loggers: ['BidSpaceLogger',
+          'MoveAnalyzeLogger',
+          'FinalGraphsLogger',
+          'UtilityDistributionLogger',
+          'TournamentSummaryLogger',
+          'EstimatedLogger',
+          'EstimatorOnlyFinalMetricLogger']
+
+## Opponent Model
+# You can define opponent models as a list of strings.
+# Each string represents the class name of an opponent model.
+# You can either write the class name from 'nenv.OpponentModel' Python module or full path to the class.
+# Note that the class must be a subclass of 'AbstractOpponentModel' class
+estimators: ['ClassicFrequencyOpponentModel', 'WindowedFrequencyOpponentModel']
+
+## Other
+# Whether an agent will negotiate with itself.
+self_negotiation: False
+# The number of times an agent will negotiate with another agent in the same domain.
+repeat: 1
+# Where the results will be logged. Note that this directory will be cleaned before the tournament starts.
+result_dir: 'results/'
+# Random seed for build-in Python random and NumPy.
+seed: 1234
+# Once all combinations have been decided, this parameter determines whether the session order will be random or not.
+shuffle: False
+# Logger drawing Format: matplotlib-PNG, matplotlib-SVG, plotly
+drawing_format: plotly

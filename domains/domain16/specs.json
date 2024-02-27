@@ -1,0 +1,32 @@
+{
+ "Name": "Domain16",
+ "NumberOfBids": 27,
+ "NumberOfIssues": 3,
+ "IssueValues": [
+  3,
+  3,
+  3
+ ],
+ "Opposition": 0.21633159732225893,
+ "BalanceScore": 0.004566666666666615,
+ "Nash Product": 0.717696,
+ "Social Welfare": 1.6944,
+ "Nash_A": 0.8543999999999999,
+ "Nash_B": 0.8400000000000001,
+ "Kalai_A": 0.8543999999999999,
+ "Kalai_B": 0.8400000000000001,
+ "NashBid": {
+  "issueA": "valueA",
+  "issueB": "valueA",
+  "issueC": "valueC"
+ },
+ "KalaiBid": {
+  "issueA": "valueA",
+  "issueB": "valueA",
+  "issueC": "valueC"
+ },
+ "ReservationValueProfileA": 0.0,
+ "ReservationValueProfileB": 0.0,
+ "MinUtility": 0.19999999999999998,
+ "MaxUtility": 1.0
+}

@@ -1,0 +1,4 @@
+/results/*
+/agent_storage/*
+*.pkl
+/.idea

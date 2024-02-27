@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nenv.logger.EstimatorMetricLogger &mdash; NegoLog 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            NegoLog
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">NegoLog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">NegoLog</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">nenv.logger.EstimatorMetricLogger</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for nenv.logger.EstimatorMetricLogger</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">nenv.logger.AbstractLogger</span> <span class="kn">import</span> <span class="n">AbstractLogger</span><span class="p">,</span> <span class="n">Bid</span><span class="p">,</span> <span class="n">SessionLogs</span><span class="p">,</span> <span class="n">Session</span><span class="p">,</span> <span class="n">LogRow</span><span class="p">,</span> <span class="n">ExcelLog</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">nenv.Agent</span> <span class="kn">import</span> <span class="n">AbstractAgent</span>
+<span class="kn">from</span> <span class="nn">nenv.utils.tournament_graphs</span> <span class="kn">import</span> <span class="n">draw_line</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+
+<div class="viewcode-block" id="EstimatorMetricLogger">
+<a class="viewcode-back" href="../../../nenv.logger.html#nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger">[docs]</a>
+<span class="k">class</span> <span class="nc">EstimatorMetricLogger</span><span class="p">(</span><span class="n">AbstractLogger</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        EstimatorMetricLogger logs the performance analysis of each Estimator round by round. RMSE, Spearman and</span>
+<span class="sd">        Kendal-Tau metrics which are commonly used for the evaluation of an Opponent Model are applied</span>
+<span class="sd">        [Baarslag2013]_ [Keskin2023]_</span>
+
+<span class="sd">        At the end of tournament, it generates overall results containing these metric results. It also draws the</span>
+<span class="sd">        necessary plots.</span>
+
+<span class="sd">        **Note**: This logger increases the computational time due to the expensive calculation of the metrics. If you</span>
+<span class="sd">        have strict time for the tournament run, you can look *EstimatorOnlyFinalMetricLogger* which is a cheaper</span>
+<span class="sd">        version of this logger.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="EstimatorMetricLogger.on_offer">
+<a class="viewcode-back" href="../../../nenv.logger.html#nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.on_offer">[docs]</a>
+    <span class="k">def</span> <span class="nf">on_offer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">offer</span><span class="p">:</span> <span class="n">Bid</span><span class="p">,</span> <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Session</span><span class="p">,</span> <span class="n">SessionLogs</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">LogRow</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_metrics</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">agentA</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">agentB</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="EstimatorMetricLogger.on_accept">
+<a class="viewcode-back" href="../../../nenv.logger.html#nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.on_accept">[docs]</a>
+    <span class="k">def</span> <span class="nf">on_accept</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">offer</span><span class="p">:</span> <span class="n">Bid</span><span class="p">,</span> <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Session</span><span class="p">,</span> <span class="n">SessionLogs</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">LogRow</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_metrics</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">agentA</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">agentB</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="EstimatorMetricLogger.on_fail">
+<a class="viewcode-back" href="../../../nenv.logger.html#nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.on_fail">[docs]</a>
+    <span class="k">def</span> <span class="nf">on_fail</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Session</span><span class="p">,</span> <span class="n">SessionLogs</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">LogRow</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_metrics</span><span class="p">(</span><span class="n">session</span><span class="o">.</span><span class="n">agentA</span><span class="p">,</span> <span class="n">session</span><span class="o">.</span><span class="n">agentB</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="EstimatorMetricLogger.on_tournament_end">
+<a class="viewcode-back" href="../../../nenv.logger.html#nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.on_tournament_end">[docs]</a>
+    <span class="k">def</span> <span class="nf">on_tournament_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tournament_logs</span><span class="p">:</span> <span class="n">ExcelLog</span><span class="p">,</span> <span class="n">agent_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">domain_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">estimator_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">estimator_names</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;opponent model/&quot;</span><span class="p">)):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;opponent model/&quot;</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">extract_estimator_summary</span><span class="p">(</span><span class="n">tournament_logs</span><span class="p">,</span> <span class="n">estimator_names</span><span class="p">)</span>
+        <span class="n">rmse</span><span class="p">,</span> <span class="n">kendall</span><span class="p">,</span> <span class="n">spearman</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_estimator_results</span><span class="p">(</span><span class="n">tournament_logs</span><span class="p">,</span> <span class="n">estimator_names</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">rmse</span><span class="p">,</span> <span class="n">kendall</span><span class="p">,</span> <span class="n">spearman</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="EstimatorMetricLogger.get_metrics">
+<a class="viewcode-back" href="../../../nenv.logger.html#nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.get_metrics">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent_a</span><span class="p">:</span> <span class="n">AbstractAgent</span><span class="p">,</span> <span class="n">agent_b</span><span class="p">:</span> <span class="n">AbstractAgent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LogRow</span><span class="p">:</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">estimator_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">agent_a</span><span class="o">.</span><span class="n">estimators</span><span class="p">)):</span>
+            <span class="n">rmseA</span><span class="p">,</span> <span class="n">spearmanA</span><span class="p">,</span> <span class="n">kendallA</span> <span class="o">=</span> <span class="n">agent_a</span><span class="o">.</span><span class="n">estimators</span><span class="p">[</span><span class="n">estimator_id</span><span class="p">]</span><span class="o">.</span><span class="n">calculate_error</span><span class="p">(</span><span class="n">agent_b</span><span class="o">.</span><span class="n">preference</span><span class="p">)</span>
+            <span class="n">rmseB</span><span class="p">,</span> <span class="n">spearmanB</span><span class="p">,</span> <span class="n">kendallB</span> <span class="o">=</span> <span class="n">agent_b</span><span class="o">.</span><span class="n">estimators</span><span class="p">[</span><span class="n">estimator_id</span><span class="p">]</span><span class="o">.</span><span class="n">calculate_error</span><span class="p">(</span><span class="n">agent_a</span><span class="o">.</span><span class="n">preference</span><span class="p">)</span>
+
+            <span class="n">log</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;RMSE_A&quot;</span><span class="p">:</span> <span class="n">rmseA</span><span class="p">,</span>
+                <span class="s2">&quot;RMSE_B&quot;</span><span class="p">:</span> <span class="n">rmseB</span><span class="p">,</span>
+                <span class="s2">&quot;SpearmanA&quot;</span><span class="p">:</span> <span class="n">spearmanA</span><span class="p">,</span>
+                <span class="s2">&quot;SpearmanB&quot;</span><span class="p">:</span> <span class="n">spearmanB</span><span class="p">,</span>
+                <span class="s2">&quot;KendallTauA&quot;</span><span class="p">:</span> <span class="n">kendallA</span><span class="p">,</span>
+                <span class="s2">&quot;KendallTauB&quot;</span><span class="p">:</span> <span class="n">kendallB</span><span class="p">,</span>
+                <span class="s2">&quot;RMSE&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">rmseA</span> <span class="o">+</span> <span class="n">rmseB</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span>
+                <span class="s2">&quot;Spearman&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">spearmanA</span> <span class="o">+</span> <span class="n">spearmanB</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">,</span>
+                <span class="s2">&quot;KendallTau&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">kendallA</span> <span class="o">+</span> <span class="n">kendallB</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span>
+            <span class="p">}</span>
+
+            <span class="n">row</span><span class="p">[</span><span class="n">agent_a</span><span class="o">.</span><span class="n">estimators</span><span class="p">[</span><span class="n">estimator_id</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">log</span>
+
+        <span class="k">return</span> <span class="n">row</span></div>
+
+
+<div class="viewcode-block" id="EstimatorMetricLogger.extract_estimator_summary">
+<a class="viewcode-back" href="../../../nenv.logger.html#nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.extract_estimator_summary">[docs]</a>
+    <span class="k">def</span> <span class="nf">extract_estimator_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tournament_logs</span><span class="p">:</span> <span class="n">ExcelLog</span><span class="p">,</span> <span class="n">estimator_names</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+            <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;EstimatorName&quot;</span><span class="p">,</span> <span class="s2">&quot;Avg.RMSE&quot;</span><span class="p">,</span> <span class="s2">&quot;Std.RMSE&quot;</span><span class="p">,</span> <span class="s2">&quot;Avg.Spearman&quot;</span><span class="p">,</span> <span class="s2">&quot;Std.Spearman&quot;</span><span class="p">,</span> <span class="s2">&quot;Avg.KendallTau&quot;</span><span class="p">,</span>
+                     <span class="s2">&quot;Std.KendallTau&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">estimator_names</span><span class="p">)):</span>
+            <span class="n">results</span> <span class="o">=</span> <span class="n">tournament_logs</span><span class="o">.</span><span class="n">to_data_frame</span><span class="p">(</span><span class="n">estimator_names</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+            <span class="n">RMSE</span><span class="p">,</span> <span class="n">spearman</span><span class="p">,</span> <span class="n">kendall</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+
+            <span class="n">RMSE</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;RMSE_A&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+            <span class="n">RMSE</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;RMSE_B&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+
+            <span class="n">spearman</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;SpearmanA&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+            <span class="n">spearman</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;SpearmanB&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+
+            <span class="n">kendall</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;KendallTauA&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+            <span class="n">kendall</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s2">&quot;KendallTauB&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+
+            <span class="n">summary</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;EstimatorName&quot;</span><span class="p">:</span> <span class="n">estimator_names</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                <span class="s2">&quot;Avg.RMSE&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">RMSE</span><span class="p">),</span>
+                <span class="s2">&quot;Std.RMSE&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">RMSE</span><span class="p">),</span>
+                <span class="s2">&quot;Avg.Spearman&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">spearman</span><span class="p">),</span>
+                <span class="s2">&quot;Std.Spearman&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">spearman</span><span class="p">),</span>
+                <span class="s2">&quot;Avg.KendallTau&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">kendall</span><span class="p">),</span>
+                <span class="s2">&quot;Std.KendallTau&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">kendall</span><span class="p">)</span>
+            <span class="p">}</span>
+
+        <span class="n">summary</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;Avg.RMSE&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">summary</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;opponent model/estimator_summary.xlsx&quot;</span><span class="p">),</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s2">&quot;EstimatorSummary&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="EstimatorMetricLogger.get_estimator_results">
+<a class="viewcode-back" href="../../../nenv.logger.html#nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.get_estimator_results">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_estimator_results</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tournament_logs</span><span class="p">:</span> <span class="n">ExcelLog</span><span class="p">,</span> <span class="n">estimator_names</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]]:</span>
+        <span class="n">tournament_results</span> <span class="o">=</span> <span class="n">tournament_logs</span><span class="o">.</span><span class="n">to_data_frame</span><span class="p">()</span>
+
+        <span class="n">max_round</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">][</span><span class="s2">&quot;Round&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_list</span><span class="p">())</span>
+
+        <span class="n">rmse</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_round</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">estimator_names</span><span class="p">}</span>
+        <span class="n">spearman</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_round</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">estimator_names</span><span class="p">}</span>
+        <span class="n">kendall</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_round</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">estimator_names</span><span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">tournament_results</span><span class="p">[</span><span class="s2">&quot;TournamentResults&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">agent_a</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;AgentA&quot;</span><span class="p">]</span>
+            <span class="n">agent_b</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;AgentB&quot;</span><span class="p">]</span>
+            <span class="n">domain_name</span> <span class="o">=</span> <span class="s2">&quot;Domain</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;DomainName&quot;</span><span class="p">])</span>
+
+            <span class="n">session_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;sessions/</span><span class="si">{</span><span class="n">agent_a</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">agent_b</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">domain_name</span><span class="si">}</span><span class="s2">.xlsx&quot;</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">estimator_names</span><span class="p">)):</span>
+                <span class="n">session_log</span> <span class="o">=</span> <span class="n">ExcelLog</span><span class="p">(</span><span class="n">file_path</span><span class="o">=</span><span class="n">session_path</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">row_index</span><span class="p">,</span> <span class="n">estimator_row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">session_log</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="n">estimator_names</span><span class="p">[</span><span class="n">i</span><span class="p">]]):</span>
+                    <span class="k">if</span> <span class="n">session_log</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="s2">&quot;Session&quot;</span><span class="p">][</span><span class="n">row_index</span><span class="p">][</span><span class="s2">&quot;Action&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Accept&quot;</span><span class="p">:</span>
+                        <span class="k">break</span>
+
+                    <span class="n">_round</span> <span class="o">=</span> <span class="n">session_log</span><span class="o">.</span><span class="n">log_rows</span><span class="p">[</span><span class="s2">&quot;Session&quot;</span><span class="p">][</span><span class="n">row_index</span><span class="p">][</span><span class="s2">&quot;Round&quot;</span><span class="p">]</span>
+
+                    <span class="n">rmse</span><span class="p">[</span><span class="n">estimator_names</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">_round</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estimator_row</span><span class="p">[</span><span class="s2">&quot;RMSE_A&quot;</span><span class="p">])</span>
+                    <span class="n">spearman</span><span class="p">[</span><span class="n">estimator_names</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">_round</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estimator_row</span><span class="p">[</span><span class="s2">&quot;SpearmanA&quot;</span><span class="p">])</span>
+                    <span class="n">kendall</span><span class="p">[</span><span class="n">estimator_names</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">_round</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estimator_row</span><span class="p">[</span><span class="s2">&quot;KendallTauA&quot;</span><span class="p">])</span>
+                    <span class="n">rmse</span><span class="p">[</span><span class="n">estimator_names</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">_round</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estimator_row</span><span class="p">[</span><span class="s2">&quot;RMSE_B&quot;</span><span class="p">])</span>
+                    <span class="n">spearman</span><span class="p">[</span><span class="n">estimator_names</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">_round</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estimator_row</span><span class="p">[</span><span class="s2">&quot;SpearmanB&quot;</span><span class="p">])</span>
+                    <span class="n">kendall</span><span class="p">[</span><span class="n">estimator_names</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">_round</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">estimator_row</span><span class="p">[</span><span class="s2">&quot;KendallTauB&quot;</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">rmse</span><span class="p">,</span> <span class="n">spearman</span><span class="p">,</span> <span class="n">kendall</span></div>
+
+
+<div class="viewcode-block" id="EstimatorMetricLogger.draw">
+<a class="viewcode-back" href="../../../nenv.logger.html#nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.draw">[docs]</a>
+    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rmse</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">spearman</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">kendall</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">rmse_mean</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mean_std</span><span class="p">(</span><span class="n">rmse</span><span class="p">)</span>
+        <span class="n">spearman_mean</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mean_std</span><span class="p">(</span><span class="n">spearman</span><span class="p">)</span>
+        <span class="n">kendall_mean</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_mean_std</span><span class="p">(</span><span class="n">kendall</span><span class="p">)</span>
+
+        <span class="n">draw_line</span><span class="p">(</span><span class="n">rmse_mean</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;opponent model/estimator_rmse&quot;</span><span class="p">),</span> <span class="s2">&quot;Rounds&quot;</span><span class="p">,</span> <span class="s2">&quot;RMSE&quot;</span><span class="p">)</span>
+        <span class="n">draw_line</span><span class="p">(</span><span class="n">spearman_mean</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;opponent model/estimator_spearman&quot;</span><span class="p">),</span> <span class="s2">&quot;Rounds&quot;</span><span class="p">,</span> <span class="s2">&quot;Spearman&quot;</span><span class="p">)</span>
+        <span class="n">draw_line</span><span class="p">(</span><span class="n">kendall_mean</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;opponent model/estimator_kendall_tau&quot;</span><span class="p">),</span> <span class="s2">&quot;Rounds&quot;</span><span class="p">,</span> <span class="s2">&quot;KendallTau&quot;</span><span class="p">)</span>
+
+        <span class="c1"># After median round, these metrics may mislead since the number of session dramatically decreases.</span>
+        <span class="n">median_round</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_median_round</span><span class="p">(</span><span class="n">rmse</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">estimator_name</span> <span class="ow">in</span> <span class="n">rmse</span><span class="p">:</span>
+            <span class="n">rmse</span><span class="p">[</span><span class="n">estimator_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">rmse</span><span class="p">[</span><span class="n">estimator_name</span><span class="p">][:</span><span class="n">median_round</span><span class="p">]</span>
+            <span class="n">spearman</span><span class="p">[</span><span class="n">estimator_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">spearman</span><span class="p">[</span><span class="n">estimator_name</span><span class="p">][:</span><span class="n">median_round</span><span class="p">]</span>
+            <span class="n">kendall</span><span class="p">[</span><span class="n">estimator_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">kendall</span><span class="p">[</span><span class="n">estimator_name</span><span class="p">][:</span><span class="n">median_round</span><span class="p">]</span>
+
+        <span class="n">draw_line</span><span class="p">(</span><span class="n">rmse_mean</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;opponent model/estimator_rmse_until_median_round&quot;</span><span class="p">),</span> <span class="s2">&quot;Rounds&quot;</span><span class="p">,</span> <span class="s2">&quot;RMSE&quot;</span><span class="p">)</span>
+        <span class="n">draw_line</span><span class="p">(</span><span class="n">spearman_mean</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;opponent model/estimator_spearman_until_median_round&quot;</span><span class="p">),</span> <span class="s2">&quot;Rounds&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;Spearman&quot;</span><span class="p">)</span>
+        <span class="n">draw_line</span><span class="p">(</span><span class="n">kendall_mean</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s2">&quot;opponent model/estimator_kendall_tau_until_median_round&quot;</span><span class="p">),</span> <span class="s2">&quot;Rounds&quot;</span><span class="p">,</span>
+                  <span class="s2">&quot;KendallTau&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="EstimatorMetricLogger.get_median_round">
+<a class="viewcode-back" href="../../../nenv.logger.html#nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.get_median_round">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_median_round</span><span class="p">(</span><span class="n">results</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">counts</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">estimator_name</span><span class="p">,</span> <span class="n">rounds</span> <span class="ow">in</span> <span class="n">results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">results</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rounds</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)):</span>
+                    <span class="n">counts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+            <span class="k">break</span>
+
+        <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">counts</span><span class="p">)))</span></div>
+
+
+<div class="viewcode-block" id="EstimatorMetricLogger.get_mean_std">
+<a class="viewcode-back" href="../../../nenv.logger.html#nenv.logger.EstimatorMetricLogger.EstimatorMetricLogger.get_mean_std">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">get_mean_std</span><span class="p">(</span><span class="n">results</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]]:</span>
+        <span class="n">means</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="p">{},</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">estimator_name</span><span class="p">,</span> <span class="n">rounds</span> <span class="ow">in</span> <span class="n">results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">means</span><span class="p">[</span><span class="n">estimator_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">std</span><span class="p">[</span><span class="n">estimator_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">rounds</span><span class="p">:</span>
+                <span class="n">means</span><span class="p">[</span><span class="n">estimator_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">result</span><span class="p">)))</span>
+                <span class="n">std</span><span class="p">[</span><span class="n">estimator_name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">result</span><span class="p">)))</span>
+
+        <span class="k">return</span> <span class="n">means</span><span class="p">,</span> <span class="n">std</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, aniltrue.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

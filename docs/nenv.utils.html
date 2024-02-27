@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nenv.utils package &mdash; NegoLog 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8d563738"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="agents package" href="agents.html" />
+    <link rel="prev" title="nenv.logger package" href="nenv.logger.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            NegoLog
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">NegoLog</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="nenv.html">nenv package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.Action">nenv.Action module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.Agent">nenv.Agent module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.Bid">nenv.Bid module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.BidSpace">nenv.BidSpace module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.EditablePreference">nenv.EditablePreference module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.Issue">nenv.Issue module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.Preference">nenv.Preference module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.Session">nenv.Session module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.SessionLogs">nenv.SessionLogs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.SessionManager">nenv.SessionManager module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.Tournament">nenv.Tournament module</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="nenv.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="nenv.OpponentModel.html">nenv.OpponentModel package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.logger.html">nenv.logger package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">nenv.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="agents.html">agents package</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NegoLog</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">NegoLog</a></li>
+          <li class="breadcrumb-item"><a href="nenv.html">nenv package</a></li>
+      <li class="breadcrumb-item active">nenv.utils package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/nenv.utils.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="nenv-utils-package">
+<h1>nenv.utils package<a class="headerlink" href="#nenv-utils-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-nenv.utils.DynamicImport">
+<span id="nenv-utils-dynamicimport-module"></span><h2>nenv.utils.DynamicImport module<a class="headerlink" href="#module-nenv.utils.DynamicImport" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="nenv.utils.DynamicImport.load_agent_class">
+<span class="sig-prename descclassname"><span class="pre">nenv.utils.DynamicImport.</span></span><span class="sig-name descname"><span class="pre">load_agent_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.html#nenv.Agent.AgentClass" title="nenv.Agent.AgentClass"><span class="pre">AgentClass</span></a></span></span><a class="reference internal" href="_modules/nenv/utils/DynamicImport.html#load_agent_class"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.DynamicImport.load_agent_class" title="Link to this definition"></a></dt>
+<dd><p>This method loads agent in runtime.</p>
+<p>Note that class must be a subclass of <strong>AbstractAgent</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>class_path</strong> – Path to agent</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The class of the agent</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nenv.utils.DynamicImport.load_estimator_class">
+<span class="sig-prename descclassname"><span class="pre">nenv.utils.DynamicImport.</span></span><span class="sig-name descname"><span class="pre">load_estimator_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.OpponentModel.html#nenv.OpponentModel.OpponentModelClass" title="nenv.OpponentModel.OpponentModelClass"><span class="pre">OpponentModelClass</span></a></span></span><a class="reference internal" href="_modules/nenv/utils/DynamicImport.html#load_estimator_class"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.DynamicImport.load_estimator_class" title="Link to this definition"></a></dt>
+<dd><p>This method loads opponent model in runtime.</p>
+<p>Note that class must be a subclass of <strong>AbstractOpponentModel</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>class_path</strong> – Path to opponent model</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The class of the opponent model</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nenv.utils.DynamicImport.load_logger_class">
+<span class="sig-prename descclassname"><span class="pre">nenv.utils.DynamicImport.</span></span><span class="sig-name descname"><span class="pre">load_logger_class</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">class_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="nenv.logger.html#nenv.logger.LoggerClass" title="nenv.logger.LoggerClass"><span class="pre">LoggerClass</span></a></span></span><a class="reference internal" href="_modules/nenv/utils/DynamicImport.html#load_logger_class"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.DynamicImport.load_logger_class" title="Link to this definition"></a></dt>
+<dd><p>This method loads logger in runtime.</p>
+<p>Note that class must be a subclass of <strong>AbstractLogger</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>class_path</strong> – Path to logger</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The class of the logger</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-nenv.utils.ExcelLog">
+<span id="nenv-utils-excellog-module"></span><h2>nenv.utils.ExcelLog module<a class="headerlink" href="#module-nenv.utils.ExcelLog" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.utils.ExcelLog.ExcelLog">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.utils.ExcelLog.</span></span><span class="sig-name descname"><span class="pre">ExcelLog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sheet_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/utils/ExcelLog.html#ExcelLog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.ExcelLog.ExcelLog" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class helps to logging into Excel file</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.utils.ExcelLog.ExcelLog.append">
+<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/utils/ExcelLog.html#ExcelLog.append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.ExcelLog.ExcelLog.append" title="Link to this definition"></a></dt>
+<dd><p>Append into logs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>row</strong> – Log row</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.utils.ExcelLog.ExcelLog.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/utils/ExcelLog.html#ExcelLog.load"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.ExcelLog.ExcelLog.load" title="Link to this definition"></a></dt>
+<dd><p>Load from file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> – File path</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.utils.ExcelLog.ExcelLog.log_rows">
+<span class="sig-name descname"><span class="pre">log_rows</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#nenv.utils.ExcelLog.ExcelLog.log_rows" title="Link to this definition"></a></dt>
+<dd><p>Log rows for each sheet</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.utils.ExcelLog.ExcelLog.save">
+<span class="sig-name descname"><span class="pre">save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/utils/ExcelLog.html#ExcelLog.save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.ExcelLog.ExcelLog.save" title="Link to this definition"></a></dt>
+<dd><p>Save to file</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> – File path</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.utils.ExcelLog.ExcelLog.sheet_names">
+<span class="sig-name descname"><span class="pre">sheet_names</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Set</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#nenv.utils.ExcelLog.ExcelLog.sheet_names" title="Link to this definition"></a></dt>
+<dd><p>List of sheet names</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.utils.ExcelLog.ExcelLog.to_data_frame">
+<span class="sig-name descname"><span class="pre">to_data_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sheet_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">DataFrame</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/nenv/utils/ExcelLog.html#ExcelLog.to_data_frame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.ExcelLog.ExcelLog.to_data_frame" title="Link to this definition"></a></dt>
+<dd><p>Convert log rows to dictionary of data frames</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary of data frames</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.utils.ExcelLog.ExcelLog.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">row_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/utils/ExcelLog.html#ExcelLog.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.ExcelLog.ExcelLog.update" title="Link to this definition"></a></dt>
+<dd><p>Update a log row</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row</strong> – New log row</p></li>
+<li><p><strong>row_index</strong> – Index of row</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.utils.ExcelLog.LogRow">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.utils.ExcelLog.</span></span><span class="sig-name descname"><span class="pre">LogRow</span></span><a class="headerlink" href="#nenv.utils.ExcelLog.LogRow" title="Link to this definition"></a></dt>
+<dd><p>Type variable of log row</p>
+<p>alias of TypeVar(‘LogRow’, bound=<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">Any</span></code>]])</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.utils.ExcelLog.LogRowIterator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.utils.ExcelLog.</span></span><span class="sig-name descname"><span class="pre">LogRowIterator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_rows</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/utils/ExcelLog.html#LogRowIterator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.ExcelLog.LogRowIterator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class helps to iterate over log rows index by index. You can iterate over ExcelLog object.</p>
+<dl class="field-list">
+<dt class="field-odd">Example<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Example for a loop in logs</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="p">:</span> <span class="n">log</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="o">...</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nenv.utils.ExcelLog.update">
+<span class="sig-prename descclassname"><span class="pre">nenv.utils.ExcelLog.</span></span><span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#nenv.utils.ExcelLog.LogRow" title="nenv.utils.ExcelLog.LogRow"><span class="pre">LogRow</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/utils/ExcelLog.html#update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.ExcelLog.update" title="Link to this definition"></a></dt>
+<dd><p>This method updates the <strong>`Source`</strong> with given <strong>`Target`</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> – Source to be updated</p></li>
+<li><p><strong>target</strong> – Target</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-nenv.utils.KillableThread">
+<span id="nenv-utils-killablethread-module"></span><h2>nenv.utils.KillableThread module<a class="headerlink" href="#module-nenv.utils.KillableThread" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.utils.KillableThread.KillableThread">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.utils.KillableThread.</span></span><span class="sig-name descname"><span class="pre">KillableThread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/utils/KillableThread.html#KillableThread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.KillableThread.KillableThread" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Thread</span></code></p>
+<p>This class is a subclass of built-in Thread class. It provides a kill function to terminate the thread.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.utils.KillableThread.KillableThread.globaltrace">
+<span class="sig-name descname"><span class="pre">globaltrace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/utils/KillableThread.html#KillableThread.globaltrace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.KillableThread.KillableThread.globaltrace" title="Link to this definition"></a></dt>
+<dd><p>Global tracing</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.utils.KillableThread.KillableThread.kill">
+<span class="sig-name descname"><span class="pre">kill</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/utils/KillableThread.html#KillableThread.kill"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.KillableThread.KillableThread.kill" title="Link to this definition"></a></dt>
+<dd><p>This method terminates/kills the thread.</p>
+<p>Do not forget to call <em>join()</em> method after killing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.utils.KillableThread.KillableThread.killed">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">killed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#nenv.utils.KillableThread.KillableThread.killed" title="Link to this definition"></a></dt>
+<dd><p>This method returns the killed state</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Whether the thread is killed, or not</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.utils.KillableThread.KillableThread.localtrace">
+<span class="sig-name descname"><span class="pre">localtrace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/utils/KillableThread.html#KillableThread.localtrace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.KillableThread.KillableThread.localtrace" title="Link to this definition"></a></dt>
+<dd><p>Local tracing. Kill the thread when kill() method is called.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.utils.KillableThread.KillableThread.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/utils/KillableThread.html#KillableThread.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.KillableThread.KillableThread.start" title="Link to this definition"></a></dt>
+<dd><p>Override the run method in the Thread class to replace with our one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nenv.utils.Move">
+<span id="nenv-utils-move-module"></span><h2>nenv.utils.Move module<a class="headerlink" href="#module-nenv.utils.Move" title="Link to this heading"></a></h2>
+<p>Helpful functions for negotiation move processes.</p>
+<dl class="py data">
+<dt class="sig sig-object py" id="nenv.utils.Move.NEGATIVE_MOVES">
+<span class="sig-prename descclassname"><span class="pre">nenv.utils.Move.</span></span><span class="sig-name descname"><span class="pre">NEGATIVE_MOVES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Selfish',</span> <span class="pre">'Unfortunate',</span> <span class="pre">'Silent']</span></em><a class="headerlink" href="#nenv.utils.Move.NEGATIVE_MOVES" title="Link to this definition"></a></dt>
+<dd><p>List of negative moves</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="nenv.utils.Move.POSITIVE_MOVES">
+<span class="sig-prename descclassname"><span class="pre">nenv.utils.Move.</span></span><span class="sig-name descname"><span class="pre">POSITIVE_MOVES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['Fortunate',</span> <span class="pre">'Nice',</span> <span class="pre">'Concession']</span></em><a class="headerlink" href="#nenv.utils.Move.POSITIVE_MOVES" title="Link to this definition"></a></dt>
+<dd><p>List of positive moves</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nenv.utils.Move.calculate_awareness">
+<span class="sig-prename descclassname"><span class="pre">nenv.utils.Move.</span></span><span class="sig-name descname"><span class="pre">calculate_awareness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_moves</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opponent_moves</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/nenv/utils/Move.html#calculate_awareness"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.Move.calculate_awareness" title="Link to this definition"></a></dt>
+<dd><p>This method calculates the awareness of the Agent B.</p>
+<p>If an agent has a higher awareness, it changes its move direction
+(i.e., from positive to negative, or vice versa) when the opponent changes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent_moves</strong> – The list of the moves of the agent</p></li>
+<li><p><strong>opponent_moves</strong> – The list of the moves of the opponent</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Awareness</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nenv.utils.Move.calculate_behavior_sensitivity">
+<span class="sig-prename descclassname"><span class="pre">nenv.utils.Move.</span></span><span class="sig-name descname"><span class="pre">calculate_behavior_sensitivity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">moves</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/nenv/utils/Move.html#calculate_behavior_sensitivity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.Move.calculate_behavior_sensitivity" title="Link to this definition"></a></dt>
+<dd><p>This method calculates the behavior sensitivity</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>moves</strong> – List of moves</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Behavior sensitivity</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nenv.utils.Move.calculate_move_correlation">
+<span class="sig-prename descclassname"><span class="pre">nenv.utils.Move.</span></span><span class="sig-name descname"><span class="pre">calculate_move_correlation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent_moves</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opponent_moves</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/nenv/utils/Move.html#calculate_move_correlation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.Move.calculate_move_correlation" title="Link to this definition"></a></dt>
+<dd><p>This method calculates the move direction correlation between the agent and the opponent.</p>
+<p><em>Note:</em> Move direction correlation is calculated for the opponent.</p>
+<p>If an agent has a higher move direction correlation, it changes its move direction in the same way when its
+opponent changes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent_moves</strong> – The list of the moves of the agent</p></li>
+<li><p><strong>opponent_moves</strong> – The list of the moves of the opponent</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Move direction correlation</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nenv.utils.Move.get_move">
+<span class="sig-prename descclassname"><span class="pre">nenv.utils.Move.</span></span><span class="sig-name descname"><span class="pre">get_move</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prev_offered_utility</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offered_utility</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prev_opponent_utility</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opponent_utility</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.03</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/nenv/utils/Move.html#get_move"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.Move.get_move" title="Link to this definition"></a></dt>
+<dd><p>This method provides the corresponding move</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prev_offered_utility</strong> – The previous utility of the agent</p></li>
+<li><p><strong>offered_utility</strong> – The current utility of the agent</p></li>
+<li><p><strong>prev_opponent_utility</strong> – The previous utility of the opponent</p></li>
+<li><p><strong>opponent_utility</strong> – The current utility of the opponent</p></li>
+<li><p><strong>threshold</strong> – Threshold for <em>‘Silent’</em> and <em>‘Nice’</em> moves</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The name of the move</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nenv.utils.Move.get_move_distribution">
+<span class="sig-prename descclassname"><span class="pre">nenv.utils.Move.</span></span><span class="sig-name descname"><span class="pre">get_move_distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">moves</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/nenv/utils/Move.html#get_move_distribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.Move.get_move_distribution" title="Link to this definition"></a></dt>
+<dd><p>This method provides the move distribution</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>moves</strong> – List of move names</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Distribution as a dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-nenv.utils.ProcessManager">
+<span id="nenv-utils-processmanager-module"></span><h2>nenv.utils.ProcessManager module<a class="headerlink" href="#module-nenv.utils.ProcessManager" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.utils.ProcessManager.ProcessManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.utils.ProcessManager.</span></span><span class="sig-name descname"><span class="pre">ProcessManager</span></span><a class="reference internal" href="_modules/nenv/utils/ProcessManager.html#ProcessManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.ProcessManager.ProcessManager" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class helps us to set time-out for a process.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.utils.ProcessManager.ProcessManager.exception">
+<span class="sig-name descname"><span class="pre">exception</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Exception</span></em><a class="headerlink" href="#nenv.utils.ProcessManager.ProcessManager.exception" title="Link to this definition"></a></dt>
+<dd><p>Exception if it occurs</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.utils.ProcessManager.ProcessManager.has_exception">
+<span class="sig-name descname"><span class="pre">has_exception</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#nenv.utils.ProcessManager.ProcessManager.has_exception" title="Link to this definition"></a></dt>
+<dd><p>If any exception is occurred, or not</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.utils.ProcessManager.ProcessManager.process">
+<span class="sig-name descname"><span class="pre">process</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span></em><a class="headerlink" href="#nenv.utils.ProcessManager.ProcessManager.process" title="Link to this definition"></a></dt>
+<dd><p>Process will be called</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.utils.ProcessManager.ProcessManager.return_val">
+<span class="sig-name descname"><span class="pre">return_val</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Any</span></em><a class="headerlink" href="#nenv.utils.ProcessManager.ProcessManager.return_val" title="Link to this definition"></a></dt>
+<dd><p>Return value of the process</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.utils.ProcessManager.ProcessManager.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">process</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">object</span></span></span><a class="reference internal" href="_modules/nenv/utils/ProcessManager.html#ProcessManager.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.ProcessManager.ProcessManager.run" title="Link to this definition"></a></dt>
+<dd><p>This method calls the process with given arguments by setting a timeout. It returns the output of the
+process. If the process is killed due to the timeout, timed_out variable becomes true.</p>
+<p>It also handles any exception occurred. The occurred exception is also kept in this object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>process</strong> – The process will be called</p></li>
+<li><p><strong>timeout</strong> – Timeout in terms of seconds</p></li>
+<li><p><strong>args</strong> – Given arguments as a list, dictionary or none</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Return value of the process</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.utils.ProcessManager.ProcessManager.thread">
+<span class="sig-name descname"><span class="pre">thread</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#nenv.utils.KillableThread.KillableThread" title="nenv.utils.KillableThread.KillableThread"><span class="pre">KillableThread</span></a></em><a class="headerlink" href="#nenv.utils.ProcessManager.ProcessManager.thread" title="Link to this definition"></a></dt>
+<dd><p>Thread object</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.utils.ProcessManager.ProcessManager.timed_out">
+<span class="sig-name descname"><span class="pre">timed_out</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#nenv.utils.ProcessManager.ProcessManager.timed_out" title="Link to this definition"></a></dt>
+<dd><p>The process is timed-out or not</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.utils.ProcessManager.ProcessManager.timeout">
+<span class="sig-name descname"><span class="pre">timeout</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#nenv.utils.ProcessManager.ProcessManager.timeout" title="Link to this definition"></a></dt>
+<dd><p>Timeout in terms of seconds</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nenv.utils.SessionOps">
+<span id="nenv-utils-sessionops-module"></span><h2>nenv.utils.SessionOps module<a class="headerlink" href="#module-nenv.utils.SessionOps" title="Link to this heading"></a></h2>
+<dl class="py data">
+<dt class="sig sig-object py" id="nenv.utils.SessionOps.AGENT_OPERATIONS">
+<span class="sig-prename descclassname"><span class="pre">nenv.utils.SessionOps.</span></span><span class="sig-name descname"><span class="pre">AGENT_OPERATIONS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'Act':</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;,</span> <span class="pre">'Initiate':</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;,</span> <span class="pre">'Receive</span> <span class="pre">Bid':</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;,</span> <span class="pre">'Terminate':</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;}</span></em><a class="headerlink" href="#nenv.utils.SessionOps.AGENT_OPERATIONS" title="Link to this definition"></a></dt>
+<dd><p>Lambda functions for agent operations.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nenv.utils.SessionOps.session_operation">
+<span class="sig-prename descclassname"><span class="pre">nenv.utils.SessionOps.</span></span><span class="sig-name descname"><span class="pre">session_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">agent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Agent.AbstractAgent" title="nenv.Agent.AbstractAgent"><span class="pre">AbstractAgent</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">process_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/nenv/utils/SessionOps.html#session_operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.SessionOps.session_operation" title="Link to this definition"></a></dt>
+<dd><p>This method helps to wrap the agent method to use them with process manager.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>agent</strong> – Agent</p></li>
+<li><p><strong>process_name</strong> – Name of the agent’s process</p></li>
+<li><p><strong>kwargs</strong> – Additional arguments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary which contains the returned value and the agent object.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-nenv.utils.TournamentProcessMonitor">
+<span id="nenv-utils-tournamentprocessmonitor-module"></span><h2>nenv.utils.TournamentProcessMonitor module<a class="headerlink" href="#module-nenv.utils.TournamentProcessMonitor" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.utils.TournamentProcessMonitor.</span></span><span class="sig-name descname"><span class="pre">TournamentProcessMonitor</span></span><a class="reference internal" href="_modules/nenv/utils/TournamentProcessMonitor.html#TournamentProcessMonitor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This method monitors the tournament process for web-based UI</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">timedelta</span></span></span><a class="reference internal" href="_modules/nenv/utils/TournamentProcessMonitor.html#TournamentProcessMonitor.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.close" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>This method is called when the tournament process ends.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.completed_number_of_sessions">
+<span class="sig-name descname"><span class="pre">completed_number_of_sessions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.completed_number_of_sessions" title="Link to this definition"></a></dt>
+<dd><p>The number of completed negotiation sessions</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.completed_percentage">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">completed_percentage</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.completed_percentage" title="Link to this definition"></a></dt>
+<dd><p>This method provides the percentage of the completed negotiation sessions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.current_session">
+<span class="sig-name descname"><span class="pre">current_session</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.current_session" title="Link to this definition"></a></dt>
+<dd><p>The last completed session</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.elapsed_time">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">elapsed_time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">timedelta</span></em><a class="headerlink" href="#nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.elapsed_time" title="Link to this definition"></a></dt>
+<dd><p>This method provides the total elapsed time while the tournament process is active.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Total elapsed time during tournament process</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.end">
+<span class="sig-name descname"><span class="pre">end</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">timedelta</span></span></span><a class="reference internal" href="_modules/nenv/utils/TournamentProcessMonitor.html#TournamentProcessMonitor.end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.end" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>This method is called when all negotiation sessions are completed.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.estimated_remaining_time">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">estimated_remaining_time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">timedelta</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.estimated_remaining_time" title="Link to this definition"></a></dt>
+<dd><p>This method estimates the remaining time to complete the tournament process.</p>
+<blockquote>
+<div><p><strong>Note</strong>: It returns <em>None</em> when no negotiation session ends to avoid zero-division errors.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The estimated remaining time to complete the tournament process</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.initiate">
+<span class="sig-name descname"><span class="pre">initiate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number_of_sessions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/utils/TournamentProcessMonitor.html#TournamentProcessMonitor.initiate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.initiate" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>This method is called when the tournament starts.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>number_of_sessions</strong> – The total number of negotiation sessions</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.is_active">
+<span class="sig-name descname"><span class="pre">is_active</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.is_active" title="Link to this definition"></a></dt>
+<dd><p>Whether the tournament process is active, or not</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.is_completed">
+<span class="sig-name descname"><span class="pre">is_completed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.is_completed" title="Link to this definition"></a></dt>
+<dd><p>Whether all negotiation sessions is completed, or not</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.last_update_datetime">
+<span class="sig-name descname"><span class="pre">last_update_datetime</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">datetime</span></em><a class="headerlink" href="#nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.last_update_datetime" title="Link to this definition"></a></dt>
+<dd><p>Last update time of the process in terms of datetime</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.last_update_time">
+<span class="sig-name descname"><span class="pre">last_update_time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.last_update_time" title="Link to this definition"></a></dt>
+<dd><p>Last update time of the process in terms of seconds</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.start_datetime">
+<span class="sig-name descname"><span class="pre">start_datetime</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">datetime</span></em><a class="headerlink" href="#nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.start_datetime" title="Link to this definition"></a></dt>
+<dd><p>Start time of the tournament in terms of datetime</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.start_time">
+<span class="sig-name descname"><span class="pre">start_time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.start_time" title="Link to this definition"></a></dt>
+<dd><p>Start time of the tournament in terms of seconds</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.total_number_of_sessions">
+<span class="sig-name descname"><span class="pre">total_number_of_sessions</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.total_number_of_sessions" title="Link to this definition"></a></dt>
+<dd><p>The total number of negotiation sessions</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">session</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">session_elapsed_time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/nenv/utils/TournamentProcessMonitor.html#TournamentProcessMonitor.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.TournamentProcessMonitor.TournamentProcessMonitor.update" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>This method is called when a negotiation session ends.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>session</strong> – The information of the completed negotiation session as a string</p></li>
+<li><p><strong>session_elapsed_time</strong> – The elapsed time of the completed negotiation session in terms of seconds</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nenv.utils.TypeCheck">
+<span id="nenv-utils-typecheck-module"></span><h2>nenv.utils.TypeCheck module<a class="headerlink" href="#module-nenv.utils.TypeCheck" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.utils.TypeCheck.TypeCheck">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.utils.TypeCheck.</span></span><span class="sig-name descname"><span class="pre">TypeCheck</span></span><a class="reference internal" href="_modules/nenv/utils/TypeCheck.html#TypeCheck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.TypeCheck.TypeCheck" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">T</span></code>]</p>
+<p>This class checks the given type <em>T</em>.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.utils.TypeCheck.TypeCheck.check">
+<span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/nenv/utils/TypeCheck.html#TypeCheck.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.TypeCheck.TypeCheck.check" title="Link to this definition"></a></dt>
+<dd><p>Whether the given object <em>x</em> is an instance of the target class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> – Object that will be checked</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Whether the given object <em>x</em> is an instance of the target class.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nenv.utils.tournament_graphs">
+<span id="nenv-utils-tournament-graphs-module"></span><h2>nenv.utils.tournament_graphs module<a class="headerlink" href="#module-nenv.utils.tournament_graphs" title="Link to this heading"></a></h2>
+<p>Helpful draw functions for loggers.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="nenv.utils.tournament_graphs.draw_heatmap">
+<span class="sig-prename descclassname"><span class="pre">nenv.utils.tournament_graphs.</span></span><span class="sig-name descname"><span class="pre">draw_heatmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_axis_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_axis_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'.2f'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/utils/tournament_graphs.html#draw_heatmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.tournament_graphs.draw_heatmap" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>This method draws a heatmap</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – Data</p></li>
+<li><p><strong>labels_x</strong> – List of x-axis labels</p></li>
+<li><p><strong>labels_y</strong> – List of y-axis labels</p></li>
+<li><p><strong>save_path</strong> – Save path</p></li>
+<li><p><strong>x_axis_name</strong> – Label for x-axis</p></li>
+<li><p><strong>y_axis_name</strong> – Label for y-axis</p></li>
+<li><p><strong>fmt</strong> – Annotation format</p></li>
+<li><p><strong>kwargs</strong> – Additional arguments</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nenv.utils.tournament_graphs.draw_heatmap_matplotlib">
+<span class="sig-prename descclassname"><span class="pre">nenv.utils.tournament_graphs.</span></span><span class="sig-name descname"><span class="pre">draw_heatmap_matplotlib</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_axis_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_axis_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'.2f'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'png'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/utils/tournament_graphs.html#draw_heatmap_matplotlib"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.tournament_graphs.draw_heatmap_matplotlib" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nenv.utils.tournament_graphs.draw_heatmap_plotly">
+<span class="sig-prename descclassname"><span class="pre">nenv.utils.tournament_graphs.</span></span><span class="sig-name descname"><span class="pre">draw_heatmap_plotly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_axis_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_axis_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fmt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'.2f'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/utils/tournament_graphs.html#draw_heatmap_plotly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.tournament_graphs.draw_heatmap_plotly" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nenv.utils.tournament_graphs.draw_line">
+<span class="sig-prename descclassname"><span class="pre">nenv.utils.tournament_graphs.</span></span><span class="sig-name descname"><span class="pre">draw_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_axis_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_axis_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_to_csv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/utils/tournament_graphs.html#draw_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.tournament_graphs.draw_line" title="Link to this definition"></a></dt>
+<dd><blockquote>
+<div><p>This method draws a line graph</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – Corresponding label-data dictionary</p></li>
+<li><p><strong>save_path</strong> – File path to save</p></li>
+<li><p><strong>x_axis_name</strong> – Label for x-axis</p></li>
+<li><p><strong>y_axis_name</strong> – Label for y-axis</p></li>
+<li><p><strong>save_to_csv</strong> – Whether save as a csv, or not</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nenv.utils.tournament_graphs.draw_line_matplotlib">
+<span class="sig-prename descclassname"><span class="pre">nenv.utils.tournament_graphs.</span></span><span class="sig-name descname"><span class="pre">draw_line_matplotlib</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_axis_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_axis_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'png'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/utils/tournament_graphs.html#draw_line_matplotlib"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.tournament_graphs.draw_line_matplotlib" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nenv.utils.tournament_graphs.draw_line_plotly">
+<span class="sig-prename descclassname"><span class="pre">nenv.utils.tournament_graphs.</span></span><span class="sig-name descname"><span class="pre">draw_line_plotly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_axis_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_axis_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/utils/tournament_graphs.html#draw_line_plotly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.tournament_graphs.draw_line_plotly" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nenv.utils.tournament_graphs.save_heatmap">
+<span class="sig-prename descclassname"><span class="pre">nenv.utils.tournament_graphs.</span></span><span class="sig-name descname"><span class="pre">save_heatmap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels_x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels_y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_axis_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_axis_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/utils/tournament_graphs.html#save_heatmap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.tournament_graphs.save_heatmap" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nenv.utils.tournament_graphs.save_line">
+<span class="sig-prename descclassname"><span class="pre">nenv.utils.tournament_graphs.</span></span><span class="sig-name descname"><span class="pre">save_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_axis_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_axis_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/utils/tournament_graphs.html#save_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.tournament_graphs.save_line" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="nenv.utils.tournament_graphs.set_drawing_format">
+<span class="sig-prename descclassname"><span class="pre">nenv.utils.tournament_graphs.</span></span><span class="sig-name descname"><span class="pre">set_drawing_format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">drawing_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/utils/tournament_graphs.html#set_drawing_format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.utils.tournament_graphs.set_drawing_format" title="Link to this definition"></a></dt>
+<dd><p>Change the <em>DRAWING_FORMAT</em> for the loggers</p>
+<dl class="simple">
+<dt><strong>Possible Values</strong>:</dt><dd><ul class="simple">
+<li><p><strong>matplotlib-PNG</strong>: Utilizing <em>matplotlib</em> and saving as <em>png</em> image format</p></li>
+<li><p><strong>matplotlib-SVG</strong>: Utilizing <em>matplotlib</em> and saving as <em>svg</em> image format</p></li>
+<li><p><strong>plotly</strong>: Utilizing <em>plotly</em> and saving as interactive <em>html</em></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>drawing_format</strong> – New drawing format.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-nenv.utils">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-nenv.utils" title="Link to this heading"></a></h2>
+<p>This module contains some helpful methods and classes.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="nenv.logger.html" class="btn btn-neutral float-left" title="nenv.logger package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="agents.html" class="btn btn-neutral float-right" title="agents package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, aniltrue.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+{
+ "reservationValue": 0.0,
+ "issueWeights": {
+  "issueA": 0.12,
+  "issueB": 0.13,
+  "issueC": 0.13,
+  "issueD": 0.15,
+  "issueE": 0.26,
+  "issueF": 0.21
+ },
+ "issues": {
+  "issueA": {
+   "valueA": 0.2,
+   "valueB": 0.28,
+   "valueC": 0.5,
+   "valueD": 0.52,
+   "valueE": 0.65,
+   "valueF": 1.0
+  },
+  "issueB": {
+   "valueA": 0.24,
+   "valueB": 0.2,
+   "valueC": 0.43,
+   "valueD": 0.2,
+   "valueE": 0.35,
+   "valueF": 1.0
+  },
+  "issueC": {
+   "valueA": 0.32,
+   "valueB": 0.2,
+   "valueC": 0.42,
+   "valueD": 0.74,
+   "valueE": 0.64,
+   "valueF": 1.0
+  },
+  "issueD": {
+   "valueA": 0.25,
+   "valueB": 0.37,
+   "valueC": 0.2,
+   "valueD": 0.43,
+   "valueE": 0.75,
+   "valueF": 1.0
+  },
+  "issueE": {
+   "valueA": 0.2,
+   "valueB": 0.31,
+   "valueC": 0.49,
+   "valueD": 0.68,
+   "valueE": 1.0,
+   "valueF": 0.92
+  },
+  "issueF": {
+   "valueA": 0.2,
+   "valueB": 0.42,
+   "valueC": 0.23,
+   "valueD": 0.61,
+   "valueE": 1.0,
+   "valueF": 0.75
+  }
+ }
+}

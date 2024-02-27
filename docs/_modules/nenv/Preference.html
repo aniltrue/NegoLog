@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nenv.Preference &mdash; NegoLog 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            NegoLog
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">NegoLog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NegoLog</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">nenv.Preference</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for nenv.Preference</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">nenv.Issue</span> <span class="kn">import</span> <span class="n">Issue</span>
+<span class="kn">from</span> <span class="nn">nenv.Bid</span> <span class="kn">import</span> <span class="n">Bid</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+
+<div class="viewcode-block" id="Preference">
+<a class="viewcode-back" href="../../nenv.html#nenv.Preference.Preference">[docs]</a>
+<span class="k">class</span> <span class="nc">Preference</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Preference class represents the preferences of an agent during a negotiation session. It reads the profile data</span>
+<span class="sd">        via json file. Thus, you can get the Issue and Issue-Value weights, reservation value, bid space in that domain,</span>
+<span class="sd">        the utility value of a bid.</span>
+
+<span class="sd">        **Note**: Preference object is mutual.</span>
+
+<span class="sd">        **Bid**:</span>
+<span class="sd">            The Preference class provides all possible bids in that domains. A bid consists of a value for each issue in</span>
+<span class="sd">            the given domain. In other words, any value combination is presented as a *Bid* object.</span>
+
+<span class="sd">            **Note**: The issues and the possible values under each issue are pre-defined in the JSON file.</span>
+
+<span class="sd">        **Utility**:</span>
+<span class="sd">            Each value under each issue has a pre-defined **utility** value in range **[0.0, 1.0]**. Besides, each issue</span>
+<span class="sd">            has a pre-defined **weight** value, and the summation of the issue weights equal to **1.0**. Hence, the</span>
+<span class="sd">            utility of a bid can be calculated based on additive utility function.</span>
+
+<span class="sd">            *Additive Utility Function*:</span>
+
+<span class="sd">                .. math::</span>
+<span class="sd">                    U_{bid} = \sum_i W_i V_i ({bid})</span>
+
+<span class="sd">                    {s.t.,}</span>
+
+<span class="sd">                    \sum_i W_i = 1.0</span>
+
+<span class="sd">                    0.0 \leq V_i \leq 1.0</span>
+
+<span class="sd">        **Reservation Value**:</span>
+<span class="sd">            At the end of a negotiation session, if the agents fail to reach an agreement, they receive the *reservation</span>
+<span class="sd">            utility*. The default value of reservation utility is set to 0.</span>
+
+<span class="sd">            **Note**: The reservation value can vary for each profile.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">profile_json_path</span><span class="p">:</span> <span class="nb">str</span>                          <span class="c1">#: JSON file path of this preference</span>
+    <span class="n">_issues</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Issue</span><span class="p">]</span>
+    <span class="n">_issue_weights</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Issue</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+    <span class="n">_value_weights</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Issue</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span>
+    <span class="n">_bids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Bid</span><span class="p">]</span>
+    <span class="n">_reservation_value</span><span class="p">:</span> <span class="nb">float</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile_json_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">generate_bids</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Constructor</span>
+
+<span class="sd">            :param profile_json_path: Profile json file&#39;s path</span>
+<span class="sd">            :param generate_bids: Automatically generate the bids. *Default Value*: *True*</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">profile_json_path</span> <span class="o">=</span> <span class="n">profile_json_path</span> <span class="k">if</span> <span class="n">profile_json_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_issues</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_issue_weights</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_value_weights</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bids</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">if</span> <span class="n">profile_json_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">profile_json_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">profile_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reservation_value</span> <span class="o">=</span> <span class="n">profile_data</span><span class="p">[</span><span class="s2">&quot;reservationValue&quot;</span><span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">issue_name</span> <span class="ow">in</span> <span class="n">profile_data</span><span class="p">[</span><span class="s2">&quot;issueWeights&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">issue</span> <span class="o">=</span> <span class="n">Issue</span><span class="p">(</span><span class="n">issue_name</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">profile_data</span><span class="p">[</span><span class="s2">&quot;issues&quot;</span><span class="p">][</span><span class="n">issue_name</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">issue</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_issue_weights</span><span class="p">[</span><span class="n">issue</span><span class="p">]</span> <span class="o">=</span> <span class="n">profile_data</span><span class="p">[</span><span class="s2">&quot;issueWeights&quot;</span><span class="p">][</span><span class="n">issue_name</span><span class="p">]</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_value_weights</span><span class="p">[</span><span class="n">issue</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+            <span class="k">for</span> <span class="n">value_name</span><span class="p">,</span> <span class="n">value_weight</span> <span class="ow">in</span> <span class="n">profile_data</span><span class="p">[</span><span class="s2">&quot;issues&quot;</span><span class="p">][</span><span class="n">issue_name</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_value_weights</span><span class="p">[</span><span class="n">issue</span><span class="p">][</span><span class="n">value_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value_weight</span>
+
+        <span class="c1"># Generate bids</span>
+        <span class="k">if</span> <span class="n">generate_bids</span><span class="p">:</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bids</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">bids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Bid</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method provides the list of all possible bids in a domain. It extracts the bids on the first call.</span>
+<span class="sd">            Also, the bids in the list are assigned the utility value, and they are sorted in descending order.</span>
+
+<span class="sd">            :return: Sorted (in descending order) list of all bids in that domain</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bids</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bids</span>
+
+        <span class="n">bids</span> <span class="o">=</span> <span class="p">[</span><span class="n">Bid</span><span class="p">({},</span> <span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+
+        <span class="c1"># Generate all bid combinations</span>
+        <span class="k">for</span> <span class="n">issue</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_issues</span><span class="p">:</span>
+            <span class="n">new_bids</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">value_name</span> <span class="ow">in</span> <span class="n">issue</span><span class="o">.</span><span class="n">values</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">bid</span> <span class="ow">in</span> <span class="n">bids</span><span class="p">:</span>
+                    <span class="n">_bid</span> <span class="o">=</span> <span class="n">bid</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+                    <span class="n">_bid</span><span class="p">[</span><span class="n">issue</span><span class="p">]</span> <span class="o">=</span> <span class="n">value_name</span>
+
+                    <span class="n">new_bids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_bid</span><span class="p">)</span>
+
+            <span class="n">bids</span> <span class="o">=</span> <span class="n">new_bids</span>
+
+        <span class="c1"># Assign the utility of a bid</span>
+        <span class="k">for</span> <span class="n">bid</span> <span class="ow">in</span> <span class="n">bids</span><span class="p">:</span>
+            <span class="n">bid</span><span class="o">.</span><span class="n">utility</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_utility</span><span class="p">(</span><span class="n">bid</span><span class="p">)</span>
+
+        <span class="c1"># Sort them descending order</span>
+        <span class="n">bids</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">bids</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bids</span> <span class="o">=</span> <span class="n">bids</span>
+
+        <span class="k">return</span> <span class="n">bids</span>
+
+<div class="viewcode-block" id="Preference.get_utility">
+<a class="viewcode-back" href="../../nenv.html#nenv.Preference.Preference.get_utility">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_utility</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bid</span><span class="p">:</span> <span class="n">Bid</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method calculates the utility value of a given bid.</span>
+
+<span class="sd">            :param bid: Target bid</span>
+<span class="sd">            :return: Utility value of the bid</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">utility</span> <span class="o">=</span> <span class="mf">0.</span>
+
+        <span class="k">for</span> <span class="n">issue_name</span><span class="p">,</span> <span class="n">value_name</span> <span class="ow">in</span> <span class="n">bid</span><span class="p">:</span>
+            <span class="n">utility</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_issue_weights</span><span class="p">[</span><span class="n">issue_name</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value_weights</span><span class="p">[</span><span class="n">issue_name</span><span class="p">][</span><span class="n">value_name</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">utility</span></div>
+
+
+<div class="viewcode-block" id="Preference.get_bid_at">
+<a class="viewcode-back" href="../../nenv.html#nenv.Preference.Preference.get_bid_at">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_bid_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_utility</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Bid</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method returns the closest bid to provided target utility. Binary Search approach is applied.</span>
+
+<span class="sd">            :param target_utility: Target utility</span>
+<span class="sd">            :return: The closest bid</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">target_utility</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bids</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">target_utility</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bids</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bids</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="n">low</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">high</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bids</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+
+        <span class="k">while</span> <span class="n">low</span> <span class="o">&lt;=</span> <span class="n">high</span><span class="p">:</span>
+            <span class="n">mid</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="p">(</span><span class="n">high</span> <span class="o">+</span> <span class="n">low</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span>
+
+            <span class="k">if</span> <span class="n">target_utility</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bids</span><span class="p">[</span><span class="n">mid</span><span class="p">]:</span>
+                <span class="n">low</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">target_utility</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bids</span><span class="p">[</span><span class="n">mid</span><span class="p">]:</span>
+                <span class="n">high</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bids</span><span class="p">[</span><span class="n">mid</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bids</span><span class="p">[</span><span class="n">low</span><span class="p">]</span><span class="o">.</span><span class="n">utility</span> <span class="o">-</span> <span class="n">target_utility</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bids</span><span class="p">[</span><span class="n">high</span><span class="p">]</span><span class="o">.</span><span class="n">utility</span> <span class="o">-</span> <span class="n">target_utility</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bids</span><span class="p">[</span><span class="n">low</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bids</span><span class="p">[</span><span class="n">high</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Preference.get_bids_at_range">
+<a class="viewcode-back" href="../../nenv.html#nenv.Preference.Preference.get_bids_at_range">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_bids_at_range</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower_bound</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Bid</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method provides a list of bids in the utility range.</span>
+
+<span class="sd">            :param lower_bound: The lower bound of the range</span>
+<span class="sd">            :param upper_bound: The upper bound of the range</span>
+<span class="sd">            :return: List of bids in that range.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">bids</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">bid</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bids</span><span class="p">:</span>
+            <span class="n">utility</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_utility</span><span class="p">(</span><span class="n">bid</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">utility</span> <span class="o">&lt;</span> <span class="n">lower_bound</span><span class="p">:</span>
+                <span class="k">break</span>
+
+            <span class="k">if</span> <span class="n">utility</span> <span class="o">&lt;=</span> <span class="n">upper_bound</span><span class="p">:</span>
+                <span class="n">bids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bid</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">bids</span></div>
+
+
+<div class="viewcode-block" id="Preference.get_bids_at">
+<a class="viewcode-back" href="../../nenv.html#nenv.Preference.Preference.get_bids_at">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_bids_at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target_utility</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lower_bound</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Bid</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method provides a list of bids in the utility window.</span>
+
+<span class="sd">            .. math:: U_{bid} \in [U_{lower}, U_{upper}]</span>
+
+<span class="sd">            :param target_utility: Center of the utility window</span>
+<span class="sd">            :param lower_bound: The lower bound of the *window = target_utility - lower_bound*</span>
+<span class="sd">            :param upper_bound: The upper bound of the *window = target_utility + upper_bound*</span>
+<span class="sd">            :return: List of bids in that window.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">bids</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">bid</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bids</span><span class="p">:</span>
+            <span class="n">utility</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_utility</span><span class="p">(</span><span class="n">bid</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">utility</span> <span class="o">&lt;</span> <span class="n">target_utility</span> <span class="o">-</span> <span class="n">lower_bound</span><span class="p">:</span>
+                <span class="k">break</span>
+
+            <span class="k">if</span> <span class="n">utility</span> <span class="o">&lt;=</span> <span class="n">target_utility</span> <span class="o">+</span> <span class="n">upper_bound</span><span class="p">:</span>
+                <span class="n">bids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bid</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="n">bids</span></div>
+
+
+<div class="viewcode-block" id="Preference.get_random_bid">
+<a class="viewcode-back" href="../../nenv.html#nenv.Preference.Preference.get_random_bid">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_random_bid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lower_bound</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method randomly selects a bid in a range [max(lower_bound, reservation_value), upper_bound]</span>
+
+<span class="sd">            :param lower_bound: Minimum utility value that the bid can obtain. If *lower_bound &lt; reservation_value*, **reservation value** will be used for the lower bound of the range. *Default = 0.0*</span>
+<span class="sd">            :param upper_bound: Maximum utility value that the bid can obtain. *Default = 1.0*</span>
+<span class="sd">            :return: Randomly selected bid in that utility range.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">lower_bound</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">lower_bound</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reservation_value</span><span class="p">)</span>
+        <span class="n">upper_bound</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mf">1.</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">lower_bound</span> <span class="o">&gt;</span> <span class="n">upper_bound</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_random_bid</span><span class="p">(</span><span class="n">upper_bound</span><span class="p">,</span> <span class="n">lower_bound</span><span class="p">)</span>
+
+        <span class="n">target_utility</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="n">upper_bound</span> <span class="o">-</span> <span class="n">lower_bound</span><span class="p">)</span> <span class="o">+</span> <span class="n">lower_bound</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_bid_at</span><span class="p">(</span><span class="n">target_utility</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">__copy__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A copy of this object</span>
+
+<span class="sd">            :return: Copy of Preference object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Preference</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">profile_json_path</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Preference.copy">
+<a class="viewcode-back" href="../../nenv.html#nenv.Preference.Preference.copy">[docs]</a>
+    <span class="k">def</span> <span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A copy of this object</span>
+
+<span class="sd">            :return: Copy of Preference object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__copy__</span><span class="p">()</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">issues</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Issue</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            A copy of list of Issue in that domain</span>
+
+<span class="sd">            :return: Copy of list of Issue in that domain</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_issues</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">reservation_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            The reservation value</span>
+
+<span class="sd">            :return: Provided reservation value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reservation_value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">issue_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Issue</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Copy of dictionary of Issue-Weight pairs.</span>
+
+<span class="sd">            :return: Copy of dictionary of Issue-Weight pairs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_issue_weights</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">value_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Issue</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Copy of dictionary of Issue-Value - Weight pairs</span>
+
+<span class="sd">            :return: Copy of dictionary of Issue-Value - Weight pairs</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value_weights</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">max_util_bid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Bid</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            The maximum utility value in the bid space</span>
+
+<span class="sd">            :return: The maximum utility value in the bid space</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bids</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">min_util_bid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Bid</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            The minimum utility value in the bid space</span>
+
+<span class="sd">            :return: The minimum utility value in the bid space</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bids</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="domain_loader">
+<a class="viewcode-back" href="../../nenv.html#nenv.Preference.domain_loader">[docs]</a>
+<span class="k">def</span> <span class="nf">domain_loader</span><span class="p">(</span><span class="n">domain_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="n">Preference</span><span class="p">,</span> <span class="n">Preference</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method generates the Preferences for both parties based on the given domain no.</span>
+
+<span class="sd">        :param domain_name: The name of the domain</span>
+<span class="sd">        :return: Preferences of profileA, Preferences of profileB</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">domain_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;domains/domain</span><span class="si">{</span><span class="n">domain_name</span><span class="si">}</span><span class="s2">/&quot;</span>
+
+    <span class="n">pref1</span> <span class="o">=</span> <span class="n">Preference</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">domain_path</span><span class="p">,</span> <span class="s2">&quot;profileA.json&quot;</span><span class="p">))</span>
+    <span class="n">pref2</span> <span class="o">=</span> <span class="n">Preference</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">domain_path</span><span class="p">,</span> <span class="s2">&quot;profileB.json&quot;</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">pref1</span><span class="p">,</span> <span class="n">pref2</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, aniltrue.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

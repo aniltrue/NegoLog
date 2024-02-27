@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nenv.OpponentModel package &mdash; NegoLog 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8d563738"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="nenv.logger package" href="nenv.logger.html" />
+    <link rel="prev" title="nenv package" href="nenv.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            NegoLog
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">NegoLog</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="nenv.html">nenv package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.Action">nenv.Action module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.Agent">nenv.Agent module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.Bid">nenv.Bid module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.BidSpace">nenv.BidSpace module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.EditablePreference">nenv.EditablePreference module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.Issue">nenv.Issue module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.Preference">nenv.Preference module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.Session">nenv.Session module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.SessionLogs">nenv.SessionLogs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.SessionManager">nenv.SessionManager module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv.Tournament">nenv.Tournament module</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="nenv.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">nenv.OpponentModel package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.logger.html">nenv.logger package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nenv.utils.html">nenv.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="nenv.html#module-nenv">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="agents.html">agents package</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">NegoLog</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">NegoLog</a></li>
+          <li class="breadcrumb-item"><a href="nenv.html">nenv package</a></li>
+      <li class="breadcrumb-item active">nenv.OpponentModel package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/nenv.OpponentModel.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="nenv-opponentmodel-package">
+<h1>nenv.OpponentModel package<a class="headerlink" href="#nenv-opponentmodel-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-nenv.OpponentModel.AbstractOpponentModel">
+<span id="nenv-opponentmodel-abstractopponentmodel-module"></span><h2>nenv.OpponentModel.AbstractOpponentModel module<a class="headerlink" href="#module-nenv.OpponentModel.AbstractOpponentModel" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.OpponentModel.AbstractOpponentModel.AbstractOpponentModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.OpponentModel.AbstractOpponentModel.</span></span><span class="sig-name descname"><span class="pre">AbstractOpponentModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reference</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Preference.Preference" title="nenv.Preference.Preference"><span class="pre">Preference</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/OpponentModel/AbstractOpponentModel.html#AbstractOpponentModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.AbstractOpponentModel.AbstractOpponentModel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Estimators (i.e., Opponent Model) predicts the opponent’s preferences during a negotiation. Each Opponent Model
+should be a subclass of <em>AbstractOpponentModel</em>. They should generate <em>EstimatedPreference</em> object which is the
+predicted preferences of the opponent agent.</p>
+<p>This separated structure (from the agent strategy) enables to independently develop and evaluate preference estimators via <em>loggers</em>.</p>
+<dl class="simple">
+<dt><strong>Methods</strong>:</dt><dd><dl class="simple">
+<dt>To extend  <em>AbstractOpponentModel</em> class, following methods must be implemented</dt><dd><ul class="simple">
+<li><p><strong>name</strong>: Each estimator must have a unique name for logging purposes.</p></li>
+<li><p><strong>update</strong>: This method is called when an offer is received from the opponent.</p></li>
+<li><p><strong>preference</strong>: This method returns the estimated preferences of the opponent as an <em>EstimatedPreference</em> object.</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.OpponentModel.AbstractOpponentModel.AbstractOpponentModel.calculate_error">
+<span class="sig-name descname"><span class="pre">calculate_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">org_pref</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Preference.Preference" title="nenv.Preference.Preference"><span class="pre">Preference</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_rmse</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_spearman</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_kendall_tau</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/OpponentModel/AbstractOpponentModel.html#AbstractOpponentModel.calculate_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.AbstractOpponentModel.AbstractOpponentModel.calculate_error" title="Link to this definition"></a></dt>
+<dd><p>This method calculates the error of the estimated preferences for the performance evaluation of the opponent
+model. There metrics are used <a class="reference internal" href="#baarslag2013" id="id1"><span>[Baarslag2013]</span></a> <a class="reference internal" href="#keskin2023" id="id2"><span>[Keskin2023]</span></a>:</p>
+<ul class="simple">
+<li><p><strong>Root Mean Squared Error (RMSE)</strong>: The difference between real and estimated utility of all bids in that domain.</p></li>
+<li><p><strong>Spearman</strong>: The ranking correlation between real and estimated bid rankings in that domain.</p></li>
+<li><p><strong>Kendall-Tau</strong>: The ranking correlation between real and estimated bid rankings in that domain.</p></li>
+</ul>
+<div role="list" class="citation-list">
+<div class="citation" id="baarslag2013" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">Baarslag2013</a><span class="fn-bracket">]</span></span>
+<p>Tim Baarslag, Mark J.C. Hendrikx, Koen V. Hindriks, and Catholijn M. Jonker. Predicting the performance of opponent models in automated negotiation. In International Joint Conferences on Web Intelligence (WI) and Intelligent Agent Technologies (IAT), 2013 IEEE/WIC/ACM, volume 2, pages 59–66, 2013.</p>
+</div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>org_pref</strong> – Original preferences of the opponent to compare</p></li>
+<li><p><strong>return_rmse</strong> – Whether RMSE will be calculated, or not</p></li>
+<li><p><strong>return_spearman</strong> – Whether Spearman will be calculated, or not</p></li>
+<li><p><strong>return_kendall_tau</strong> – Whether Kendall-Tau will be calculated, or not</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The metric results (i.e., RMSE, Spearman and Kendall-Tau) as a tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.OpponentModel.AbstractOpponentModel.AbstractOpponentModel.name">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#nenv.OpponentModel.AbstractOpponentModel.AbstractOpponentModel.name" title="Link to this definition"></a></dt>
+<dd><p>Each Opponent Model must have a name for loggers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Name of the Opponent Model</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.OpponentModel.AbstractOpponentModel.AbstractOpponentModel.preference">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">preference</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#nenv.OpponentModel.EstimatedPreference.EstimatedPreference" title="nenv.OpponentModel.EstimatedPreference.EstimatedPreference"><span class="pre">EstimatedPreference</span></a></em><a class="headerlink" href="#nenv.OpponentModel.AbstractOpponentModel.AbstractOpponentModel.preference" title="Link to this definition"></a></dt>
+<dd><p>This method returns the estimated preferences of the opponent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Estimated Preferences of the opponent</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.OpponentModel.AbstractOpponentModel.AbstractOpponentModel.update">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/OpponentModel/AbstractOpponentModel.html#AbstractOpponentModel.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.AbstractOpponentModel.AbstractOpponentModel.update" title="Link to this definition"></a></dt>
+<dd><p>This method is called when a bid is received from the opponent to update the estimation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bid</strong> – Received bid</p></li>
+<li><p><strong>t</strong> – Negotiation time</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nenv.OpponentModel.BayesianOpponentModel">
+<span id="nenv-opponentmodel-bayesianopponentmodel-module"></span><h2>nenv.OpponentModel.BayesianOpponentModel module<a class="headerlink" href="#module-nenv.OpponentModel.BayesianOpponentModel" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.OpponentModel.BayesianOpponentModel.</span></span><span class="sig-name descname"><span class="pre">BayesianOpponentModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reference</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Preference.Preference" title="nenv.Preference.Preference"><span class="pre">Preference</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/OpponentModel/BayesianOpponentModel.html#BayesianOpponentModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nenv.OpponentModel.AbstractOpponentModel.AbstractOpponentModel" title="nenv.OpponentModel.AbstractOpponentModel.AbstractOpponentModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractOpponentModel</span></code></a></p>
+<dl class="simple">
+<dt><strong>Bayesian opponent model</strong>:</dt><dd><p>It applies the Bayes theorem with a set of hypotheses about the opponent’s preferences. The Bayesian
+learning approaches try to classify the opponent’s preference and the classes of preference relations over
+the values in that domain. It predicts not only the shape of the opponent’s utility function
+(i.e. triangular, downhill, uphill) but also the issue weights and the value utilities under the
+corresponding issue. Although the Bayesian opponent model also observes the opponent’s negotiation history,
+they have the potential to achieve better performance in a short time than the frequency-based models.
+<a class="reference internal" href="#hindriks2008" id="id3"><span>[Hindriks2008]</span></a></p>
+</dd>
+</dl>
+<div role="list" class="citation-list">
+<div class="citation" id="hindriks2008" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">Hindriks2008</a><span class="fn-bracket">]</span></span>
+<p>Hindriks, Koen &amp; Tykhonov, Dmytro. (2008). Opponent modelling in automated multi-issue negotiation using Bayesian learning. Proceedings of the 7th International Joint Conference on Autonomous Agents and Multiagent Systems. 1. 331-338.</p>
+</div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.conditionalDistribution">
+<span class="sig-name descname"><span class="pre">conditionalDistribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pUtility</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pPreviousBidUtility</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/nenv/OpponentModel/BayesianOpponentModel.html#BayesianOpponentModel.conditionalDistribution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.conditionalDistribution" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.fBiddingHistory">
+<span class="sig-name descname"><span class="pre">fBiddingHistory</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.fBiddingHistory" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.fEvaluatorHyps">
+<span class="sig-name descname"><span class="pre">fEvaluatorHyps</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.fEvaluatorHyps" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.fExpectedWeight">
+<span class="sig-name descname"><span class="pre">fExpectedWeight</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.fExpectedWeight" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.fPreviousBidUtility">
+<span class="sig-name descname"><span class="pre">fPreviousBidUtility</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.fPreviousBidUtility" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.fWeightHyps">
+<span class="sig-name descname"><span class="pre">fWeightHyps</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.fWeightHyps" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.getExpectedEvaluationValue">
+<span class="sig-name descname"><span class="pre">getExpectedEvaluationValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pBid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">pIssueNumber</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/nenv/OpponentModel/BayesianOpponentModel.html#BayesianOpponentModel.getExpectedEvaluationValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.getExpectedEvaluationValue" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.getExpectedUtility">
+<span class="sig-name descname"><span class="pre">getExpectedUtility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/nenv/OpponentModel/BayesianOpponentModel.html#BayesianOpponentModel.getExpectedUtility"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.getExpectedUtility" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.getExpectedWeight">
+<span class="sig-name descname"><span class="pre">getExpectedWeight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pIssueNumber</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/nenv/OpponentModel/BayesianOpponentModel.html#BayesianOpponentModel.getExpectedWeight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.getExpectedWeight" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.getNormalizedWeight">
+<span class="sig-name descname"><span class="pre">getNormalizedWeight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Issue.Issue" title="nenv.Issue.Issue"><span class="pre">Issue</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">startingNumber</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/nenv/OpponentModel/BayesianOpponentModel.html#BayesianOpponentModel.getNormalizedWeight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.getNormalizedWeight" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.getPartialUtility">
+<span class="sig-name descname"><span class="pre">getPartialUtility</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pBid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">pIssueIndex</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/nenv/OpponentModel/BayesianOpponentModel.html#BayesianOpponentModel.getPartialUtility"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.getPartialUtility" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.get_expected_eval">
+<span class="sig-name descname"><span class="pre">get_expected_eval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">discrete_eval</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/nenv/OpponentModel/BayesianOpponentModel.html#BayesianOpponentModel.get_expected_eval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.get_expected_eval" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.haveSeenBefore">
+<span class="sig-name descname"><span class="pre">haveSeenBefore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pBid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/nenv/OpponentModel/BayesianOpponentModel.html#BayesianOpponentModel.haveSeenBefore"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.haveSeenBefore" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.initWeightHyps">
+<span class="sig-name descname"><span class="pre">initWeightHyps</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/OpponentModel/BayesianOpponentModel.html#BayesianOpponentModel.initWeightHyps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.initWeightHyps" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.issues">
+<span class="sig-name descname"><span class="pre">issues</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.issues" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.name" title="Link to this definition"></a></dt>
+<dd><p>Each Opponent Model must have a name for loggers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Name of the Opponent Model</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.preference">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">preference</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#nenv.OpponentModel.EstimatedPreference.EstimatedPreference" title="nenv.OpponentModel.EstimatedPreference.EstimatedPreference"><span class="pre">EstimatedPreference</span></a></em><a class="headerlink" href="#nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.preference" title="Link to this definition"></a></dt>
+<dd><p>This method returns the estimated preferences of the opponent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Estimated Preferences of the opponent</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/OpponentModel/BayesianOpponentModel.html#BayesianOpponentModel.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.update" title="Link to this definition"></a></dt>
+<dd><p>This method is called when a bid is received from the opponent to update the estimation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bid</strong> – Received bid</p></li>
+<li><p><strong>t</strong> – Negotiation time</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.updateEvaluationFns">
+<span class="sig-name descname"><span class="pre">updateEvaluationFns</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/OpponentModel/BayesianOpponentModel.html#BayesianOpponentModel.updateEvaluationFns"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.updateEvaluationFns" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.updateWeights">
+<span class="sig-name descname"><span class="pre">updateWeights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/OpponentModel/BayesianOpponentModel.html#BayesianOpponentModel.updateWeights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.BayesianOpponentModel.BayesianOpponentModel.updateWeights" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nenv.OpponentModel.ClassicFrequencyOpponentModel">
+<span id="nenv-opponentmodel-classicfrequencyopponentmodel-module"></span><h2>nenv.OpponentModel.ClassicFrequencyOpponentModel module<a class="headerlink" href="#module-nenv.OpponentModel.ClassicFrequencyOpponentModel" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.OpponentModel.ClassicFrequencyOpponentModel.ClassicFrequencyOpponentModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.OpponentModel.ClassicFrequencyOpponentModel.</span></span><span class="sig-name descname"><span class="pre">ClassicFrequencyOpponentModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reference</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Preference.Preference" title="nenv.Preference.Preference"><span class="pre">Preference</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/OpponentModel/ClassicFrequencyOpponentModel.html#ClassicFrequencyOpponentModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.ClassicFrequencyOpponentModel.ClassicFrequencyOpponentModel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nenv.OpponentModel.AbstractOpponentModel.AbstractOpponentModel" title="nenv.OpponentModel.AbstractOpponentModel.AbstractOpponentModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractOpponentModel</span></code></a></p>
+<dl>
+<dt><strong>Classical Frequency-based opponent model</strong>:</dt><dd><dl class="simple">
+<dt>In the classical frequency-based approaches, agents have two heuristics:</dt><dd><ul class="simple">
+<li><p>The opponent concedes less on important issues</p></li>
+<li><p>The preferred values appear more often in the opponent’s offers (i.e., a negotiator tends to offer the most desired values).</p></li>
+</ul>
+</dd>
+</dl>
+<p>If a given value for an issue appears more frequently, the evaluation value of that value increases.
+<a class="reference internal" href="#krimpen2013" id="id4"><span>[Krimpen2013]</span></a></p>
+</dd>
+</dl>
+<div role="list" class="citation-list">
+<div class="citation" id="krimpen2013" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">Krimpen2013</a><span class="fn-bracket">]</span></span>
+<p>van Krimpen, T., Looije, D., Hajizadeh, S. (2013). HardHeaded. In: Ito, T., Zhang, M., Robu, V., Matsuo, T. (eds) Complex Automated Negotiations: Theories, Models, and Software Competitions. Studies in Computational Intelligence, vol 435. Springer, Berlin, Heidelberg. &lt;<a class="reference external" href="https://doi.org/10.1007/978-3-642-30737-9_17">https://doi.org/10.1007/978-3-642-30737-9_17</a>&gt;</p>
+</div>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.OpponentModel.ClassicFrequencyOpponentModel.ClassicFrequencyOpponentModel.alpha">
+<span class="sig-name descname"><span class="pre">alpha</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#nenv.OpponentModel.ClassicFrequencyOpponentModel.ClassicFrequencyOpponentModel.alpha" title="Link to this definition"></a></dt>
+<dd><p>Alpha parameter for issue weight update</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.OpponentModel.ClassicFrequencyOpponentModel.ClassicFrequencyOpponentModel.issue_counts">
+<span class="sig-name descname"><span class="pre">issue_counts</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="nenv.html#nenv.Issue.Issue" title="nenv.Issue.Issue"><span class="pre">Issue</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#nenv.OpponentModel.ClassicFrequencyOpponentModel.ClassicFrequencyOpponentModel.issue_counts" title="Link to this definition"></a></dt>
+<dd><p>The number of changes for each issue</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.OpponentModel.ClassicFrequencyOpponentModel.ClassicFrequencyOpponentModel.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#nenv.OpponentModel.ClassicFrequencyOpponentModel.ClassicFrequencyOpponentModel.name" title="Link to this definition"></a></dt>
+<dd><p>Each Opponent Model must have a name for loggers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Name of the Opponent Model</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.OpponentModel.ClassicFrequencyOpponentModel.ClassicFrequencyOpponentModel.opponent_bids">
+<span class="sig-name descname"><span class="pre">opponent_bids</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#nenv.OpponentModel.ClassicFrequencyOpponentModel.ClassicFrequencyOpponentModel.opponent_bids" title="Link to this definition"></a></dt>
+<dd><p>The list of received bids</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.OpponentModel.ClassicFrequencyOpponentModel.ClassicFrequencyOpponentModel.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/OpponentModel/ClassicFrequencyOpponentModel.html#ClassicFrequencyOpponentModel.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.ClassicFrequencyOpponentModel.ClassicFrequencyOpponentModel.update" title="Link to this definition"></a></dt>
+<dd><p>This method is called when a bid is received from the opponent to update the estimation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bid</strong> – Received bid</p></li>
+<li><p><strong>t</strong> – Negotiation time</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.OpponentModel.ClassicFrequencyOpponentModel.ClassicFrequencyOpponentModel.update_weights">
+<span class="sig-name descname"><span class="pre">update_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/OpponentModel/ClassicFrequencyOpponentModel.html#ClassicFrequencyOpponentModel.update_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.ClassicFrequencyOpponentModel.ClassicFrequencyOpponentModel.update_weights" title="Link to this definition"></a></dt>
+<dd><p>This method updates the weights</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.OpponentModel.ClassicFrequencyOpponentModel.ClassicFrequencyOpponentModel.value_counts">
+<span class="sig-name descname"><span class="pre">value_counts</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="nenv.html#nenv.Issue.Issue" title="nenv.Issue.Issue"><span class="pre">Issue</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#nenv.OpponentModel.ClassicFrequencyOpponentModel.ClassicFrequencyOpponentModel.value_counts" title="Link to this definition"></a></dt>
+<dd><p>The number of observation for each value under each issue</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nenv.OpponentModel.ConflictBasedOpponentModel">
+<span id="nenv-opponentmodel-conflictbasedopponentmodel-module"></span><h2>nenv.OpponentModel.ConflictBasedOpponentModel module<a class="headerlink" href="#module-nenv.OpponentModel.ConflictBasedOpponentModel" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.OpponentModel.ConflictBasedOpponentModel.ComparisonObject">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.OpponentModel.ConflictBasedOpponentModel.</span></span><span class="sig-name descname"><span class="pre">ComparisonObject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">first_offer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">second_offer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/OpponentModel/ConflictBasedOpponentModel.html#ComparisonObject"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.ConflictBasedOpponentModel.ComparisonObject" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Helper class for Conflict-Based Opponent Model</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.OpponentModel.ConflictBasedOpponentModel.ComparisonObject.is_comparable">
+<span class="sig-name descname"><span class="pre">is_comparable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/OpponentModel/ConflictBasedOpponentModel.html#ComparisonObject.is_comparable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.ConflictBasedOpponentModel.ComparisonObject.is_comparable" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.OpponentModel.ConflictBasedOpponentModel.ComparisonObject.reduce_elements">
+<span class="sig-name descname"><span class="pre">reduce_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">first_offer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">second_offer</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/OpponentModel/ConflictBasedOpponentModel.html#ComparisonObject.reduce_elements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.ConflictBasedOpponentModel.ComparisonObject.reduce_elements" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.OpponentModel.ConflictBasedOpponentModel.ConflictBasedOpponentModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.OpponentModel.ConflictBasedOpponentModel.</span></span><span class="sig-name descname"><span class="pre">ConflictBasedOpponentModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reference</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Preference.Preference" title="nenv.Preference.Preference"><span class="pre">Preference</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/OpponentModel/ConflictBasedOpponentModel.html#ConflictBasedOpponentModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.ConflictBasedOpponentModel.ConflictBasedOpponentModel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nenv.OpponentModel.AbstractOpponentModel.AbstractOpponentModel" title="nenv.OpponentModel.AbstractOpponentModel.AbstractOpponentModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractOpponentModel</span></code></a></p>
+<dl class="simple">
+<dt><strong>Conflict-based opponent model</strong>:</dt><dd><p>It tries to extract the maximum information gained with limited interaction. It presents a conflict-based
+opponent modeling technique which resolves the conflicts by ordering the issues and values.
+The proposed model out-performs them despite the diversity of participants’ negotiation behaviors. Besides,
+the conflict-based opponent model estimates the entire bid space much more successfully than its competitors
+in automated negotiation sessions when a small portion of the outcome space was explored. <a class="reference internal" href="#keskin2023" id="id5"><span>[Keskin2023]</span></a></p>
+</dd>
+</dl>
+<div role="list" class="citation-list">
+<div class="citation" id="keskin2023" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>Keskin2023<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id2">1</a>,<a role="doc-backlink" href="#id5">2</a>)</span>
+<p>Keskin, M.O., Buzcu, B. &amp; Aydoğan, R. Conflict-based negotiation strategy for human-agent negotiation. Appl Intell 53, 29741–29757 (2023). &lt;<a class="reference external" href="https://doi.org/10.1007/s10489-023-05001-9">https://doi.org/10.1007/s10489-023-05001-9</a>&gt;</p>
+</div>
+</div>
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.OpponentModel.ConflictBasedOpponentModel.ConflictBasedOpponentModel.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#nenv.OpponentModel.ConflictBasedOpponentModel.ConflictBasedOpponentModel.name" title="Link to this definition"></a></dt>
+<dd><p>Each Opponent Model must have a name for loggers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Name of the Opponent Model</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.OpponentModel.ConflictBasedOpponentModel.ConflictBasedOpponentModel.opponent_history">
+<span class="sig-name descname"><span class="pre">opponent_history</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#nenv.OpponentModel.ConflictBasedOpponentModel.ConflictBasedOpponentModel.opponent_history" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.OpponentModel.ConflictBasedOpponentModel.ConflictBasedOpponentModel.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/OpponentModel/ConflictBasedOpponentModel.html#ConflictBasedOpponentModel.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.ConflictBasedOpponentModel.ConflictBasedOpponentModel.update" title="Link to this definition"></a></dt>
+<dd><p>This method is called when a bid is received from the opponent to update the estimation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bid</strong> – Received bid</p></li>
+<li><p><strong>t</strong> – Negotiation time</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nenv.OpponentModel.EstimatedPreference">
+<span id="nenv-opponentmodel-estimatedpreference-module"></span><h2>nenv.OpponentModel.EstimatedPreference module<a class="headerlink" href="#module-nenv.OpponentModel.EstimatedPreference" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.OpponentModel.EstimatedPreference.EstimatedPreference">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.OpponentModel.EstimatedPreference.</span></span><span class="sig-name descname"><span class="pre">EstimatedPreference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reference</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Preference.Preference" title="nenv.Preference.Preference"><span class="pre">Preference</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/OpponentModel/EstimatedPreference.html#EstimatedPreference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.EstimatedPreference.EstimatedPreference" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="nenv.html#nenv.Preference.Preference" title="nenv.Preference.Preference"><code class="xref py py-class docutils literal notranslate"><span class="pre">Preference</span></code></a></p>
+<p>Preference object is mutual. Thus, Opponent Models (i.e., Estimators) generate EstimatedPreference object which
+enable to change Issue and Value weights.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.OpponentModel.EstimatedPreference.EstimatedPreference.get_issue_weight">
+<span class="sig-name descname"><span class="pre">get_issue_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">issue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Issue.Issue" title="nenv.Issue.Issue"><span class="pre">Issue</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/nenv/OpponentModel/EstimatedPreference.html#EstimatedPreference.get_issue_weight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.EstimatedPreference.EstimatedPreference.get_issue_weight" title="Link to this definition"></a></dt>
+<dd><p>Get the weight of an issue</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>issue</strong> – Issue object or IssueName as string</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Weight of corresponding Issue</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.OpponentModel.EstimatedPreference.EstimatedPreference.get_value_weight">
+<span class="sig-name descname"><span class="pre">get_value_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">issue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Issue.Issue" title="nenv.Issue.Issue"><span class="pre">Issue</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/nenv/OpponentModel/EstimatedPreference.html#EstimatedPreference.get_value_weight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.EstimatedPreference.EstimatedPreference.get_value_weight" title="Link to this definition"></a></dt>
+<dd><p>Get the utility (weight) of a value under an issue</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>issue</strong> – Issue object or IssueName as string</p></li>
+<li><p><strong>value</strong> – Value as string</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Weight of corresponding Issue-Value pair</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.OpponentModel.EstimatedPreference.EstimatedPreference.normalize">
+<span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/OpponentModel/EstimatedPreference.html#EstimatedPreference.normalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.EstimatedPreference.EstimatedPreference.normalize" title="Link to this definition"></a></dt>
+<dd><p>This method normalize the Issue and Value weights.</p>
+<ul class="simple">
+<li><p>Value weights must be in <strong>[0.0-1.0]</strong> range</p></li>
+<li><p>Sum of Issue weights must be <strong>1.0</strong></p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.OpponentModel.EstimatedPreference.EstimatedPreference.set_issue_weight">
+<span class="sig-name descname"><span class="pre">set_issue_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">issue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Issue.Issue" title="nenv.Issue.Issue"><span class="pre">Issue</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/OpponentModel/EstimatedPreference.html#EstimatedPreference.set_issue_weight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.EstimatedPreference.EstimatedPreference.set_issue_weight" title="Link to this definition"></a></dt>
+<dd><p>Change Issue Weight</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>issue</strong> – Issue object or IssueName as string</p></li>
+<li><p><strong>weight</strong> – New weight that will be assigned</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.OpponentModel.EstimatedPreference.EstimatedPreference.set_value_weight">
+<span class="sig-name descname"><span class="pre">set_value_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">issue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Issue.Issue" title="nenv.Issue.Issue"><span class="pre">Issue</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/OpponentModel/EstimatedPreference.html#EstimatedPreference.set_value_weight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.EstimatedPreference.EstimatedPreference.set_value_weight" title="Link to this definition"></a></dt>
+<dd><p>Change Value weight</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>issue</strong> – Issue object or IssueName as string</p></li>
+<li><p><strong>value</strong> – Value as string</p></li>
+<li><p><strong>weight</strong> – New weight that will be assigned</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nenv.OpponentModel.WindowedFrequencyOpponentModel">
+<span id="nenv-opponentmodel-windowedfrequencyopponentmodel-module"></span><h2>nenv.OpponentModel.WindowedFrequencyOpponentModel module<a class="headerlink" href="#module-nenv.OpponentModel.WindowedFrequencyOpponentModel" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.OpponentModel.WindowedFrequencyOpponentModel.IssueEstimator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.OpponentModel.WindowedFrequencyOpponentModel.</span></span><span class="sig-name descname"><span class="pre">IssueEstimator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/OpponentModel/WindowedFrequencyOpponentModel.html#IssueEstimator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.WindowedFrequencyOpponentModel.IssueEstimator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class is a helpful class for Windowed Frequency Opponent Model</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.OpponentModel.WindowedFrequencyOpponentModel.IssueEstimator.gamma">
+<span class="sig-name descname"><span class="pre">gamma</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.25</span></em><a class="headerlink" href="#nenv.OpponentModel.WindowedFrequencyOpponentModel.IssueEstimator.gamma" title="Link to this definition"></a></dt>
+<dd><p>The gamma parameter for smoothing</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.OpponentModel.WindowedFrequencyOpponentModel.IssueEstimator.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/OpponentModel/WindowedFrequencyOpponentModel.html#IssueEstimator.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.WindowedFrequencyOpponentModel.IssueEstimator.update" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.OpponentModel.WindowedFrequencyOpponentModel.IssueEstimator.value_counter">
+<span class="sig-name descname"><span class="pre">value_counter</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#nenv.OpponentModel.WindowedFrequencyOpponentModel.IssueEstimator.value_counter" title="Link to this definition"></a></dt>
+<dd><p>The number of observation of values under the issue</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.OpponentModel.WindowedFrequencyOpponentModel.IssueEstimator.value_weights">
+<span class="sig-name descname"><span class="pre">value_weights</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#nenv.OpponentModel.WindowedFrequencyOpponentModel.IssueEstimator.value_weights" title="Link to this definition"></a></dt>
+<dd><p>The weights of the values under the issue</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.OpponentModel.WindowedFrequencyOpponentModel.IssueEstimator.weight">
+<span class="sig-name descname"><span class="pre">weight</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#nenv.OpponentModel.WindowedFrequencyOpponentModel.IssueEstimator.weight" title="Link to this definition"></a></dt>
+<dd><p>The estimated weight of the issue</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.OpponentModel.WindowedFrequencyOpponentModel.WindowedFrequencyOpponentModel">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.OpponentModel.WindowedFrequencyOpponentModel.</span></span><span class="sig-name descname"><span class="pre">WindowedFrequencyOpponentModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reference</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Preference.Preference" title="nenv.Preference.Preference"><span class="pre">Preference</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/OpponentModel/WindowedFrequencyOpponentModel.html#WindowedFrequencyOpponentModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.WindowedFrequencyOpponentModel.WindowedFrequencyOpponentModel" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#nenv.OpponentModel.AbstractOpponentModel.AbstractOpponentModel" title="nenv.OpponentModel.AbstractOpponentModel.AbstractOpponentModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">AbstractOpponentModel</span></code></a></p>
+<dl>
+<dt><strong>Windowed frequency-based opponent model</strong>:</dt><dd><p>It extends the classical frequency-based approach by introducing the window approach. Instead of comparing
+two subsequent offers, they compare the fixed number of subsequent offers (i.e., window). They test whether
+there is a statistical difference between the distribution of issue values in a current window to determine
+whether the issue weights should be updated. For updating issue weights, <em>alpha</em> and <em>beta</em> parameters
+are used to adjust the amount of update.</p>
+<p>The issue update approach works well if the opponent makes a concession. However, opponents can make other
+moves, such as silent and selfish moves. Therefore, it applies the issue update if there is a concession
+between the windows. Note that these windows are consecutive and disjoint windows of the negotiation
+history of the opponent. <a class="reference internal" href="#tunali2017" id="id6"><span>[Tunali2017]</span></a></p>
+</dd>
+</dl>
+<div role="list" class="citation-list">
+<div class="citation" id="tunali2017" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">Tunali2017</a><span class="fn-bracket">]</span></span>
+<p>Tunalı, O., Aydoğan, R., Sanchez-Anguix, V. (2017). Rethinking Frequency Opponent Modeling in Automated Negotiation. In: An, B., Bazzan, A., Leite, J., Villata, S., van der Torre, L. (eds) PRIMA 2017: Principles and Practice of Multi-Agent Systems. PRIMA 2017. Lecture Notes in Computer Science(), vol 10621. Springer, Cham. &lt;<a class="reference external" href="https://doi.org/10.1007/978-3-319-69131-2_16">https://doi.org/10.1007/978-3-319-69131-2_16</a>&gt;</p>
+</div>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.OpponentModel.WindowedFrequencyOpponentModel.WindowedFrequencyOpponentModel.alpha">
+<span class="sig-name descname"><span class="pre">alpha</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10.0</span></em><a class="headerlink" href="#nenv.OpponentModel.WindowedFrequencyOpponentModel.WindowedFrequencyOpponentModel.alpha" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.OpponentModel.WindowedFrequencyOpponentModel.WindowedFrequencyOpponentModel.beta">
+<span class="sig-name descname"><span class="pre">beta</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5.0</span></em><a class="headerlink" href="#nenv.OpponentModel.WindowedFrequencyOpponentModel.WindowedFrequencyOpponentModel.beta" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.OpponentModel.WindowedFrequencyOpponentModel.WindowedFrequencyOpponentModel.issues">
+<span class="sig-name descname"><span class="pre">issues</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#nenv.OpponentModel.WindowedFrequencyOpponentModel.WindowedFrequencyOpponentModel.issues" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="nenv.OpponentModel.WindowedFrequencyOpponentModel.WindowedFrequencyOpponentModel.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#nenv.OpponentModel.WindowedFrequencyOpponentModel.WindowedFrequencyOpponentModel.name" title="Link to this definition"></a></dt>
+<dd><p>Each Opponent Model must have a name for loggers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Name of the Opponent Model</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.OpponentModel.WindowedFrequencyOpponentModel.WindowedFrequencyOpponentModel.offers">
+<span class="sig-name descname"><span class="pre">offers</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#nenv.OpponentModel.WindowedFrequencyOpponentModel.WindowedFrequencyOpponentModel.offers" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.OpponentModel.WindowedFrequencyOpponentModel.WindowedFrequencyOpponentModel.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bid</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/OpponentModel/WindowedFrequencyOpponentModel.html#WindowedFrequencyOpponentModel.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.WindowedFrequencyOpponentModel.WindowedFrequencyOpponentModel.update" title="Link to this definition"></a></dt>
+<dd><p>This method is called when a bid is received from the opponent to update the estimation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bid</strong> – Received bid</p></li>
+<li><p><strong>t</strong> – Negotiation time</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.OpponentModel.WindowedFrequencyOpponentModel.WindowedFrequencyOpponentModel.update_issues">
+<span class="sig-name descname"><span class="pre">update_issues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">previous_window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_window</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="nenv.html#nenv.Bid.Bid" title="nenv.Bid.Bid"><span class="pre">Bid</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/OpponentModel/WindowedFrequencyOpponentModel.html#WindowedFrequencyOpponentModel.update_issues"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.WindowedFrequencyOpponentModel.WindowedFrequencyOpponentModel.update_issues" title="Link to this definition"></a></dt>
+<dd><p>Update issue weights</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>previous_window</strong> – Previous window as a list of bids</p></li>
+<li><p><strong>current_window</strong> – Current window as a list of bids</p></li>
+<li><p><strong>t</strong> – Current negotiation time</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="nenv.OpponentModel.WindowedFrequencyOpponentModel.WindowedFrequencyOpponentModel.update_weights">
+<span class="sig-name descname"><span class="pre">update_weights</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/nenv/OpponentModel/WindowedFrequencyOpponentModel.html#WindowedFrequencyOpponentModel.update_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#nenv.OpponentModel.WindowedFrequencyOpponentModel.WindowedFrequencyOpponentModel.update_weights" title="Link to this definition"></a></dt>
+<dd><p>This method updates the weights</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Nothing</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="nenv.OpponentModel.WindowedFrequencyOpponentModel.WindowedFrequencyOpponentModel.window_size">
+<span class="sig-name descname"><span class="pre">window_size</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">48</span></em><a class="headerlink" href="#nenv.OpponentModel.WindowedFrequencyOpponentModel.WindowedFrequencyOpponentModel.window_size" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-nenv.OpponentModel">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-nenv.OpponentModel" title="Link to this heading"></a></h2>
+<p>This module contains whole components of Opponent Model in Negotiation ENVironment.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="nenv.OpponentModel.OpponentModelClass">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">nenv.OpponentModel.</span></span><span class="sig-name descname"><span class="pre">OpponentModelClass</span></span><a class="headerlink" href="#nenv.OpponentModel.OpponentModelClass" title="Link to this definition"></a></dt>
+<dd><p>Type variable of AbstractOpponentModel class to declare a type for a variable</p>
+<p>alias of TypeVar(‘OpponentModelClass’, bound=<code class="xref py py-class docutils literal notranslate"><span class="pre">ABCMeta</span></code>)</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="nenv.html" class="btn btn-neutral float-left" title="nenv package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="nenv.logger.html" class="btn btn-neutral float-right" title="nenv.logger package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, aniltrue.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

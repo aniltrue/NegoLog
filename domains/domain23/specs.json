@@ -1,0 +1,35 @@
+{
+ "Name": "Domain23",
+ "NumberOfBids": 1296,
+ "NumberOfIssues": 4,
+ "IssueValues": [
+  6,
+  6,
+  6,
+  6
+ ],
+ "Opposition": 0.24204338454087107,
+ "BalanceScore": 0.044716666666666696,
+ "Nash Product": 0.7150080000000001,
+ "Social Welfare": 1.699,
+ "Nash_A": 0.931,
+ "Nash_B": 0.768,
+ "Kalai_A": 0.931,
+ "Kalai_B": 0.768,
+ "NashBid": {
+  "issueA": "valueA",
+  "issueB": "valueC",
+  "issueC": "valueF",
+  "issueD": "valueF"
+ },
+ "KalaiBid": {
+  "issueA": "valueA",
+  "issueB": "valueC",
+  "issueC": "valueF",
+  "issueD": "valueF"
+ },
+ "ReservationValueProfileA": 0.0,
+ "ReservationValueProfileB": 0.0,
+ "MinUtility": 0.2,
+ "MaxUtility": 1.0
+}

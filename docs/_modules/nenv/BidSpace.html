@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nenv.BidSpace &mdash; NegoLog 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=8d563738"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            NegoLog
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">NegoLog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">NegoLog</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">nenv.BidSpace</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for nenv.BidSpace</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">nenv.Preference</span> <span class="kn">import</span> <span class="n">Preference</span>
+<span class="kn">from</span> <span class="nn">nenv.Bid</span> <span class="kn">import</span> <span class="n">Bid</span>
+
+
+<div class="viewcode-block" id="BidPoint">
+<a class="viewcode-back" href="../../nenv.html#nenv.BidSpace.BidPoint">[docs]</a>
+<span class="k">class</span> <span class="nc">BidPoint</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        BidPoint class holds the Bid object with the utilit values of each agent.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">__bid</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Bid</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>  <span class="c1">#: Corresponding Bid object</span>
+    <span class="n">__utility_a</span><span class="p">:</span> <span class="nb">float</span>       <span class="c1">#: Utility value of AgentA</span>
+    <span class="n">__utility_b</span><span class="p">:</span> <span class="nb">float</span>       <span class="c1">#: Utility value of AgentB</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bid</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Bid</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">utility_a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">utility_b</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Constructor</span>
+
+<span class="sd">            :param bid: Corresponding Bid object</span>
+<span class="sd">            :param utility_a: Utility value of AgentA</span>
+<span class="sd">            :param utility_b: Utility value of AgentB</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__bid</span> <span class="o">=</span> <span class="n">bid</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__utility_a</span> <span class="o">=</span> <span class="n">utility_a</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__utility_b</span> <span class="o">=</span> <span class="n">utility_b</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">bid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Bid</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">            :return: Copy of Bid object without utility value</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__bid</span><span class="o">.</span><span class="n">copy_without_utility</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">utility_a</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">            :return: Utility value of AgentA</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__utility_a</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">utility_b</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">            :return: Utility value of AgentB</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__utility_b</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">product_score</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">            :return: Product Score of this BidPoint</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__utility_a</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">__utility_b</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">social_welfare</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">            :return: Social welfate of this BidPoint</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__utility_a</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">__utility_b</span>
+
+<div class="viewcode-block" id="BidPoint.distance">
+<a class="viewcode-back" href="../../nenv.html#nenv.BidSpace.BidPoint.distance">[docs]</a>
+    <span class="k">def</span> <span class="nf">distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bid_point</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method calculates the Euclidean distance between the BidPoints</span>
+
+<span class="sd">            :Example:</span>
+<span class="sd">                Example usage of distance calculation</span>
+
+<span class="sd">                &gt;&gt;&gt; bid_point1 = BidPoint(None, 1.0, 0.5)</span>
+<span class="sd">                &gt;&gt;&gt; bid_point2 = BidPoint(None, 0.5, 1.0)</span>
+<span class="sd">                &gt;&gt;&gt; distance = bid_point1.distance(bid_point2)</span>
+<span class="sd">                &gt;&gt;&gt; print(round(distance, 2)) # 0.71</span>
+
+<span class="sd">            :param bid_point: Other BidPoint</span>
+<span class="sd">            :return: Euclidean distance between bid points in the corresponding bid space</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">__utility_a</span> <span class="o">-</span> <span class="n">bid_point</span><span class="o">.</span><span class="n">utility_a</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__utility_b</span> <span class="o">-</span> <span class="n">bid_point</span><span class="o">.</span><span class="n">utility_b</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bid_point</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            *&quot;-&quot;* operator implementation that returns the distance between the bid points.</span>
+
+<span class="sd">            :Example:</span>
+<span class="sd">                Example usage of distance calculation</span>
+
+<span class="sd">                &gt;&gt;&gt; bid_point1 = BidPoint(None, 1.0, 0.5)</span>
+<span class="sd">                &gt;&gt;&gt; bid_point2 = BidPoint(None, 0.5, 1.0)</span>
+<span class="sd">                &gt;&gt;&gt; distance = bid_point1 - bid_point2</span>
+<span class="sd">                &gt;&gt;&gt; print(round(distance, 2)) # 0.71</span>
+
+<span class="sd">            :param bid_point: Other BidPoint</span>
+<span class="sd">            :return: Euclidean distance between bid points in the corresponding bid space</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">bid_point</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            &quot;==&quot; operator implementation that compares the offer contents.</span>
+
+<span class="sd">            :param other: Bid, BidPoint or offer content</span>
+<span class="sd">            :return: Whether the offer contents are same, or not</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">BidPoint</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__bid</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">__bid</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__bid</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">            :return: String version of the offer content</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__bid</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">            :return: The hash value of the offer content</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__bid</span><span class="o">.</span><span class="fm">__hash__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">            :return: The representation of the offer content</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__bid</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            &quot;&gt;&quot; operator implementation to compare two BidPoints in terms of the nash product</span>
+
+<span class="sd">            :param other: Another BidPoint that will be compared</span>
+<span class="sd">            :return: bid_point &gt; other</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">product_score</span> <span class="o">&gt;</span> <span class="n">other</span><span class="o">.</span><span class="n">product_score</span>
+
+    <span class="k">def</span> <span class="fm">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            &quot;&gt;=&quot; operator implementation to compare two BidPoints in terms of the nash product</span>
+
+<span class="sd">            :param other: Another BidPoint that will be compared</span>
+<span class="sd">            :return: bid_point &gt;= other</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">product_score</span> <span class="o">&gt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">product_score</span>
+
+    <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            &quot;&lt;&quot; operator implementation to compare two BidPoints in terms of the nash product</span>
+
+<span class="sd">            :param other: Another BidPoint that will be compared</span>
+<span class="sd">            :return: bid_point &lt; other</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">product_score</span> <span class="o">&lt;</span> <span class="n">other</span><span class="o">.</span><span class="n">product_score</span>
+
+    <span class="k">def</span> <span class="fm">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            &quot;&lt;=&quot; operator implementation to compare two BidPoints in terms of the nash product</span>
+
+<span class="sd">            :param other: Another BidPoint that will be compared</span>
+<span class="sd">            :return: bid_point &lt;= other</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">product_score</span> <span class="o">&lt;=</span> <span class="n">other</span><span class="o">.</span><span class="n">product_score</span></div>
+
+
+
+<div class="viewcode-block" id="BidSpace">
+<a class="viewcode-back" href="../../nenv.html#nenv.BidSpace.BidSpace">[docs]</a>
+<span class="k">class</span> <span class="nc">BidSpace</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Bid space of preferences of the agents.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">prefA</span><span class="p">:</span> <span class="n">Preference</span>        <span class="c1">#: Preferences of agentA</span>
+    <span class="n">prefB</span><span class="p">:</span> <span class="n">Preference</span>        <span class="c1">#: Preferences of agentB</span>
+    <span class="n">__bids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">BidPoint</span><span class="p">]</span>   <span class="c1">#: The bid points of the bid space</span>
+    <span class="n">__nash_point</span><span class="p">:</span> <span class="n">BidPoint</span>   <span class="c1">#: Nash Point of the bid space</span>
+    <span class="n">__kalai_point</span><span class="p">:</span> <span class="n">BidPoint</span>  <span class="c1">#: Kalai Point of the bid space</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefA</span><span class="p">:</span> <span class="n">Preference</span><span class="p">,</span> <span class="n">prefB</span><span class="p">:</span> <span class="n">Preference</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Constructor</span>
+
+<span class="sd">            :param prefA: Preferences of agentA</span>
+<span class="sd">            :param prefB: Preferences of agentB</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prefA</span> <span class="o">=</span> <span class="n">prefA</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prefB</span> <span class="o">=</span> <span class="n">prefB</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__bids</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__nash_point</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__kalai_point</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">bid_points</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            The bid points of the bid space. It is initiated when the first call.</span>
+
+<span class="sd">            :return: The bid points of the bid space</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__bids</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__bids</span>
+
+        <span class="k">for</span> <span class="n">bid</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefA</span><span class="o">.</span><span class="n">bids</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__bids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">BidPoint</span><span class="p">(</span><span class="n">bid</span><span class="o">.</span><span class="n">copy_without_utility</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefA</span><span class="o">.</span><span class="n">get_utility</span><span class="p">(</span><span class="n">bid</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefB</span><span class="o">.</span><span class="n">get_utility</span><span class="p">(</span><span class="n">bid</span><span class="p">)))</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__nash_point</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">__kalai_point</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__nash_point</span> <span class="o">=</span> <span class="n">BidPoint</span><span class="p">(</span><span class="n">bid</span><span class="o">.</span><span class="n">copy_without_utility</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefA</span><span class="o">.</span><span class="n">get_utility</span><span class="p">(</span><span class="n">bid</span><span class="p">),</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">prefB</span><span class="o">.</span><span class="n">get_utility</span><span class="p">(</span><span class="n">bid</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__kalai_point</span> <span class="o">=</span> <span class="n">BidPoint</span><span class="p">(</span><span class="n">bid</span><span class="o">.</span><span class="n">copy_without_utility</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefA</span><span class="o">.</span><span class="n">get_utility</span><span class="p">(</span><span class="n">bid</span><span class="p">),</span>
+                                              <span class="bp">self</span><span class="o">.</span><span class="n">prefB</span><span class="o">.</span><span class="n">get_utility</span><span class="p">(</span><span class="n">bid</span><span class="p">))</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__nash_point</span><span class="o">.</span><span class="n">product_score</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">__bids</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">product_score</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__nash_point</span> <span class="o">=</span> <span class="n">BidPoint</span><span class="p">(</span><span class="n">bid</span><span class="o">.</span><span class="n">copy_without_utility</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefA</span><span class="o">.</span><span class="n">get_utility</span><span class="p">(</span><span class="n">bid</span><span class="p">),</span>
+                                             <span class="bp">self</span><span class="o">.</span><span class="n">prefB</span><span class="o">.</span><span class="n">get_utility</span><span class="p">(</span><span class="n">bid</span><span class="p">))</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__kalai_point</span><span class="o">.</span><span class="n">social_welfare</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">__bids</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">social_welfare</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__kalai_point</span> <span class="o">=</span> <span class="n">BidPoint</span><span class="p">(</span><span class="n">bid</span><span class="o">.</span><span class="n">copy_without_utility</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefA</span><span class="o">.</span><span class="n">get_utility</span><span class="p">(</span><span class="n">bid</span><span class="p">),</span>
+                                              <span class="bp">self</span><span class="o">.</span><span class="n">prefB</span><span class="o">.</span><span class="n">get_utility</span><span class="p">(</span><span class="n">bid</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__bids</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">pareto</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">BidPoint</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">            :return: List of BidPoint on pareto frontier</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">bids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bid_points</span>
+
+        <span class="n">pareto_indices</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bids</span><span class="p">))]</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bids</span><span class="p">)):</span>
+            <span class="n">point_i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">bids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">utility_a</span><span class="p">,</span> <span class="n">bids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">utility_b</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bids</span><span class="p">)):</span>
+                <span class="n">point_j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">bids</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">utility_a</span><span class="p">,</span> <span class="n">bids</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">utility_b</span><span class="p">])</span>
+
+                <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">point_j</span> <span class="o">&gt;=</span> <span class="n">point_i</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">point_j</span> <span class="o">&gt;</span> <span class="n">point_i</span><span class="p">):</span>
+                    <span class="n">pareto_indices</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+                    <span class="k">break</span>
+
+        <span class="n">pareto_bids</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bids</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">pareto_indices</span><span class="p">[</span><span class="n">index</span><span class="p">]:</span>
+                <span class="n">pareto_bids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bids</span><span class="p">[</span><span class="n">index</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">pareto_bids</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">nash_point</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BidPoint</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            The Bid Point which has the highest Nash Product</span>
+
+<span class="sd">            :return: Nash point of the bid space as BidPoint</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__nash_point</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bid_points</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__nash_point</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">kalai_point</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BidPoint</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            The Bid Point which has the highest Social Welfare</span>
+
+<span class="sd">            :return: Kalai point of the bid space as BidPoint</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__kalai_point</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bid_points</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__kalai_point</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">nash_score</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            The highest Product Score</span>
+
+<span class="sd">            :return: Product Score of the Nash point</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">nash_point</span><span class="o">.</span><span class="n">product_score</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">kalai_score</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            The highest Social Welfare</span>
+
+<span class="sd">            :return: Social Welfare of the Kalai point</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">kalai_point</span><span class="o">.</span><span class="n">social_welfare</span>
+
+<div class="viewcode-block" id="BidSpace.calculate_opposition">
+<a class="viewcode-back" href="../../nenv.html#nenv.BidSpace.BidSpace.calculate_opposition">[docs]</a>
+    <span class="k">def</span> <span class="nf">calculate_opposition</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method calculates the **opposition** score of this bid space.</span>
+
+<span class="sd">        :return: Opposition score</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">kalai_distance</span><span class="p">(</span><span class="n">BidPoint</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="BidSpace.calculate_balance_score">
+<a class="viewcode-back" href="../../nenv.html#nenv.BidSpace.BidSpace.calculate_balance_score">[docs]</a>
+    <span class="k">def</span> <span class="nf">calculate_balance_score</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method calculates the **balance score** of this bid space.</span>
+
+<span class="sd">        :return: Balance Score</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">bids_a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefA</span><span class="o">.</span><span class="n">bids</span>
+        <span class="n">bids_b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefB</span><span class="o">.</span><span class="n">bids</span>
+
+        <span class="n">total_diff</span> <span class="o">=</span> <span class="mf">0.</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bids_a</span><span class="p">)):</span>
+            <span class="n">total_diff</span> <span class="o">+=</span> <span class="n">bids_a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">utility</span> <span class="o">-</span> <span class="n">bids_b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">utility</span>
+
+        <span class="k">return</span> <span class="n">total_diff</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">bids_a</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BidSpace.calculate_normalized_balance_score">
+<a class="viewcode-back" href="../../nenv.html#nenv.BidSpace.BidSpace.calculate_normalized_balance_score">[docs]</a>
+    <span class="k">def</span> <span class="nf">calculate_normalized_balance_score</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method calculates the **normalized balance score** of this bid space.</span>
+
+<span class="sd">        :return: Normalized Balance Score</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">bids_a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefA</span><span class="o">.</span><span class="n">bids</span>
+        <span class="n">bids_b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefB</span><span class="o">.</span><span class="n">bids</span>
+
+        <span class="n">nash_point</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nash_point</span>
+
+        <span class="n">nash_zero</span> <span class="o">=</span> <span class="n">nash_point</span> <span class="o">-</span> <span class="n">BidPoint</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
+
+        <span class="n">total_diff</span> <span class="o">=</span> <span class="mf">0.</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">bids_a</span><span class="p">)):</span>
+            <span class="n">nash_distance</span> <span class="o">=</span> <span class="n">nash_point</span> <span class="o">-</span> <span class="n">BidPoint</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">bids_a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">utility</span><span class="p">,</span> <span class="n">bids_b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">utility</span><span class="p">)</span>
+
+            <span class="n">total_diff</span> <span class="o">+=</span> <span class="p">(</span><span class="n">bids_a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">utility</span> <span class="o">-</span> <span class="n">bids_b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">utility</span><span class="p">)</span> <span class="o">*</span> <span class="n">nash_distance</span> <span class="o">/</span> <span class="p">(</span><span class="n">nash_zero</span> <span class="o">+</span> <span class="mf">1e-12</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">total_diff</span></div>
+
+
+<div class="viewcode-block" id="BidSpace.get_bid_point">
+<a class="viewcode-back" href="../../nenv.html#nenv.BidSpace.BidSpace.get_bid_point">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_bid_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bid</span><span class="p">:</span> <span class="n">Bid</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BidPoint</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method converts given bid into *BidPoint* object</span>
+
+<span class="sd">            :Example:</span>
+<span class="sd">                Example of converting a Bid object to BidPoint object</span>
+
+<span class="sd">                &gt;&gt;&gt; bid_point = bid_space.get_bid_point(bid)</span>
+
+<span class="sd">            :param bid: Corresponding bid that will be converted into BidPoint object</span>
+<span class="sd">            :return:  that is converted from the given bid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">BidPoint</span><span class="p">(</span><span class="n">bid</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefA</span><span class="o">.</span><span class="n">get_utility</span><span class="p">(</span><span class="n">bid</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefB</span><span class="o">.</span><span class="n">get_utility</span><span class="p">(</span><span class="n">bid</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="BidSpace.nash_distance">
+<a class="viewcode-back" href="../../nenv.html#nenv.BidSpace.BidSpace.nash_distance">[docs]</a>
+    <span class="k">def</span> <span class="nf">nash_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Bid</span><span class="p">,</span> <span class="n">BidPoint</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Euclidean distance between the target and Nash point</span>
+
+<span class="sd">            :param target: The target as Bid or BidSpace</span>
+<span class="sd">            :return: Euclidean distance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">BidPoint</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">target</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">nash_point</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">Bid</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_bid_point</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">nash_point</span></div>
+
+
+<div class="viewcode-block" id="BidSpace.kalai_distance">
+<a class="viewcode-back" href="../../nenv.html#nenv.BidSpace.BidSpace.kalai_distance">[docs]</a>
+    <span class="k">def</span> <span class="nf">kalai_distance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Bid</span><span class="p">,</span> <span class="n">BidPoint</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            Euclidean distance between the target and Kalai point</span>
+
+<span class="sd">            :param target: The target as Bid or BidSpace</span>
+<span class="sd">            :return: Euclidean distance</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">BidPoint</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">target</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">kalai_point</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">Bid</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_bid_point</span><span class="p">(</span><span class="n">target</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">kalai_point</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            The number of Bids</span>
+
+<span class="sd">            :Example:</span>
+<span class="sd">                You can get the number of bids:</span>
+
+<span class="sd">                &gt;&gt;&gt; size = len(bid_space)</span>
+
+<span class="sd">            :return: Number of bids in the bid space</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__bids</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            This method helps you to iterate over all BidPoint in that BidSpace object. Example:</span>
+
+<span class="sd">            :Example:</span>
+<span class="sd">                Example for loop</span>
+
+<span class="sd">                &gt;&gt;&gt; for bid_point in bid_space:</span>
+<span class="sd">                &gt;&gt;&gt;     ...</span>
+
+<span class="sd">            :return: List Iterator</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__bids</span><span class="o">.</span><span class="fm">__iter__</span><span class="p">()</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, aniltrue.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
