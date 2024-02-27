@@ -23,7 +23,7 @@
 [![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg)](https://www.python.org/downloads/release/python-31011/)
 [![Version 1.0](https://img.shields.io/badge/version-1.0-blue.svg)](https://github.com/aniltrue/NegoLog)
 [![status developing](https://img.shields.io/badge/status-developing-g.svg)](https://github.com/aniltrue/NegoLog)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/72e4b71b5c83401c9221ef0085d9175f)](https://app.codacy.com/gh/aniltrue/NegoLog/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/a0fa8198e61b4ac98d8c3b473dcf3658)](https://app.codacy.com/gh/aniltrue/NegoLog/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 ### Abstract
 The complexity of automated negotiation research calls for dedicated, user-friendly research frameworks that facilitate advanced analytics, comprehensive loggers, visualization tools, and auto-generated domains and preference profiles. Existing frameworks for automated negotiation research provide some support but lack in others. NegoLog, a platform that provides advanced and customizable analysis modules to agent developers for exhaustive performance evaluation. NegoLog introduces an automated scenario and tournament generation tool in its web-based user interface so that the agent developers can adjust the competitiveness and complexity of the negotiations. One of the leading novelties of the NegoLog is an individual assessment of preference estimation models independent of the strategies.
