@@ -16,6 +16,7 @@
   - [Agent Strategy](#agent-strategy)
   - [Opponent Model](#opponent-model)
   - [Custom Logger](#custom-logger)
+- [Citation](#citation)
 - [License](#license)
 
 ## Overview
@@ -23,10 +24,10 @@
 [![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg)](https://www.python.org/downloads/release/python-31011/)
 [![Version 1.0](https://img.shields.io/badge/version-1.0-blue.svg)](https://github.com/aniltrue/NegoLog)
 [![status developing](https://img.shields.io/badge/status-developing-g.svg)](https://github.com/aniltrue/NegoLog)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/72e4b71b5c83401c9221ef0085d9175f)](https://app.codacy.com/gh/aniltrue/NegoLog/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/a0fa8198e61b4ac98d8c3b473dcf3658)](https://app.codacy.com/gh/aniltrue/NegoLog/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 ### Abstract
-The complexity of automated negotiation research calls for dedicated, user-friendly research frameworks that facilitate advanced analytics, comprehensive loggers, visualization tools, and auto-generated domains and preference profiles. Existing frameworks for automated negotiation research provide some support but lack in others. NegoLog, a platform that provides advanced and customizable analysis modules to agent developers for exhaustive performance evaluation. NegoLog introduces an automated scenario and tournament generation tool in its web-based user interface so that the agent developers can adjust the competitiveness and complexity of the negotiations. One of the leading novelties of the NegoLog is an individual assessment of preference estimation models independent of the strategies.
+The complexity of automated negotiation research calls for dedicated, user-friendly research frameworks that facilitate advanced analytics, comprehensive loggers, visualization tools, and auto-generated domains and preference profiles. This paper introduces NegoLog, a platform that provides advanced and customizable analysis modules to agent developers for exhaustive performance evaluation. NegoLog introduces an automated scenario and tournament generation tool in its Web-based user interface so that the agent developers can adjust the competitiveness and complexity of the negotiations. One of the key novelties of the NegoLog is an individual assessment of preference estimation models independent of the strategies. 
 
 ### Features
 NegoLog is an automated bilateral negotiation framework to develop and analyze sophisticated intelligent agents. NegoLog provides:
@@ -140,6 +141,27 @@ researchers and developers to easily implement their own *loggers* within NegoLo
   - **on_session_end**: This callback is invoked after the negotiation session ends. **Session-based** logs and analysis can be conducted in this method. This method should return logs as a dictionary for *tournament* log file.
   - **on_tournament_end**: This callback is invoked after the tournament ends. **Tournament-based** logs, analysis and graph generation can be conducted in this method.
   - **get_path**: The directory path for logs & results.
+
+## Citation
+
+If you use our code in your research, please cite our paper:
+
+```bibtex
+@inproceedings{ijcai2024p998,
+  title     = {NegoLog: An Integrated Python-based Automated Negotiation Framework with Enhanced Assessment Components},
+  author    = {Doğru, Anıl and Keskin, Mehmet Onur and Jonker, Catholijn M. and Baarslag, Tim and Aydoğan, Reyhan},
+  booktitle = {Proceedings of the Thirty-Third International Joint Conference on
+               Artificial Intelligence, {IJCAI-24}},
+  publisher = {International Joint Conferences on Artificial Intelligence Organization},
+  editor    = {Kate Larson},
+  pages     = {8640--8643},
+  year      = {2024},
+  month     = {8},
+  note      = {Demo Track},
+  doi       = {10.24963/ijcai.2024/998},
+  url       = {https://doi.org/10.24963/ijcai.2024/998},
+}
+```
 
 ## License
 
