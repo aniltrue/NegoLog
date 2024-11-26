@@ -11,7 +11,7 @@ from nenv.Agent import AgentClass
 from nenv.logger import AbstractLogger, LoggerClass
 from nenv.OpponentModel import OpponentModelClass
 from nenv.SessionManager import SessionManager
-from nenv.utils import ExcelLog, TournamentProcessMonitor
+from nenv.utils import ExcelLog, TournamentProcessMonitor, open_folder
 
 
 class Tournament:
@@ -178,9 +178,8 @@ class Tournament:
 
         print("Total Elapsed Time:", str(self.tournament_process.close()))
 
-        # Open folder
-        path = os.path.realpath(os.path.join(os.getcwd(), self.result_dir))
-        os.startfile(path)
+        # Show folder
+        open_folder(self.result_dir)
 
     def generate_combinations(self) -> List[Tuple[AgentClass, AgentClass, str]]:
         """

@@ -7,6 +7,8 @@ from nenv.utils.tournament_graphs import plt, DRAWING_FORMAT
 from typing import List
 import numpy as np
 import os
+import matplotlib
+matplotlib.use('Agg')  # Agg backend for file-based rendering
 
 
 class UtilityDistributionLogger(AbstractLogger):

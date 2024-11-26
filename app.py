@@ -16,6 +16,8 @@ import glob
 from nenv.OpponentModel import AbstractOpponentModel
 from nenv.logger import AbstractLogger
 from nenv.utils.DynamicImport import load_agent_class, load_estimator_class, load_logger_class
+from nenv.utils.OSUtils import open_folder as utils_open_folder
+
 
 app = Flask(__name__, template_folder="web_framework/", static_folder="web_framework/",
             static_url_path="")
@@ -135,6 +137,9 @@ def fetch_agents():
         agents = {}
 
         for file_name in glob.glob("agents/**/*.py", recursive=True):
+            if "ParetoWalker" in file_name or "NegoFormer" in file_name:
+                continue
+
             module_path = file_name.replace("\\__init__", "").replace("\\", ".").replace(".py", "")
 
             module = importlib.import_module(module_path)
@@ -400,8 +405,7 @@ def open_folder():
         if "path" not in request.json:
             return jsonify({"error": True, "errorMessage": "Invalid request."})
 
-        path = os.path.realpath(request.json["path"])
-        os.startfile(path)
+        utils_open_folder(request.json["path"])
 
         return jsonify({"error": False})
 

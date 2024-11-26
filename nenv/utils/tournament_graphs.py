@@ -10,6 +10,8 @@ import plotly
 import seaborn as sb
 import numpy as np
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')  # Agg backend for file-based rendering
 
 DRAWING_FORMAT: str = None
 
