@@ -17,6 +17,7 @@ class MICROAgent(nenv.AbstractAgent):
     my_last_bid: nenv.Bid   # My last offered bid
     index: int              # Number of unique proposals made by me
     increase: int           # Increase amount
+    bids_offered: set       # Set of bids offered by MiCRO
 
     @property
     def name(self) -> str:
@@ -25,6 +26,7 @@ class MICROAgent(nenv.AbstractAgent):
     def initiate(self, opponent_name: Union[None, str]):
         # Set default values
         self.my_last_bid = self.preference.bids[0]
+        self.bids_offered = set()
         self.index = 0
         self.increase = 1
 
@@ -34,12 +36,12 @@ class MICROAgent(nenv.AbstractAgent):
     def act(self, t: float) -> Action:
         # In first 2 rounds, offer the bid with the highest utility for me
         if len(self.last_received_bids) < 2:
+            self.bids_offered.add(self.my_last_bid)
             return nenv.Action(self.my_last_bid)
 
-        # Utility difference of the last two received bids.
-        diff = self.last_received_bids[-1].utility - self.last_received_bids[-2].utility
-
-        if diff >= 0:  # If the opponent conceded
+        # Number of distinct bids received
+        n = len(set(self.last_received_bids))
+        if len(self.bids_offered) <= n:  # If the opponent conceded
             # Increase the number of unique proposals made by me
             self.index += self.increase
 
@@ -54,6 +56,7 @@ class MICROAgent(nenv.AbstractAgent):
             if self.preference.bids[self.index] <= self.last_received_bids[-1] >= self.preference.reservation_value:
                 return self.accept_action
 
+            self.bids_offered.add(self.my_last_bid)
             return nenv.Offer(self.my_last_bid)
         else:
             # AC_Next strategy to decide accepting or not
@@ -67,4 +70,5 @@ class MICROAgent(nenv.AbstractAgent):
             if self.my_last_bid.utility < self.preference.reservation_value:
                 self.my_last_bid = self.preference.get_bid_at(self.preference.reservation_value)
 
+            self.bids_offered.add(self.my_last_bid)
             return nenv.Offer(self.my_last_bid)
