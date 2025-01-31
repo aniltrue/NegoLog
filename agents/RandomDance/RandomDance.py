@@ -1,7 +1,6 @@
 import math
 import random
-from typing import Dict, List, Set, Union
-
+from typing import Dict, List, Set, Optional
 import nenv
 from nenv import Action, Bid
 
@@ -142,7 +141,7 @@ class RandomDance(nenv.AbstractAgent):
     myData: PlayerData
     nash: List[str]
     olderBidMap: Dict[str, nenv.Bid]
-    olderBid: nenv.Bid
+    olderBid: Optional[nenv.Bid]
 
     discountFactor: float
     reservationValue: float
@@ -153,7 +152,7 @@ class RandomDance(nenv.AbstractAgent):
     def name(self) -> str:
         return "RandomDance"
 
-    def initiate(self, opponent_name: Union[None, str]):
+    def initiate(self, opponent_name: Optional[str]):
         self.NashCountMax = 200
         self.NumberOfAcceptSafety = 5
         self.NumberOfRandomTargetCheck = 3
@@ -184,7 +183,7 @@ class RandomDance(nenv.AbstractAgent):
         utilityMap["my"] = self.myData
 
         maxval: float = -999
-        maxPlayer: str = None
+        maxPlayer: Optional[str] = None
 
         for string in self.olderBidMap.keys():
             utility = 1.
@@ -207,8 +206,8 @@ class RandomDance(nenv.AbstractAgent):
 
         playerWeight = self.getWeights()
 
-        action: nenv.Action = None
-        offer: nenv.Action = None
+        action: Optional[nenv.Action] = None
+        offer: Optional[nenv.Action] = None
 
         target = self.GetTarget(utilityMap, t)
         utility = 0
@@ -216,7 +215,7 @@ class RandomDance(nenv.AbstractAgent):
         if self.olderBid is not None:
             utility = self.preference.get_utility(self.olderBid)
 
-        offer = nenv.Action(self.SearchBid(target, utilityMap, playerWeight))
+        offer = nenv.Offer(self.SearchBid(target, utilityMap, playerWeight))
         action = offer
 
         if action is None or self.IsAccept(target, utility, t):

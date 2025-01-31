@@ -1,5 +1,5 @@
 import math
-from typing import List, Union
+from typing import List, Union, Optional
 import numpy as np
 from nenv.Preference import Preference
 from nenv.Bid import Bid
@@ -9,11 +9,11 @@ class BidPoint:
     """
         BidPoint class holds the Bid object with the utilit values of each agent.
     """
-    __bid: Union[Bid, None]  #: Corresponding Bid object
+    __bid: Optional[Bid]     #: Corresponding Bid object
     __utility_a: float       #: Utility value of AgentA
     __utility_b: float       #: Utility value of AgentB
 
-    def __init__(self, bid: Union[Bid, None], utility_a: float, utility_b: float):
+    def __init__(self, bid: Optional[Bid], utility_a: float, utility_b: float):
         """
             Constructor
 
@@ -26,12 +26,15 @@ class BidPoint:
         self.__utility_b = utility_b
 
     @property
-    def bid(self) -> Union[Bid, None]:
+    def bid(self) -> Optional[int]:
         """
 
             :return: Copy of Bid object without utility value
         """
-        return self.__bid.copy_without_utility()
+        if self.__bid is None:
+            return None
+
+        return self.__bid.copy()
 
     @property
     def utility_a(self) -> float:
@@ -81,6 +84,16 @@ class BidPoint:
             :return: Euclidean distance between bid points in the corresponding bid space
         """
         return math.sqrt((self.__utility_a - bid_point.utility_a) ** 2 + (self.__utility_b - bid_point.utility_b) ** 2)
+
+    def dominate(self, bid_point) -> bool:
+        """
+            This method determine whether the bid point dominates the other one
+
+            :param bid_point: Other BidPoint
+            :return: Whether bid point dominates the other one
+        """
+        return ((self.utility_a > bid_point.utility_a or self.utility_b > bid_point.utility_b) and
+                (self.utility_a >= bid_point.utility_a and self.utility_b >= bid_point.utility_b))
 
     def __sub__(self, bid_point) -> float:
         """
@@ -173,11 +186,12 @@ class BidSpace:
     """
         Bid space of preferences of the agents.
     """
-    prefA: Preference        #: Preferences of agentA
-    prefB: Preference        #: Preferences of agentB
-    __bids: List[BidPoint]   #: The bid points of the bid space
-    __nash_point: BidPoint   #: Nash Point of the bid space
-    __kalai_point: BidPoint  #: Kalai Point of the bid space
+    prefA: Preference                   #: Preferences of agentA
+    prefB: Preference                   #: Preferences of agentB
+    __bids: List[BidPoint]              #: The bid points of the bid space
+    __nash_point: Optional[BidPoint]    #: Nash Point of the bid space
+    __kalai_point: Optional[BidPoint]   #: Kalai Point of the bid space
+    __pareto: Optional[List[BidPoint]]  #: Pareto-frontier of the bid space
 
     def __init__(self, prefA: Preference, prefB: Preference):
         """
@@ -191,6 +205,7 @@ class BidSpace:
         self.__bids = []
         self.__nash_point = None
         self.__kalai_point = None
+        self.__pareto = None
 
     @property
     def bid_points(self):
@@ -224,16 +239,30 @@ class BidSpace:
     @property
     def pareto(self) -> List[BidPoint]:
         """
+            The list of BidPoint on the Pareto-Frontier
 
-            :return: List of BidPoint on pareto frontier
+            :return: List of BidPoint on the Pareto-Frontier
         """
+        if self.__pareto is not None:
+            return self.__pareto
+
         bids = self.bid_points
 
         pareto_indices = [True for _ in range(len(bids))]
 
         for i in range(len(bids)):
             point_i = np.array([bids[i].utility_a, bids[i].utility_b])
-            for j in range(len(bids)):
+
+            if not pareto_indices[i]:
+                continue
+
+            for j in range(i + 1, len(bids)):
+                if not pareto_indices[i]:
+                    break
+
+                if not pareto_indices[j]:
+                    continue
+
                 point_j = np.array([bids[j].utility_a, bids[j].utility_b])
 
                 if all(point_j >= point_i) and any(point_j > point_i):
@@ -241,11 +270,16 @@ class BidSpace:
 
                     break
 
+                if all(point_i >= point_j) and any(point_i > point_j):
+                    pareto_indices[j] = False
+
         pareto_bids = []
 
         for index in range(len(bids)):
             if pareto_indices[index]:
                 pareto_bids.append(bids[index])
+
+        self.__pareto = pareto_bids
 
         return pareto_bids
 

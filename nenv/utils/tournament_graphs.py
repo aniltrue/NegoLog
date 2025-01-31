@@ -1,6 +1,7 @@
 """
     Helpful draw functions for loggers.
 """
+import os
 from typing import Union, List, Dict
 
 import matplotlib.pyplot as plt
@@ -34,6 +35,7 @@ def set_drawing_format(drawing_format: str):
     global DRAWING_FORMAT
 
     DRAWING_FORMAT = drawing_format
+    os.environ['DRAWING_FORMAT'] = drawing_format
 
 
 def draw_heatmap_matplotlib(data: np.ndarray, labels_x: list, labels_y: list, save_path: str, x_axis_name: str, y_axis_name: str, title: str, fmt: str = ".2f", file_format: str = "png", **kwargs):

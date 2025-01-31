@@ -1,5 +1,4 @@
-from typing import Union
-
+from typing import Optional
 import nenv
 from agents.AgentKN.etc.negotiatingInfo import negotiatingInfo
 from agents.AgentKN.etc.bidSearch import bidSearch
@@ -38,8 +37,8 @@ class AgentKN(nenv.AbstractAgent):
     negotiatingInfo: negotiatingInfo
     bidSearch: bidSearch
     negotiatingStrategy: strategy
-    mLastReceivedBid: nenv.Bid
-    mOfferedBid: nenv.Bid
+    mLastReceivedBid: Optional[nenv.Bid]
+    mOfferedBid: Optional[nenv.Bid]
     nrChosenActions: int
     history: list
 
@@ -47,7 +46,7 @@ class AgentKN(nenv.AbstractAgent):
     def name(self) -> str:
         return "AgentKN"
 
-    def initiate(self, opponent_name: Union[None, str]):
+    def initiate(self, opponent_name: Optional[str]):
         self.mOfferedBid = None
         self.mLastReceivedBid = None
         self.nrChosenActions = 0
@@ -71,7 +70,7 @@ class AgentKN(nenv.AbstractAgent):
 
         self.negotiatingInfo.updateMyBidHistory(offerBid)
 
-        return nenv.Action(offerBid)
+        return nenv.Offer(offerBid)
 
     def receive_offer(self, bid: Bid, t: float):
         sender = "OpponentAgent"

@@ -1,7 +1,6 @@
 import math
 import random
-from typing import Union
-
+from typing import Optional
 import nenv
 from nenv import Action, Bid
 from agents.NiceTitForTat.helpers.BidHistory import BidHistory, BidDetails
@@ -34,7 +33,7 @@ class NiceTitForTat(nenv.AbstractAgent):
     def name(self) -> str:
         return "NiceTitForTat"
 
-    def initiate(self, opponent_name: Union[None, str]):
+    def initiate(self, opponent_name: Optional[str]):
         self.myHistory = BidHistory()
         self.opponentHistory = BidHistory()
         self.random100 = random.Random()
@@ -52,11 +51,11 @@ class NiceTitForTat(nenv.AbstractAgent):
 
         if len(self.last_received_bids) == 0:
             self.myHistory.add(BidDetails(opening_bid, opening_bid.utility, t))
-            return nenv.Action(opening_bid)
+            return nenv.Offer(opening_bid)
 
         if len(self.myHistory.history) == 0:
             self.myHistory.history.append(BidDetails(opening_bid, opening_bid.utility, t))
-            return nenv.Action(opening_bid)
+            return nenv.Offer(opening_bid)
 
         counter_bid = self.chooseCounterBid(t)
 
@@ -65,7 +64,7 @@ class NiceTitForTat(nenv.AbstractAgent):
 
         self.myHistory.history.append(BidDetails(counter_bid, self.get_utility(counter_bid), t))
 
-        return nenv.Action(counter_bid)
+        return nenv.Offer(counter_bid)
 
     def get_utility(self, b: nenv.Bid) -> float:
         if b is None:
@@ -258,7 +257,7 @@ class NiceTitForTat(nenv.AbstractAgent):
         if len(recent_bids.history) > 1 and best_bid_utility > offered_utility and self.offeredOpponentBestBid <= 3:
             self.offeredOpponentBestBid += 1
 
-            return nenv.Action(best_bid)
+            return nenv.Offer(best_bid)
 
         return self.accept_action
 

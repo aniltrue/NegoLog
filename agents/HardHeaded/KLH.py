@@ -1,6 +1,6 @@
 import math
 import random
-from typing import Tuple, List, Dict, Union
+from typing import Tuple, List, Dict, Optional
 
 import nenv
 from agents.HardHeaded.BidHistory import BidHistory
@@ -22,38 +22,38 @@ class HardHeaded(nenv.AbstractAgent):
         .. [Krimpen2013] van Krimpen, T., Looije, D., Hajizadeh, S. (2013). HardHeaded. In: Ito, T., Zhang, M., Robu, V., Matsuo, T. (eds) Complex Automated Negotiations: Theories, Models, and Software Competitions. Studies in Computational Intelligence, vol 435. Springer, Berlin, Heidelberg. <https://doi.org/10.1007/978-3-642-30737-9_17>
     """
 
-    bidHistory: BidHistory                                  #: BidHistory object to hold both agent and opponent history
-    BSelector: BidSelector                                  #: BidSelector object
-    MINIMUM_BID_UTILITY: float                              #: Minimum bid utility to offer
-    TOP_SELECTED_BIDS: int = 4                              #: Maximum number of selected bids
-    LEARNING_COEF: float = 0.2                              #: Calculation for golden value in the opponent model
-    LEARNING_VALUE_ADDITION: int = 1                        #: Value count effect
-    UTILITY_TOLERANCE: float = 0.01                         #: Utility tolerance
-    Ka: float                                               #: Parameter to calculate concession step
-    e: float                                                #: Parameter to calculate concession step
-    discountF: float                                        #: Discount factor
-    lowestYetUtility: float                                 #: Lowest utility that the agent made yet
+    bidHistory: BidHistory                                              #: BidHistory object to hold both agent and opponent history
+    BSelector: BidSelector                                              #: BidSelector object
+    MINIMUM_BID_UTILITY: float                                          #: Minimum bid utility to offer
+    TOP_SELECTED_BIDS: int = 4                                          #: Maximum number of selected bids
+    LEARNING_COEF: float = 0.2                                          #: Calculation for golden value in the opponent model
+    LEARNING_VALUE_ADDITION: int = 1                                    #: Value count effect
+    UTILITY_TOLERANCE: float = 0.01                                     #: Utility tolerance
+    Ka: float                                                           #: Parameter to calculate concession step
+    e: float                                                            #: Parameter to calculate concession step
+    discountF: float                                                    #: Discount factor
+    lowestYetUtility: float                                             #: Lowest utility that the agent made yet
 
-    offerQueue: List[Tuple[float, nenv.Bid]]                #: Offer queue
-    opponentLastBid: nenv.Bid                               #: Last received bid
-    firstRound: bool                                        #: If it is first round, or not
+    offerQueue: List[Tuple[float, nenv.Bid]]                            #: Offer queue
+    opponentLastBid: Optional[nenv.Bid]                                 #: Last received bid
+    firstRound: bool                                                    #: If it is first round, or not
 
-    oppUtility: nenv.OpponentModel.EstimatedPreference      #: Estimated preferences of the opponent
-    numberOfIssues: int                                     #: Number of issues in that domain
+    oppUtility: Optional[nenv.OpponentModel.EstimatedPreference]        #: Estimated preferences of the opponent
+    numberOfIssues: int                                                 #: Number of issues in that domain
 
-    valueCounter: Dict[nenv.Issue, Dict[str, float]]        #: Value counter for Frequentist approach
+    valueCounter: Dict[nenv.Issue, Dict[str, float]]                    #: Value counter for Frequentist approach
 
-    maxUtil: float                                          #: Maximum possible utility in that domain
-    minUtil: float                                          #: Minimum utility to offer
+    maxUtil: float                                                      #: Maximum possible utility in that domain
+    minUtil: float                                                      #: Minimum utility to offer
 
-    opponentbestbid: nenv.Bid                               #: Highest received bid
-    opponentbestentry: Tuple[float, nenv.Bid]               #: Entry of highest received bid
+    opponentbestbid: Optional[nenv.Bid]                                 #: Highest received bid
+    opponentbestentry: Tuple[float, nenv.Bid]                           #: Entry of highest received bid
 
-    random100: random.Random                                #: Random object
-    random200: random.Random                                #: Random object
-    round: int                                              #: Current negotiation round
+    random100: random.Random                                            #: Random object
+    random200: random.Random                                            #: Random object
+    round: int                                                          #: Current negotiation round
 
-    def initiate(self, opponent_name: Union[None, str]):
+    def initiate(self, opponent_name: Optional[str]):
         # Default parameters and objects
         self.BSelector = BidSelector(self.preference)
         self.bidHistory = BidHistory(self.preference)
@@ -328,7 +328,7 @@ class HardHeaded(nenv.AbstractAgent):
             elif self.can_accept() and bestBid1 is None:
                 newAction = self.accept_action
             else:
-                newAction = nenv.Action(bestBid1)
+                newAction = nenv.Offer(bestBid1)
 
                 # Update lowestYetUtility
                 if self.preference.get_utility(bestBid1) < self.lowestYetUtility:
@@ -345,6 +345,6 @@ class HardHeaded(nenv.AbstractAgent):
             if offer[0] < self.lowestYetUtility:
                 self.lowestYetUtility = self.preference.get_utility(offer[1])
 
-            newAction = nenv.Action(offer[1])
+            newAction = nenv.Offer(offer[1])
 
         return newAction

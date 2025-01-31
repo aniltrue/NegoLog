@@ -1,6 +1,5 @@
 import math
-from typing import List
-
+from typing import Optional
 import numpy as np
 import nenv
 
@@ -9,20 +8,20 @@ class negotiatingInfo:
     pref: nenv.Preference
     issues: list
     opponents: list
-    my_bid_history: list = None
-    bob_history: list = None
-    pb_list: list = None
+    my_bid_history: Optional[list] = None
+    bob_history: Optional[list] = None
+    pb_list: Optional[list] = None
 
-    opponents_bid_history: dict = None
+    opponents_bid_history: Optional[dict] = None
     opponents_average: dict
     opponents_variance: dict
     opponents_sum: dict
     opponents_pow_sum: dict
     opponents_stdev: dict
-    value_relative_utility: dict = None
+    value_relative_utility: Optional[dict] = None
 
-    all_value_frequency: dict = None
-    opponents_value_frequency: dict = None
+    all_value_frequency: Optional[dict] = None
+    opponents_value_frequency: Optional[dict] = None
 
     BOU:float
     MPBU: float

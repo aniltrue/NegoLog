@@ -1,5 +1,5 @@
 import random
-from typing import Union, Set
+from typing import Optional, Set
 
 import nenv
 from nenv import Action, Bid
@@ -14,16 +14,16 @@ class MICROAgent(nenv.AbstractAgent):
 
         .. [deJonge2022] Dave de Jonge. An analysis of the linear bilateral ANAC domains using the MiCRO benchmark strategy. In Luc De Raedt, editor, Proceedings of the Thirty-First International Joint Conference on Artificial Intelligence, IJCAI 2022, Vienna, Austria, 23-29 July 2022, pages 223–229. ijcai.org, 2022.
     """
-    my_last_bid: nenv.Bid           # My last offered bid
-    index: int                      # Number of unique proposals made by me
-    increase: int                   # Increase amount
-    received_bids: Set[nenv.Bid]    # Unique received bids
+    my_last_bid: nenv.Bid           #: My last offered bid
+    index: int                      #: Number of unique proposals made by me
+    increase: int                   #: Increase amount
+    received_bids: Set[nenv.Bid]    #: Unique received bids
 
     @property
     def name(self) -> str:
         return "MiCRO"
 
-    def initiate(self, opponent_name: Union[None, str]):
+    def initiate(self, opponent_name: Optional[str]):
         # Set default values
         self.my_last_bid = self.preference.bids[0]
         self.index = 1
@@ -37,7 +37,7 @@ class MICROAgent(nenv.AbstractAgent):
     def act(self, t: float) -> Action:
         # If MiCRO agent starts, offer the bid with the highest utility
         if len(self.last_received_bids) == 0:
-            return nenv.Action(self.my_last_bid)
+            return nenv.Offer(self.my_last_bid)
 
         # If the opponent makes enough number of unique bid, then concede
         ready_to_concede = self.index < len(self.received_bids)

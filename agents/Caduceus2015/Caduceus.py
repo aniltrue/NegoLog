@@ -1,4 +1,4 @@
-from typing import Dict, Union
+from typing import Dict, Optional
 import nenv
 from agents.Caduceus2015.UtilFunctions import *
 from agents.Caduceus2015.CounterOfferGenerator import CounterOfferGenerator
@@ -18,14 +18,14 @@ class Caduceus2015(nenv.AbstractAgent):
     numberOfOpponents: int
     selfReservationValue: float
     percentageOfOfferringBestBid: float
-    mySaneUtilitySpace: SaneUtilitySpace
+    mySaneUtilitySpace: Optional[SaneUtilitySpace]
     opponentProfiles: Dict[str, Opponent]
     previousBid: nenv.Bid
     takeConcessionStep: bool
 
     opponentMap: Dict[str, Opponent]
 
-    def initiate(self, opponent_name: Union[None, str]):
+    def initiate(self, opponent_name: Optional[str]):
         self.discountFactor = 1.
         self.selfReservationValue = max(self.preference.reservation_value, 0.75)
         self.percentageOfOfferringBestBid = 0.83 * self.discountFactor
@@ -44,7 +44,7 @@ class Caduceus2015(nenv.AbstractAgent):
             bestBid = self.getBestBid()
 
             if bestBid is not None:
-                return nenv.Action(bestBid)
+                return nenv.Offer(bestBid)
         else:
             bid = self.getMyBestOfferForEveryone(t)
 
@@ -55,8 +55,8 @@ class Caduceus2015(nenv.AbstractAgent):
                 if self.can_accept() and self.preference.get_utility(self.previousBid) > self.preference.get_utility(bid) + 0.2:
                     return self.accept_action
 
-            return nenv.Action(bid)
-        return nenv.Action(self.getBestBid())
+            return nenv.Offer(bid)
+        return nenv.Offer(self.getBestBid())
 
     def getMyBestOfferForEveryone(self, time: float) -> nenv.Bid:
         utilitySpaces = [self.getMySaneUtilitySpace()]
@@ -95,7 +95,7 @@ class Caduceus2015(nenv.AbstractAgent):
 
         self.previousBid = uglyBid
 
-        previousBid: nenv.Bid = None
+        previousBid: Optional[nenv.Bid] = None
 
         if len(opponentProfile.history) > 0:
             previousBid = opponentProfile.history[-1]

@@ -4,7 +4,7 @@ import random
 import shutil
 import time
 import warnings
-from typing import Union, Set, List, Tuple
+from typing import Union, Set, List, Tuple, Optional
 import numpy as np
 import pandas as pd
 from nenv.Agent import AgentClass
@@ -22,10 +22,10 @@ class Tournament:
     loggers: List[AbstractLogger]                  #: List of Logger classes
     domains: List[str]                             #: List of domains
     estimators: Set[OpponentModelClass]            #: List of opponent models
-    deadline_time: Union[int, None]                #: Time-based deadline in terms of seconds
-    deadline_round: Union[int, None]               #: Round-based deadline in terms of number of rounds
+    deadline_time: Optional[int]                    #: Time-based deadline in terms of seconds
+    deadline_round: Optional[int]                   #: Round-based deadline in terms of number of rounds
     result_dir: str                                #: The directory where the result logs will be extracted
-    seed: Union[int, None]                         #: Random seed for whole tournament
+    seed: Optional[int]                             #: Random seed for whole tournament
     shuffle: bool                                  #: Whether the combinations will be shuffled, or not
     repeat: int                                    #: Number of repetition for each combination
     self_negotiation: bool                         #: Whether the agents negotiate with itself, or not
@@ -36,12 +36,12 @@ class Tournament:
                  domains: List[str],
                  logger_classes: Union[List[LoggerClass], Set[LoggerClass]],
                  estimator_classes: Union[List[OpponentModelClass], Set[OpponentModelClass]],
-                 deadline_time: Union[int, None],
-                 deadline_round: Union[int, None],
+                 deadline_time: Optional[int],
+                 deadline_round: Optional[int],
                  self_negotiation: bool = False,
                  repeat: int = 1,
                  result_dir: str = "results/",
-                 seed: Union[int, None] = None,
+                 seed: Optional[int] = None,
                  shuffle: bool = False
                  ):
         """
@@ -95,6 +95,7 @@ class Tournament:
         if self.seed is not None:
             random.seed(self.seed)
             np.random.seed(self.seed)
+            os.environ['PYTHONHASHSEED'] = str(self.seed)
 
         # Create directory
         if os.path.exists(self.result_dir):

@@ -1,5 +1,4 @@
-from typing import Tuple, List
-
+from typing import Tuple, List, Optional
 import nenv
 
 
@@ -20,7 +19,7 @@ class BidHistory:
         self.myBids = []
         self.opponentBids = []
 
-    def getOpponentSecondLastBid(self) -> nenv.Bid:
+    def getOpponentSecondLastBid(self) -> Optional[nenv.Bid]:
         """
             This method returns the second last bid of the opponent if it exists.
         :return: Second last bid of the opponent
@@ -30,7 +29,7 @@ class BidHistory:
 
         return None
 
-    def getOpponentLastBid(self) -> nenv.Bid:
+    def getOpponentLastBid(self) -> Optional[nenv.Bid]:
         """
             This method returns the last bid of the opponent if it exists.
         :return: Last bid of the opponent

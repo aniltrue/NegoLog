@@ -1,4 +1,4 @@
-from typing import List, TypeVar, Union
+from typing import List, TypeVar, Union, Optional
 
 import nenv
 from nenv.Preference import Preference
@@ -64,7 +64,7 @@ class AbstractAgent(ABC):
         pass
 
     @abstractmethod
-    def initiate(self, opponent_name: Union[None, str]):
+    def initiate(self, opponent_name: Optional[str]):
         """
             This method is called before the negotiation session starts.
             You should initiate your agent in this method. Do not use constructor.

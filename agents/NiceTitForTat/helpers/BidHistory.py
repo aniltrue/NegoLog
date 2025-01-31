@@ -1,6 +1,5 @@
 import random
-from typing import List
-
+from typing import List, Optional
 import nenv
 
 
@@ -22,10 +21,10 @@ class BidDetails:
 
 
 class BidHistory:
-    pref: nenv.Preference
+    pref: Optional[nenv.Preference]
     history: List[BidDetails]
 
-    def __init__(self, pref: nenv.Preference = None, history: list = None):
+    def __init__(self, pref: Optional[nenv.Preference] = None, history: Optional[list] = None):
         self.history = history if history is not None else []
 
         if pref is None:
@@ -104,7 +103,7 @@ class BidHistory:
 
         return best
 
-    def getRandom(self, r: random.Random = None) -> BidDetails:
+    def getRandom(self, r: Optional[random.Random] = None) -> Optional[BidDetails]:
         size = len(self.history)
 
         if size == 0:

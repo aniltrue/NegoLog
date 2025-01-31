@@ -1,7 +1,6 @@
 import math
-
 import nenv
-from agents.Kawaii.NegotiatiInfo import NegotiatingInfo
+from agents.Kawaii.NegotiatingInfo import NegotiatingInfo
 
 
 class Strategy:

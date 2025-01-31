@@ -1,7 +1,6 @@
 import math
 import random
-from typing import Union
-
+from typing import Optional
 import nenv
 from nenv import Action, Bid
 
@@ -32,7 +31,7 @@ class PonPokoAgent(nenv.AbstractAgent):
     def name(self) -> str:
         return "PonPoko"
 
-    def initiate(self, opponent_name: Union[None, str]):
+    def initiate(self, opponent_name: Optional[str]):
         self.threshold_low = .99
         self.threshold_high = 1.0
 
@@ -75,7 +74,7 @@ class PonPokoAgent(nenv.AbstractAgent):
             if bid is None:
                 self.threshold_low -= 0.0001
 
-        return nenv.Action(bid)
+        return nenv.Offer(bid)
 
     def selectBidfromList(self):
         bids = []

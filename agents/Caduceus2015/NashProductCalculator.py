@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from agents.Caduceus2015.SaneUtilitySpace import SaneUtilitySpace
 import nenv
 
@@ -7,7 +7,7 @@ class NashProductCalculator:
     utilitySpaces: List[SaneUtilitySpace]
 
     nashProduct: float
-    nashBid: nenv.Bid
+    nashBid: Optional[nenv.Bid]
 
     def __init__(self, utilitySpaces: list):
         self.utilitySpaces = utilitySpaces

@@ -1,6 +1,6 @@
 import math
 import random
-from typing import Union
+from typing import Optional
 import numpy as np
 import nenv
 from agents.SAGA.GeneticAlgorithm import GeneticAlgorithm
@@ -17,13 +17,13 @@ class SAGAAgent(nenv.AbstractAgent):
 
         .. [Aydogan2020] Aydoğan, R. et al. (2020). Challenges and Main Results of the Automated Negotiating Agents Competition (ANAC) 2019. In: Bassiliades, N., Chalkiadakis, G., de Jonge, D. (eds) Multi-Agent Systems and Agreement Technologies. EUMAS AT 2020 2020. Lecture Notes in Computer Science(), vol 12520. Springer, Cham. <https://doi.org/10.1007/978-3-030-66412-1_23>
     """
-    rnd: random.Random                              # Random object
-    lastOffer: nenv.Bid                             # Last received bid
-    isFirst: bool                                   # Whether the received bid is the first, or not
-    firstUtil: float                                # Utility value of the first received bid
-    pref: nenv.Preference                           # Estimated preferences of the SAGA Agent
+    rnd: random.Random                              #: Random object
+    lastOffer: Optional[nenv.Bid]                   #: Last received bid
+    isFirst: bool                                   #: Whether the received bid is the first, or not
+    firstUtil: float                                #: Utility value of the first received bid
+    pref: nenv.Preference                           #: Estimated preferences of the SAGA Agent
 
-    def initiate(self, opponent_name: Union[None, str]):
+    def initiate(self, opponent_name: Optional[str]):
         # Default values
         self.isFirst = True
         self.firstUtil = 0.95
@@ -50,7 +50,7 @@ class SAGAAgent(nenv.AbstractAgent):
                 return self.accept_action
 
         # Make an offer
-        return nenv.Action(self.generateRandomBidAbove(target))
+        return nenv.Offer(self.generateRandomBidAbove(target))
 
     def isAcceptable(self, time: float, target: float, util: float) -> bool:
         """

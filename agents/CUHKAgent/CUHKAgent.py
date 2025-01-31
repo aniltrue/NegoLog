@@ -1,7 +1,7 @@
 import math
 import random
 import time
-from typing import List, Union
+from typing import List, Optional
 
 import nenv
 from agents.CUHKAgent.OwnBidHistory import OwnBidHistory
@@ -15,7 +15,7 @@ class CUHKAgent(nenv.AbstractAgent):
         .. [Hao2014] Hao, J., Leung, Hf. (2014). CUHKAgent: An Adaptive Negotiation Strategy for Bilateral Negotiations over Multiple Items. In: Marsa-Maestre, I., Lopez-Carmona, M., Ito, T., Zhang, M., Bai, Q., Fujita, K. (eds) Novel Insights in Agent-based Complex Automated Negotiation. Studies in Computational Intelligence, vol 535. Springer, Tokyo. <https://doi.org/10.1007/978-4-431-54758-7_11>
     """
     totalTime: float
-    ActionOfOpponent: nenv.Action
+    ActionOfOpponent: Optional[nenv.Action]
     maximumOfBid: float
     ownBidHistory: OwnBidHistory
     opponentBidHistory: OpponentBidHistory
@@ -39,7 +39,7 @@ class CUHKAgent(nenv.AbstractAgent):
     reservationValue: float
     rnd: random.Random
 
-    def initiate(self, opponent_name: Union[None, str]):
+    def initiate(self, opponent_name: Optional[str]):
         self.ActionOfOpponent = None
         self.rnd = random.Random()
         self.maximumOfBid = len(self.preference.bids)
@@ -68,7 +68,7 @@ class CUHKAgent(nenv.AbstractAgent):
         self.reservationValue = self.preference.reservation_value
 
     def receive_offer(self, bid: nenv.Bid, t: float):
-        self.ActionOfOpponent = nenv.Action(bid.copy())
+        self.ActionOfOpponent = nenv.Offer(bid.copy())
 
     @property
     def name(self) -> str:
@@ -83,14 +83,14 @@ class CUHKAgent(nenv.AbstractAgent):
 
         if self.ActionOfOpponent is None or self.ActionOfOpponent.bid is None:
             bid = self.bid_maximum_utility
-            action = nenv.Action(bid)
+            action = nenv.Offer(bid)
         else:
             self.opponentBidHistory.updateOpponentModel(self.ActionOfOpponent.bid, self.preference)
             self.updateConcedeDegree()
 
             if len(self.ownBidHistory.BidHistory) == 0:
                 bid = self.bid_maximum_utility
-                action = nenv.Action(bid)
+                action = nenv.Offer(bid)
             else:
                 if self.estimateRoundLeft(True, t) > 10:
                     bid = self.BidToOffer(t)
@@ -101,11 +101,11 @@ class CUHKAgent(nenv.AbstractAgent):
                         action = self.accept_action
                     elif self.concedeToOpponent:
                         bid = self.opponentBidHistory.bid_maximum_from_opponent
-                        action = nenv.Action(bid)
+                        action = nenv.Offer(bid)
                         self.toughAgent = True
                         self.concedeToOpponent = False
                     else:
-                        action = nenv.Action(bid)
+                        action = nenv.Offer(bid)
                         self.toughAgent = False
                 else:
                     if t > 0.9985 and self.estimateRoundLeft(True, t) < 5:
@@ -130,7 +130,7 @@ class CUHKAgent(nenv.AbstractAgent):
                         elif self.toughAgent:
                             action = self.accept_action
                         else:
-                            action = nenv.Action(bid)
+                            action = nenv.Offer(bid)
                     else:
                         bid = self.BidToOffer(t)
 
@@ -140,7 +140,7 @@ class CUHKAgent(nenv.AbstractAgent):
                         if IsAccept and not IsTerminate:
                             action = self.accept_action
                         else:
-                            action = nenv.Action(bid)
+                            action = nenv.Offer(bid)
 
         self.ownBidHistory.addBid(bid, self.preference)
         end_time = time.time()
@@ -150,7 +150,7 @@ class CUHKAgent(nenv.AbstractAgent):
         return action
 
     def BidToOffer(self, t: float):
-        bidReturned: nenv.Bid = None
+        bidReturned: Optional[nenv.Bid] = None
         decreasingAmount_1 = 0.05
         decreasingAmount_2 = 0.25
 

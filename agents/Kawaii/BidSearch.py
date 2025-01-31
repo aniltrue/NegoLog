@@ -1,14 +1,14 @@
 import math
 import random
-
+from typing import Optional
 import nenv
-from agents.Kawaii.NegotiatiInfo import NegotiatingInfo
+from agents.Kawaii.NegotiatingInfo import NegotiatingInfo
 
 
 class BidSearch:
     pref: nenv.Preference
     negotiatingInfo: NegotiatingInfo
-    maxBid: nenv.Bid
+    maxBid: Optional[nenv.Bid]
 
     SA_ITERATION: int = 1
     START_TEMPERATURE: float = 1.

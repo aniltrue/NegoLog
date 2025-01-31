@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 import numpy as np
 from sklearn.gaussian_process import GaussianProcessRegressor, kernels
 
@@ -7,13 +7,13 @@ class Regression:
     """
         This class helps for the prediction and training of the Gaussian Process Regression
     """
-    regressor: GaussianProcessRegressor  # Scikit-Learn model
-    kernel: kernels.Kernel               # Kernel
-    means: np.ndarray                    # Predicted means
-    sigma: np.ndarray                    # Predicted variances
-    utility_samples: List[float]         # Utility sample list [0.01 - 1.00]
-    time_samples_list: List[float]       # Time sample list [0.01 - 1.00]
-    time_samples: np.ndarray             # Numpy array version of the time sample list
+    regressor: GaussianProcessRegressor  #: Scikit-Learn model
+    kernel: kernels.Kernel               #: Kernel
+    means: Optional[np.ndarray]          #: Predicted means
+    sigma: Optional[np.ndarray]          #: Predicted variances
+    utility_samples: List[float]         #: Utility sample list [0.01 - 1.00]
+    time_samples_list: List[float]       #: Time sample list [0.01 - 1.00]
+    time_samples: np.ndarray             #: Numpy array version of the time sample list
 
     def __init__(self):
         """

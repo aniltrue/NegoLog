@@ -4,7 +4,7 @@ import numpy as np
 
 from nenv.BidSpace import BidSpace, BidPoint
 from nenv.logger.AbstractLogger import AbstractLogger, Session, SessionLogs, Bid, LogRow
-from typing import List, Union
+from typing import List, Union, Optional
 
 from nenv.utils import ExcelLog
 
@@ -19,7 +19,7 @@ class EstimatedParetoLogger(AbstractLogger):
         **Note**: This logger increases the computational time due to the expensive process of the pareto estimation.
     """
 
-    real_pareto: Union[None, List[BidPoint]]
+    real_pareto: Optional[List[BidPoint]]
 
     def before_session_start(self, session: Union[Session, SessionLogs]) -> List[str]:
         if len(session.agentA.estimators) == 0:

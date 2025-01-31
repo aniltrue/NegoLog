@@ -1,6 +1,5 @@
 import math
-from typing import List, Union
-
+from typing import List, Optional
 import nenv
 from agents.IAMhaggler.OpponentBid import OpponentHistory, OpponentBid
 from agents.IAMhaggler.Regression import Regression
@@ -16,29 +15,29 @@ class IAMhaggler(nenv.AbstractAgent):
 
         .. [Williams2012] Williams, C.R., Robu, V., Gerding, E.H., Jennings, N.R. (2012). IAMhaggler: A Negotiation Agent for Complex Environments. In: Ito, T., Zhang, M., Robu, V., Fatima, S., Matsuo, T. (eds) New Trends in Agent-Based Complex Automated Negotiations. Studies in Computational Intelligence, vol 383. Springer, Berlin, Heidelberg. <https://doi.org/10.1007/978-3-642-24696-8_10>
     """
-    RISK_PARAMETER: float = 3.0      # Default value of Risk Factor
-    regression: Regression           # Prediction model
-    lastRegressionTime: float        # The last negotiation time when the prediction is made
-    lastRegressionUtility: float     # The last utility value when the prediction is made
-    targetUtility: float             # Predicted target utility
-    targetTime: float                # Predicted negotiation time
-    history: OpponentHistory         # List of bids for prediction
-    slotHistory: OpponentHistory     # Last slot
-    firstBidFromOpponent: nenv.Bid   # Fist received bid
-    previousTargetUtility: float     # Previous target utility that the agent calculated
+    RISK_PARAMETER: float = 3.0                 #: Default value of Risk Factor
+    regression: Regression                      #: Prediction model
+    lastRegressionTime: float                   #: The last negotiation time when the prediction is made
+    lastRegressionUtility: float                #: The last utility value when the prediction is made
+    targetUtility: float                        #: Predicted target utility
+    targetTime: float                           #: Predicted negotiation time
+    history: OpponentHistory                    #: List of bids for prediction
+    slotHistory: OpponentHistory                #: Last slot
+    firstBidFromOpponent: Optional[nenv.Bid]    #: Fist received bid
+    previousTargetUtility: float                #: Previous target utility that the agent calculated
 
-    MAXIMUM_ASPIRATION: float = 0.9  # For the acceptance strategy
-    acceptMultiplier: float = 1.02   # For the acceptance strategy
-    lastTimeSlot = -1                # Number of time slots
-    number_of_time_window: float     # Number of time-window
-    session_time: int                # Deadline
+    MAXIMUM_ASPIRATION: float = 0.9             #: For the acceptance strategy
+    acceptMultiplier: float = 1.02              #: For the acceptance strategy
+    lastTimeSlot = -1                           #: Number of time slots
+    number_of_time_window: float                #: Number of time-window
+    session_time: int                           #: Deadline
 
     def __init__(self, preference: nenv.Preference, session_time: int, estimators: List[nenv.OpponentModel.AbstractOpponentModel]):
         super().__init__(preference, session_time, estimators)
 
         self.session_time = session_time
 
-    def initiate(self, opponent_name: Union[None, str]):
+    def initiate(self, opponent_name: Optional[str]):
         # Default values
         self.lastRegressionTime = 0.
         self.lastRegressionUtility = 1.
@@ -75,7 +74,7 @@ class IAMhaggler(nenv.AbstractAgent):
             bid = self.preference.bids[0]
             self.previousTargetUtility = bid.utility
 
-            return nenv.Action(bid)
+            return nenv.Offer(bid)
 
         # Apply acceptance strategy to decide accepting or not.
         if self.preference.get_utility(self.last_received_bids[-1]) * self.acceptMultiplier >= self.previousTargetUtility:
@@ -95,7 +94,7 @@ class IAMhaggler(nenv.AbstractAgent):
             return self.accept_action
 
         # Offer the bid
-        return nenv.Action(bid)
+        return nenv.Offer(bid)
 
     def get_target_utility(self, t: float):
         time_slot = math.floor(t * self.number_of_time_window)  # Time window

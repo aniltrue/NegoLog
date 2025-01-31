@@ -1,14 +1,14 @@
 import math
 import random
+from typing import Optional
 
 import numpy as np
-
 import nenv
 from agents.Atlas3.etc.negotiatingInfo import negotiatingInfo
 
 
 class bidSearch:
-    maxBid: nenv.Bid = None
+    maxBid: Optional[nenv.Bid] = None
     negotiatingInfo: negotiatingInfo
     NEAR_ITERATION = 1
     SA_ITERATION = 1

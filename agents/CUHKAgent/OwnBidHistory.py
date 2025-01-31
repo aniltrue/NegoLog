@@ -1,11 +1,10 @@
-from typing import List
-
+from typing import List, Optional
 import nenv
 
 
 class OwnBidHistory:
     BidHistory: List[nenv.Bid]
-    minBidInHistory: nenv.Bid
+    minBidInHistory: Optional[nenv.Bid]
 
     def __init__(self):
         self.BidHistory = []

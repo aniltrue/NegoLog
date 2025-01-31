@@ -1,6 +1,4 @@
-import time
-from typing import List, Union
-
+from typing import List, Optional
 import nenv
 from nenv import Bid, Action, Offer
 
@@ -12,10 +10,10 @@ class HybridAgent(nenv.AbstractAgent):
 
         .. [Keskin2021] Mehmet Onur Keskin, Umut Çakan, and Reyhan Aydoğan. 2021. Solver Agent: Towards Emotional and Opponent-Aware Agent for Human-Robot Negotiation. In Proceedings of the 20th International Conference on Autonomous Agents and MultiAgent Systems (AAMAS '21). International Foundation for Autonomous Agents and Multiagent Systems, Richland, SC, 1557–1559.
     """
-    p0: float   # Initial utility
-    p1: float   # Concession ratio
-    p2: float   # Final utility
-    p3: float   # Empathy Score
+    p0: float   #: Initial utility
+    p1: float   #: Concession ratio
+    p2: float   #: Final utility
+    p3: float   #: Empathy Score
 
     # Window for Behavior-Based strategy
     W = {
@@ -30,7 +28,7 @@ class HybridAgent(nenv.AbstractAgent):
     def name(self) -> str:
         return "Hybrid"
 
-    def initiate(self, opponent_name: Union[None, str]):
+    def initiate(self, opponent_name: Optional[str]):
         # Set default values
         self.p0 = 1.0
         self.p1 = 0.75
@@ -109,7 +107,7 @@ class HybridAgent(nenv.AbstractAgent):
             target_utility = self.preference.reservation_value
 
         # AC_Next strategy to decide accepting or not
-        if self.can_accept() and target_utility <= self.last_received_bids[-1]:
+        if self.can_accept() and target_utility <= self.last_received_bids[-1].utility:
             return self.accept_action
 
         # Find the closest bid to target utility

@@ -1,7 +1,6 @@
 import math
 import random
-from typing import List, Union
-
+from typing import List, Optional
 import nenv
 from agents.AhBuNeAgent.impmap.SimilarityMap import SimilarityMap
 from agents.AhBuNeAgent.impmap.OppSimilarityMap import OppSimilarityMap
@@ -30,40 +29,40 @@ class AhBuNeAgent(nenv.AbstractAgent):
 
         .. [Yildirim2023] Yıldırım, A.B., Sunman, N., Aydoğan, R. (2023). AhBuNe Agent: Winner of the Eleventh International Automated Negotiating Agent Competition (ANAC 2020). In: Hadfi, R., Aydoğan, R., Ito, T., Arisaka, R. (eds) Recent Advances in Agent-Based Negotiation: Applications and Competition Challenges. IJCAI 2022. Studies in Computational Intelligence, vol 1092. Springer, Singapore. <https://doi.org/10.1007/978-981-99-0561-4_6>
     """
-    rnd: random.Random                                      # Random object
-    ourNumFirstBids: int                                    # Our number of first bids
-    ourNumLastBids: int                                     # Our number of last bids
-    oppNumFirstBids: int                                    # Opponent's number of first bids
-    ourKnownBidNum: int                                     # Our number of known bids
-    oppKnownBidNum: int                                     # Opponent's number of known bids
+    rnd: random.Random                                      #: Random object
+    ourNumFirstBids: int                                    #: Our number of first bids
+    ourNumLastBids: int                                     #: Our number of last bids
+    oppNumFirstBids: int                                    #: Opponent's number of first bids
+    ourKnownBidNum: int                                     #: Our number of known bids
+    oppKnownBidNum: int                                     #: Opponent's number of known bids
 
-    time: float                                             #
-    allPossibleBids: List[nenv.Bid]                         # List of all possible bids
-    allPossibleBidsSize: int                                # Length of the list of all possible bids
+    time: float                                             #: Time
+    allPossibleBids: List[nenv.Bid]                         #: List of all possible bids
+    allPossibleBidsSize: int                                #: Length of the list of all possible bids
 
-    ourLinearPartialOrdering: SimpleLinearOrdering          # Our estimated profile
-    oppLinearPartialOrdering: OppSimpleLinearOrderding      # Opponent's estimated profile
-    ourSimilarityMap: SimilarityMap                         # Our Similarity Map
-    oppSimilarityMap: OppSimilarityMap                      # Opponent's Similarity Map
+    ourLinearPartialOrdering: SimpleLinearOrdering          #: Our estimated profile
+    oppLinearPartialOrdering: OppSimpleLinearOrderding      #: Opponent's estimated profile
+    ourSimilarityMap: SimilarityMap                         #: Our Similarity Map
+    oppSimilarityMap: OppSimilarityMap                      #: Opponent's Similarity Map
 
-    lastReceivedBid: nenv.Bid                               # Last received bid
-    utilityLowerBound: float                                # Lower utility bound
-    ourMaxCompromise: float                                 # Our max. compromise
+    lastReceivedBid: Optional[nenv.Bid]                     #: Last received bid
+    utilityLowerBound: float                                #: Lower utility bound
+    ourMaxCompromise: float                                 #: Our max. compromise
 
-    lostElicityScore: float                                 # The lost of elicity score
-    elicitationCost: float                                  # Elicitation cost
-    maxElicitationLost: float                               # Maximum lost of elicity
-    leftElicitationNumber: int                              # Number of not elicitated
-    elicitationBid: nenv.Bid                                # Elicitated bid of the agent
-    mostCompromisedBids: list                               # List of most compromised bids
-    oppElicitatedBid: List[nenv.Bid]                        # Elicitated bid of the opponent
-    reservationBid: nenv.Bid                                # Reservation bid
+    lostElicityScore: float                                 #: The lost of elicity score
+    elicitationCost: float                                  #: Elicitation cost
+    maxElicitationLost: float                               #: Maximum lost of elicity
+    leftElicitationNumber: int                              #: Number of not elicitated
+    elicitationBid: Optional[nenv.Bid]                      #: Elicitated bid of the agent
+    mostCompromisedBids: list                               #: List of most compromised bids
+    oppElicitatedBid: List[nenv.Bid]                        #: Elicitated bid of the opponent
+    reservationBid: nenv.Bid                                #: Reservation bid
 
     @property
     def name(self) -> str:
         return "AhBuNe"
 
-    def initiate(self, opponent_name: Union[None, str]):
+    def initiate(self, opponent_name: Optional[str]):
         # Default values
         self.ourKnownBidNum = 0
         self.oppKnownBidNum = 0

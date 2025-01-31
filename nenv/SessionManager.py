@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Union, Optional
 from nenv.OpponentModel import OpponentModelClass
 from nenv.Agent import AbstractAgent, AgentClass
 from nenv.Session import Session
@@ -18,10 +18,10 @@ class SessionManager:
     agentA: AbstractAgent            #: AgentA object
     agentB: AbstractAgent            #: AgentB object
     session: Session                 #: Negotiation session object
-    deadline_time: Union[None, int]  #: The time-based deadline in terms of seconds
-    deadline_time: Union[None, int]  #: The round-based in terms of number of rounds
+    deadline_time: Optional[int]    #: The time-based deadline in terms of seconds
+    deadline_time: Optional[int]    #: The round-based in terms of number of rounds
 
-    def __init__(self, agentA_class: AgentClass, agentB_class: AgentClass, domain_name: str, deadline_time: Union[None, int], deadline_round: Union[None, int], estimators: List[OpponentModelClass], loggers: List[LoggerClass]):
+    def __init__(self, agentA_class: AgentClass, agentB_class: AgentClass, domain_name: str, deadline_time: Optional[int], deadline_round: Optional[int], estimators: List[OpponentModelClass], loggers: List[LoggerClass]):
         """
             Constructor
 

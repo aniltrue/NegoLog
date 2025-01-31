@@ -1,6 +1,6 @@
 import math
 import random
-from typing import Union
+from typing import Optional
 from scipy.stats import spearmanr, kendalltau
 from nenv.Bid import Bid
 from nenv.Preference import Preference
@@ -66,7 +66,7 @@ class AbstractOpponentModel(ABC):
     def calculate_error(self, org_pref: Preference,
                         return_rmse: bool = True,
                         return_spearman: bool = True,
-                        return_kendall_tau: bool = True) -> (Union[float, None], Union[float, None], Union[float, None]):
+                        return_kendall_tau: bool = True) -> (Optional[float], Optional[float], Optional[float]):
         """
             This method calculates the error of the estimated preferences for the performance evaluation of the opponent
             model. There metrics are used [Baarslag2013]_ [Keskin2023]_:

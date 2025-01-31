@@ -1,7 +1,5 @@
 import math
-import time
-from typing import List, Dict, Union
-
+from typing import List, Dict, Optional
 import nenv
 
 
@@ -37,7 +35,7 @@ class YXAgent(nenv.AbstractAgent):
     def name(self) -> str:
         return "YXAgent"
 
-    def initiate(self, opponent_name: Union[None, str]):
+    def initiate(self, opponent_name: Optional[str]):
         self.rv = self.preference.reservation_value
         self.discountFactor = 1.0
 
@@ -90,7 +88,7 @@ class YXAgent(nenv.AbstractAgent):
                 myLastBid = self.preference.get_random_bid()
                 myUtility = myLastBid.utility
 
-            return nenv.Action(myLastBid)
+            return nenv.Offer(myLastBid)
 
         testBid = self.preference.get_random_bid()
         myUtility = testBid.utility
@@ -108,11 +106,11 @@ class YXAgent(nenv.AbstractAgent):
 
             calThreshold = calUtil - ((len(self.opponents) * deductThreshold) * 3 / 4)
             calThreshold = max(tempThreshold, calThreshold)
-            myAction = self.accept_action if self.oppUtility > calThreshold else nenv.Action(testBid)
+            myAction = self.accept_action if self.oppUtility > calThreshold else nenv.Offer(testBid)
 
             return myAction
         else:
-            myAction = self.accept_action if self.oppUtility > tempThreshold else nenv.Action(testBid)
+            myAction = self.accept_action if self.oppUtility > tempThreshold else nenv.Offer(testBid)
 
             return myAction
 

@@ -1,6 +1,6 @@
 import os
 import random
-from typing import List, Dict, Union
+from typing import List, Dict, Optional
 from nenv.Issue import Issue
 from nenv.Bid import Bid
 import json
@@ -50,7 +50,7 @@ class Preference:
     _bids: List[Bid]
     _reservation_value: float
 
-    def __init__(self, profile_json_path: Union[str, None], generate_bids: bool = True):
+    def __init__(self, profile_json_path: Optional[str], generate_bids: bool = True):
         """
             Constructor
 
@@ -140,55 +140,35 @@ class Preference:
 
     def get_bid_at(self, target_utility: float) -> Bid:
         """
-            This method returns the closest bid to provided target utility. Binary Search approach is applied.
+            This method returns the closest bid to provided target utility.
 
             :param target_utility: Target utility
             :return: The closest bid
         """
-        if target_utility >= self._bids[0]:
-            return self._bids[0].copy()
-
-        if target_utility <= self._bids[-1]:
-            return self._bids[-1].copy()
-
-        low: int = 0
-        high: int = len(self._bids) - 1
-
-        while low <= high:
-            mid: int = (high + low) // 2
-
-            if target_utility < self._bids[mid]:
-                low = mid + 1
-            elif target_utility > self._bids[mid]:
-                high = mid - 1
-            else:
-                return self._bids[mid].copy()
-
-        if abs(self._bids[low].utility - target_utility) < abs(self._bids[high].utility - target_utility):
-            return self._bids[low].copy()
-
-        return self._bids[high].copy()
+        return self.bids[self.__binary_search(target_utility)]
 
     def get_bids_at_range(self, lower_bound: float = 0., upper_bound: float = 1.) -> List[Bid]:
         """
             This method provides a list of bids in the utility range.
 
+            .. math:: U_{bid} \in [U_{lower}, U_{upper}]
+
             :param lower_bound: The lower bound of the range
             :param upper_bound: The upper bound of the range
             :return: List of bids in that range.
         """
-        bids = []
+        lower_index = self.__binary_search(lower_bound)
+        upper_index = self.__binary_search(upper_bound)
 
-        for bid in self._bids:
-            utility = self.get_utility(bid)
+        bids = self.bids
 
-            if utility < lower_bound:
-                break
+        while upper_index >= 1 and bids[upper_index].utility == bids[upper_index - 1].utility:
+            upper_index -= 1
 
-            if utility <= upper_bound:
-                bids.append(bid.copy())
+        while lower_index < len(bids) - 2 and bids[lower_index].utility == bids[lower_index + 1].utility:
+            lower_index += 1
 
-        return bids
+        return bids[upper_index:lower_index + 1]
 
     def get_bids_at(self, target_utility: float, lower_bound: float = 0., upper_bound: float = 0.) -> List[Bid]:
         """
@@ -201,18 +181,7 @@ class Preference:
             :param upper_bound: The upper bound of the *window = target_utility + upper_bound*
             :return: List of bids in that window.
         """
-        bids = []
-
-        for bid in self._bids:
-            utility = self.get_utility(bid)
-
-            if utility < target_utility - lower_bound:
-                break
-
-            if utility <= target_utility + upper_bound:
-                bids.append(bid.copy())
-
-        return bids
+        return self.get_bids_at_range(target_utility - lower_bound, target_utility + upper_bound)
 
     def get_random_bid(self, lower_bound: float = 0., upper_bound: float = 1.):
         """
@@ -222,7 +191,7 @@ class Preference:
             :param upper_bound: Maximum utility value that the bid can obtain. *Default = 1.0*
             :return: Randomly selected bid in that utility range.
         """
-        lower_bound = max(lower_bound, self._reservation_value)
+        lower_bound = max(lower_bound, self._reservation_value, 0.)
         upper_bound = min(1., upper_bound)
 
         if lower_bound > upper_bound:
@@ -231,6 +200,39 @@ class Preference:
         target_utility = random.random() * (upper_bound - lower_bound) + lower_bound
 
         return self.get_bid_at(target_utility)
+
+    def __binary_search(self, target_utility: float) -> int:
+        """
+            This method employs Binary-Search algorithm to find the index of the closest bid to the given target utility.
+
+            :param target_utility: Target utility
+            :return: Index of the closest bid to the target utility
+        """
+        bids = self.bids
+
+        if target_utility >= bids[0].utility:
+            return 0
+
+        if target_utility <= bids[-1].utility:
+            return len(bids) - 1
+
+        low: int = 0
+        high: int = len(bids) - 1
+
+        while low <= high:
+            mid: int = (high + low) // 2
+
+            if target_utility < bids[mid].utility:
+                low = mid + 1
+            elif target_utility > bids[mid].utility:
+                high = mid - 1
+            else:
+                return mid
+
+        if abs(bids[low].utility - target_utility) < abs(bids[high].utility - target_utility):
+            return low
+
+        return high
 
     def __copy__(self):
         """

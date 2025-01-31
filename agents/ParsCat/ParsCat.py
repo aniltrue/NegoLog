@@ -1,4 +1,4 @@
-from typing import Union
+from typing import Optional
 import nenv
 from nenv import Action, Bid
 from agents.NiceTitForTat.helpers.BidHistory import BidDetails, BidHistory
@@ -22,7 +22,7 @@ class ParsCatAgent(nenv.AbstractAgent):
     def name(self) -> str:
         return "ParsCat"
 
-    def initiate(self, opponent_name: Union[None, str]):
+    def initiate(self, opponent_name: Optional[str]):
         self.t1 = 0
         self.u2 = 1
         self.tresh = 0
@@ -36,9 +36,9 @@ class ParsCatAgent(nenv.AbstractAgent):
 
     def act(self, t: float) -> Action:
         if len(self.otherAgentsBidHistory.history) == 0:
-            return nenv.Action(self.maxBid)
+            return nenv.Offer(self.maxBid)
 
-        action = nenv.Action(self.getRandomBid())
+        action = nenv.Offer(self.getRandomBid())
         myBid = action.bid
 
         myOfferedUtil = myBid.utility

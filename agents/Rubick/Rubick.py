@@ -1,7 +1,6 @@
 import math
 import random
-from typing import List, Dict, Union
-
+from typing import List, Dict, Optional
 import nenv
 
 
@@ -53,7 +52,7 @@ class Rubick(nenv.AbstractAgent):
     def name(self) -> str:
         return "RubickAgent"
 
-    def initiate(self, opponent_name: Union[None, str]):
+    def initiate(self, opponent_name: Optional[str]):
         # Default values
         self.parties = []
         self.history = []
@@ -133,7 +132,7 @@ class Rubick(nenv.AbstractAgent):
 
         bid = self.generateBid(decisiveUtil, t)
 
-        return nenv.Action(bid)
+        return nenv.Offer(bid)
 
     def takeTheChange(self, maxReceived: float) -> float:
         """
@@ -227,7 +226,7 @@ class Rubick(nenv.AbstractAgent):
 
         return res
 
-    def searchCandidateBids(self, targetUtil: float) -> nenv.Bid:
+    def searchCandidateBids(self, targetUtil: float) -> Optional[nenv.Bid]:
         """
             This method tries to find a bid which not only is beneficial for both opponents but also has a higher
             utility than the given target utility.

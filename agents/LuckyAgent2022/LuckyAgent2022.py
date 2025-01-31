@@ -1,7 +1,6 @@
 import math
 import random
-from typing import Union
-
+from typing import Optional
 import numba
 import numpy as np
 from agents.LuckyAgent2022.OpponentModel import OpponentModel
@@ -25,7 +24,7 @@ class LuckyAgent2022(nenv.AbstractAgent):
     betta: float
     NUMBER_OF_GOALS: int = 5
     agreement_utility: float
-    who_accepted: str
+    who_accepted: Optional[str]
     is_called: bool
 
     max: float
@@ -43,7 +42,7 @@ class LuckyAgent2022(nenv.AbstractAgent):
     def name(self) -> str:
         return "LuckAgent2022"
 
-    def initiate(self, opponent_name: Union[None, str]):
+    def initiate(self, opponent_name: Optional[str]):
         self.alpha = 1.0
         self.betta = 0.0
         self.agreement_utility = 0.0

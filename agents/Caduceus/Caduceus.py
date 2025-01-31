@@ -1,5 +1,5 @@
 import random
-from typing import List, Union
+from typing import List, Optional
 import agents
 from agents.Caduceus2015.UtilFunctions import *
 import nenv
@@ -32,7 +32,7 @@ class Caduceus(nenv.AbstractAgent):
     def getScore(self, agentIndex: int):
         return self.scores[agentIndex]
 
-    def initiate(self, opponent_name: Union[None, str]):
+    def initiate(self, opponent_name: Optional[str]):
         self.random = random.Random()
         self.discountFactor = 1.
         self.selfReservationValue = max(0.75, self.preference.reservation_value)
@@ -56,7 +56,7 @@ class Caduceus(nenv.AbstractAgent):
 
     def act(self, t: float) -> nenv.Action:
         if self.isBestOfferTime(t):
-            return nenv.Action(self.preference.bids[0])
+            return nenv.Offer(self.preference.bids[0])
 
         bidsFromAgents = []
         possibleActions = []
@@ -80,9 +80,9 @@ class Caduceus(nenv.AbstractAgent):
         if self.can_accept() and scoreOfAccepts > scoreOfBids:
             return self.accept_action
         elif scoreOfBids > scoreOfAccepts:
-            return nenv.Action(self.getRandomizedAction(agentsWithBids, bidsFromAgents))
+            return nenv.Offer(self.getRandomizedAction(agentsWithBids, bidsFromAgents))
 
-        return nenv.Action(self.preference.bids[0])
+        return nenv.Offer(self.preference.bids[0])
 
     def getRandomizedAction(self, agentsWithBids: list, bidsFromAgents: list):
         possibilities = [self.getScore(agentWithBid) for agentWithBid in agentsWithBids]

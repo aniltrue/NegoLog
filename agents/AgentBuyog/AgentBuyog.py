@@ -1,6 +1,6 @@
 import math
 import random
-from typing import Union, Dict
+from typing import Dict, Optional
 
 import nenv
 from agents.AgentBuyog.Regression import Regression
@@ -29,15 +29,15 @@ class AgentBuyog(nenv.AbstractAgent):
     lastSecondConcessionFactor: float
     kalaiPointCorrection: float
     kalaiPointUpdate: Dict[str, int]
-    infoA: OpponentInfo
-    infoB: OpponentInfo
+    infoA: Optional[OpponentInfo]
+    infoB: Optional[OpponentInfo]
     myBidHistory: BidHistory
     AandBscommonBids: BidHistory
     totalHistory: BidHistory
     initialized: bool
     numberOfRounds: int
 
-    def initiate(self, opponent_name: Union[None, str]):
+    def initiate(self, opponent_name: Optional[str]):
         self.alphaDefault = 0.
         self.betaDefault = 0.
         self.issueWeightsConstant = 0.3
@@ -82,7 +82,7 @@ class AgentBuyog(nenv.AbstractAgent):
         if len(self.totalHistory.history) > 0:
             mostRecentBidsUtility = self.totalHistory.history[-1].utility
 
-        difficultAgent: OpponentInfo = None
+        difficultAgent: Optional[OpponentInfo] = None
 
         if self.infoA is not None and self.infoB is not None and self.infoA.agentDifficulty is not None and self.infoB.agentDifficulty is not None:
             if self.infoA.agentDifficulty <= self.infoB.agentDifficulty:
@@ -114,12 +114,9 @@ class AgentBuyog(nenv.AbstractAgent):
 
         self.totalHistory.add(bestBid)
 
-        return nenv.Action(bestBid.bid)
+        return nenv.Offer(bestBid.bid)
 
     def getBestBidFromList(self, bidsInWindow: list):
-        bestBidOpponentsUtil = 0.
-        bestBid = None
-
         if self.infoA is None or self.infoB is None or self.infoA.agentDifficulty is None or self.infoB.agentDifficulty is None:
             return random.choice(bidsInWindow)
 

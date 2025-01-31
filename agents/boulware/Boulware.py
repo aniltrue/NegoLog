@@ -1,7 +1,6 @@
-from typing import Union
-
+from typing import Optional
 import nenv
-from nenv import Action, Bid, Action
+from nenv import Bid, Action, Offer
 
 
 class BoulwareAgent(nenv.AbstractAgent):
@@ -18,15 +17,15 @@ class BoulwareAgent(nenv.AbstractAgent):
         .. [Faratin1998] Peyman Faratin, Carles Sierra, and Nick R. Jennings. 1998. Negotiation decision functions for autonomous agents. Robotics and Autonomous Systems 24, 3 (1998), 159–182.
         .. [Vahidov2017] Rustam M. Vahidov, Gregory E. Kersten, and Bo Yu. 2017. Human-Agent Ne-gotiations: The Impact Agents’ Concession Schedule and Task Complexity onAgreements. In 50th Hawaii International Conference on System Sciences, HICSS2017, Tung Bui (Ed.). ScholarSpace / AIS Electronic Library (AISeL), Hawaii, 1–9
     """
-    p0: float   # Initial utility
-    p1: float   # Concession ratio
-    p2: float   # Final utility
+    p0: float   #: Initial utility
+    p1: float   #: Concession ratio
+    p2: float   #: Final utility
 
     @property
     def name(self) -> str:
         return "Boulware"
 
-    def initiate(self, opponent_name: Union[None, str]):
+    def initiate(self, opponent_name: Optional[str]):
         # Set default values
         self.p0 = 1.0
         self.p1 = 0.85
@@ -62,4 +61,4 @@ class BoulwareAgent(nenv.AbstractAgent):
         # Find the closest bid to target utility
         bid = self.preference.get_bid_at(target_utility)
 
-        return Action(bid)
+        return Offer(bid)

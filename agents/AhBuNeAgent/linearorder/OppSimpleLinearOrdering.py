@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 import nenv
 
@@ -15,7 +15,7 @@ class OppSimpleLinearOrderding:
         """
         self.bids = []
 
-    def getMinBid(self) -> nenv.Bid:
+    def getMinBid(self) -> Optional[nenv.Bid]:
         """
             Get the worst bid.
         :return: Worst bid
@@ -25,7 +25,7 @@ class OppSimpleLinearOrderding:
 
         return self.bids[0]
 
-    def getMaxBid(self) -> nenv.Bid:
+    def getMaxBid(self) -> Optional[nenv.Bid]:
         """
             Get the best bid.
         :return: Best bid

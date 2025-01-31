@@ -1,7 +1,5 @@
 import math
-import time
-from typing import List, Union
-
+from typing import List, Optional
 import nenv
 from nenv import Bid, Action, Offer
 
@@ -13,14 +11,14 @@ class HybridAgentWithOppModel(nenv.AbstractAgent):
         .. [Yesevi2022] Yesevi, G., Keskin, M.O., Doğru, A., Aydoğan, R. (2023). Time Series Predictive Models for Opponent Behavior Modeling in Bilateral Negotiations. In: Aydoğan, R., Criado, N., Lang, J., Sanchez-Anguix, V., Serramia, M. (eds) PRIMA 2022: Principles and Practice of Multi-Agent Systems. PRIMA 2022. Lecture Notes in Computer Science(), vol 13753. Springer, Cham. <https://doi.org/10.1007/978-3-031-21203-1_23>
         .. [Keskin2021] Mehmet Onur Keskin, Umut Çakan, and Reyhan Aydoğan. 2021. Solver Agent: Towards Emotional and Opponent-Aware Agent for Human-Robot Negotiation. In Proceedings of the 20th International Conference on Autonomous Agents and MultiAgent Systems (AAMAS '21). International Foundation for Autonomous Agents and Multiagent Systems, Richland, SC, 1557–1559.
     """
-    p0: float  # Initial utility
-    p1: float  # Concession ratio
-    p2: float  # Final utility
-    p3: float  # Empathy Score
+    p0: float  #: Initial utility
+    p1: float  #: Concession ratio
+    p2: float  #: Final utility
+    p3: float  #: Empathy Score
 
-    window_lower_bound: float  # Bid Search window lower bound
-    window_upper_bound: float  # Bid Search window upper bound
-    repetition_limit: int      # Number of previous bids to avoid repetition
+    window_lower_bound: float  #: Bid Search window lower bound
+    window_upper_bound: float  #: Bid Search window upper bound
+    repetition_limit: int      #: Number of previous bids to avoid repetition
 
     opponent_model: nenv.OpponentModel.AbstractOpponentModel  # Opponent Model
 
@@ -37,7 +35,7 @@ class HybridAgentWithOppModel(nenv.AbstractAgent):
     def name(self) -> str:
         return "Hybrid with OppModel"
 
-    def initiate(self, opponent_name: Union[None, str]):
+    def initiate(self, opponent_name: Optional[str]):
         # Set default values
         self.p0 = 1.0
         self.p1 = 0.75
@@ -137,7 +135,7 @@ class HybridAgentWithOppModel(nenv.AbstractAgent):
         bid = self.bid_search(target_utility)
 
         # AC_Next strategy to decide accepting or not
-        if self.can_accept() and (target_utility <= self.last_received_bids[-1] or bid.utility <= self.last_received_bids[-1]):
+        if self.can_accept() and (target_utility <= self.last_received_bids[-1].utility or bid.utility <= self.last_received_bids[-1].utility):
             return self.accept_action
 
         self.my_last_bids.append(bid)
@@ -161,7 +159,7 @@ class HybridAgentWithOppModel(nenv.AbstractAgent):
         if len(bids) == 0:
             return target_bid
 
-        selected_bid: nenv.Bid = None
+        selected_bid: Optional[nenv.Bid] = None
 
         if len(self.my_last_bids) <= self.repetition_limit:
             last_bids = self.my_last_bids

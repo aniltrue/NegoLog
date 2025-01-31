@@ -1,4 +1,3 @@
-import nenv
 import nenv.OpponentModel
 
 

@@ -1,14 +1,14 @@
 import math
 import random
+from typing import Optional
 
 import numpy as np
-
 import nenv
 from agents.AgentKN.etc.negotiatingInfo import negotiatingInfo
 
 
 class bidSearch:
-    maxBid: nenv.Bid = None
+    maxBid: Optional[nenv.Bid] = None
     negotiatingInfo: negotiatingInfo
     SA_ITERATION = 1
     START_TEMPERATURE = 1.0

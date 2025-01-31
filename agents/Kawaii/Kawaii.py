@@ -1,7 +1,6 @@
-from typing import Union
-
+from typing import Optional
 import nenv
-from agents.Kawaii.NegotiatiInfo import NegotiatingInfo
+from agents.Kawaii.NegotiatingInfo import NegotiatingInfo
 from agents.Kawaii.BidSearch import BidSearch
 from agents.Kawaii.Strategy import Strategy
 
@@ -15,9 +14,9 @@ class Kawaii(nenv.AbstractAgent):
     negotiatingInfo: NegotiatingInfo
     bidSearch: BidSearch
     strategy: Strategy
-    offeredBid: nenv.Bid
+    offeredBid: Optional[nenv.Bid]
 
-    def initiate(self, opponent_name: Union[None, str]):
+    def initiate(self, opponent_name: Optional[str]):
         self.negotiatingInfo = NegotiatingInfo(self.preference)
 
         self.bidSearch = BidSearch(self.preference, self.negotiatingInfo)
@@ -40,7 +39,7 @@ class Kawaii(nenv.AbstractAgent):
 
         self.negotiatingInfo.MyBidHistory.append(offeredBid)
 
-        return nenv.Action(offeredBid)
+        return nenv.Offer(offeredBid)
 
     def receive_offer(self, bid: nenv.Bid, t: float):
         sender = "OpponentAgent"

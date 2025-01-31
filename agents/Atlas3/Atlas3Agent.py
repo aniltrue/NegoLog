@@ -1,5 +1,4 @@
-from typing import Union
-
+from typing import Optional
 import nenv
 from agents.Atlas3.etc.negotiatingInfo import negotiatingInfo
 from agents.Atlas3.etc.bidSearch import bidSearch
@@ -31,7 +30,7 @@ class Atlas3Agent(nenv.AbstractAgent):
     bidSearch: bidSearch
     strategy: strategy
     rv: float
-    offeredBid: nenv.Bid
+    offeredBid: Optional[nenv.Bid]
     supporter_num: int
     CList_index: int
 
@@ -39,7 +38,7 @@ class Atlas3Agent(nenv.AbstractAgent):
     def name(self) -> str:
         return "Atlas3"
 
-    def initiate(self, opponent_name: Union[None, str]):
+    def initiate(self, opponent_name: Optional[str]):
         self.offeredBid = None
         self.supporter_num = 0
         self.CList_index = 0
@@ -81,7 +80,7 @@ class Atlas3Agent(nenv.AbstractAgent):
             self.CList_index += 1
             self.negotiatingInfo.updateMyBidHistory(CBid)
 
-            return nenv.Action(CBid)
+            return nenv.Offer(CBid)
         elif offered_bid_util > self.rv:
             return self.accept_action
 
@@ -92,7 +91,7 @@ class Atlas3Agent(nenv.AbstractAgent):
 
         self.negotiatingInfo.updateMyBidHistory(offerBid)
 
-        return nenv.Action(offerBid)
+        return nenv.Offer(offerBid)
 
     def receive_offer(self, bid: Bid, t: float):
         sender = "OpponentAgent"

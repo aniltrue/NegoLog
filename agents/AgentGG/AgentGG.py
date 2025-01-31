@@ -1,5 +1,5 @@
 import random
-from typing import Union, List
+from typing import List, Optional
 import nenv
 from agents.AgentGG.ImpMap import ImpMap
 
@@ -38,7 +38,7 @@ class AgentGG(nenv.AbstractAgent):
     lastReceivedBid: nenv.Bid               #: Last received bid
     initialTimePass: bool                   #: If the first bid is received, or not
 
-    def initiate(self, opponent_name: Union[None, str]):
+    def initiate(self, opponent_name: Optional[str]):
         # Default values
         self.offerLowerRatio = 1.0
         self.offerHigherRatio = 1.1
@@ -65,7 +65,7 @@ class AgentGG(nenv.AbstractAgent):
     def act(self, t: float) -> nenv.Action:
         # If it is in first round, offer the highest bid.
         if not self.can_accept():
-            return nenv.Action(self.MAX_IMPORTANCE_BID)
+            return nenv.Offer(self.MAX_IMPORTANCE_BID)
 
         # Get estimated importance for me
         impRatioForMe = (self.impMap.getImportance(self.receivedBid) - self.MIN_IMPORTANCE) / (self.MAX_IMPORTANCE - self.MIN_IMPORTANCE)
@@ -95,7 +95,7 @@ class AgentGG(nenv.AbstractAgent):
 
         self.lastReceivedBid = self.receivedBid
 
-        return nenv.Action(bid)
+        return nenv.Offer(bid)
 
     def receive_offer(self, bid: nenv.Bid, t: float):
         # Set received bic

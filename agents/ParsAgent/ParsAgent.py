@@ -1,7 +1,6 @@
 import math
 import random
-from typing import Dict, List, Union
-
+from typing import Dict, List, Optional
 import nenv
 
 
@@ -41,20 +40,20 @@ class ParsAgent(nenv.AbstractAgent):
 
         .. [Khosravimehr2017] Khosravimehr, Z., Nassiri-Mofakham, F. (2017). Pars Agent: Hybrid Time-Dependent, Random and Frequency-Based Bidding and Acceptance Strategies in Multilateral Negotiations. In: Fujita, K., et al. Modern Approaches to Agent-based Complex Automated Negotiation. Studies in Computational Intelligence, vol 674. Springer, Cham. <https://doi.org/10.1007/978-3-319-51563-2_12>
     """
-    lastBid: nenv.Bid
+    lastBid: Optional[nenv.Bid]
     lastAction: nenv.Action
-    oppAName: str
+    oppAName: Optional[str]
     oppBName: str
     round_: int
     myutility: float
     Imfirst: bool
-    withDiscount: bool
+    withDiscount: Optional[bool]
     fornullAgent: bool
     opponentAB: List[BidUtility]
     oppAPreferences: OpponentPreferences
     oppBPreferences: OpponentPreferences
 
-    def initiate(self, opponent_name: Union[None, str]):
+    def initiate(self, opponent_name: Optional[str]):
         self.myutility = 0.8
         self.Imfirst = False
         self.withDiscount = None
@@ -73,7 +72,7 @@ class ParsAgent(nenv.AbstractAgent):
         if self.lastBid is None:
             self.Imfirst = True
 
-            return nenv.Action(self.getMyBestBid(self.preference.bids[0], 0.))
+            return nenv.Offer(self.getMyBestBid(self.preference.bids[0], 0.))
 
         if self.can_accept() and self.preference.get_utility(self.lastBid) > self.getMyUtility(t):
             return self.accept_action
@@ -112,7 +111,7 @@ class ParsAgent(nenv.AbstractAgent):
         return bestValue
 
     def offerMyNewBid(self, t: float):
-        bidNN: nenv.Bid = None
+        bidNN: Optional[nenv.Bid] = None
 
         if len(self.opponentAB) > 0:
             bidNN = self.getNNBid(self.opponentAB, t)
@@ -122,7 +121,7 @@ class ParsAgent(nenv.AbstractAgent):
 
         issues = self.getMutualIssues()
         map = {}
-        bid: nenv.Bid = None
+        bid: Optional[nenv.Bid] = None
 
         dissues = self.preference.issues
 

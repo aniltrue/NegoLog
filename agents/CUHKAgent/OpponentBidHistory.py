@@ -1,7 +1,6 @@
 import math
 import random
-from typing import List, Dict
-
+from typing import List, Dict, Optional
 import nenv
 
 
@@ -10,7 +9,7 @@ class OpponentBidHistory:
     opponentBidsStatisticsForDiscrete: List[Dict[str, int]]
     maximumBidsStored: int
     bidCounter: Dict[nenv.Bid, int]
-    bid_maximum_from_opponent: nenv.Bid
+    bid_maximum_from_opponent: Optional[nenv.Bid]
 
     def __init__(self):
         self.bidHistory = []

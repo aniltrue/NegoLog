@@ -1,4 +1,6 @@
 import math
+from typing import Optional
+
 import nenv
 
 
@@ -56,19 +58,19 @@ class negotiatingInfo:
     pref: nenv.Preference
     issues: list
     opponents: list
-    my_bid_history: list = None
+    my_bid_history: Optional[list] = None
     offeredValueNum: dict
 
-    opponents_bid_history: dict = None
+    opponents_bid_history: Optional[dict] = None
     opponents_average: dict
     opponents_variance: dict
     opponents_sum: dict
     opponents_pow_sum: dict
     opponents_stdev: dict
-    value_relative_utility: dict = None
+    value_relative_utility: Optional[dict] = None
 
-    all_value_frequency: dict = None
-    opponents_value_frequency: dict = None
+    all_value_frequency: Optional[dict] = None
+    opponents_value_frequency: Optional[dict] = None
     round: int
     negotiator_num: int
     isLinerUtilitySpace: bool
@@ -118,7 +120,7 @@ class negotiatingInfo:
                 self.value_relative_utility[issue][value] = 0.
 
     def setValueRelativeUtility(self, maxBid: nenv.Bid):
-        currentBid: nenv.Bid = None
+        currentBid: Optional[nenv.Bid] = None
 
         for issue in self.issues:
             currentBid = maxBid.copy()

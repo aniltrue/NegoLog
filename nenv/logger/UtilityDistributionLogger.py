@@ -2,7 +2,7 @@ import warnings
 from nenv.Preference import domain_loader
 from nenv.BidSpace import BidSpace, BidPoint
 from nenv.logger.AbstractLogger import AbstractLogger, SessionLogs, Session, LogRow, ExcelLog
-from typing import Union
+from typing import Union, Optional
 from nenv.utils.tournament_graphs import plt, DRAWING_FORMAT
 from typing import List
 import numpy as np
@@ -68,7 +68,7 @@ class UtilityDistributionLogger(AbstractLogger):
             self.draw_agent_opponent_utility(tournament_logs, agent_names, domain_dir, True, domain)
 
     def draw_agent_opponent_utility(self, tournament_logs: ExcelLog, agent_names: list, directory: str,
-                                    draw_pareto: bool, target_domain_id: Union[str | None] = None):
+                                    draw_pareto: bool, target_domain_id: Optional[str] = None):
         agent_mean_utilities = {}
         opponent_mean_utilities = {}
 
@@ -161,6 +161,9 @@ class UtilityDistributionLogger(AbstractLogger):
         fig.set_size_inches(18.5, 10.5)
 
         plt.tight_layout()
+
+        global DRAWING_FORMAT
+        DRAWING_FORMAT = os.getenv('DRAWING_FORMAT', "matplotlib-PNG")
 
         if DRAWING_FORMAT == "matplotlib-PNG":
             plt.savefig(os.path.join(directory, "utility_distribution.png"), dpi=1200)

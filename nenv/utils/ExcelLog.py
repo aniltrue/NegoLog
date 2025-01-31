@@ -1,4 +1,4 @@
-from typing import Dict, List, Set, TypeVar, Any, Union, Tuple
+from typing import Dict, List, Set, TypeVar, Any, Union, Tuple, Optional
 from nenv.utils.TypeCheck import TypeCheck
 
 import pandas as pd
@@ -64,7 +64,7 @@ class ExcelLog:
     log_rows: Dict[str, List[Dict[str, Any]]]  #: Log rows for each sheet
     sheet_names: Set[str]                      #: List of sheet names
 
-    def __init__(self, sheet_names: Union[Set[str], List[str]] = None, file_path: str = None):
+    def __init__(self, sheet_names: Union[Set[str], List[str], None] = None, file_path: str = None):
         """
             Constructor
 
@@ -112,7 +112,7 @@ class ExcelLog:
 
                 df.to_excel(writer, sheet_name=sheet_name, index=False)
 
-    def to_data_frame(self, sheet_name: Union[str, None] = None) -> Union[pd.DataFrame, Dict[str, pd.DataFrame]]:
+    def to_data_frame(self, sheet_name: Optional[str] = None) -> Union[pd.DataFrame, Dict[str, pd.DataFrame]]:
         """
             Convert log rows to dictionary of data frames
 

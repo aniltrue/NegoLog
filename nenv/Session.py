@@ -1,6 +1,6 @@
 import time
-from typing import List, Union
-from nenv.Action import Accept, Action, Offer
+from typing import List, Union, Optional
+from nenv.Action import Accept, Action
 from nenv.Agent import AbstractAgent
 from nenv.BidSpace import BidSpace
 from nenv.utils.ProcessManager import ProcessManager
@@ -36,14 +36,14 @@ class Session:
     action_history: List[Action]            #: List of Action that the agents have taken
     bidSpace: BidSpace                      #: BidSpace object of the domain
     log_path: str                           #: Session Log csv path
-    deadline_time: Union[None, int]         #: Time-based deadline in terms of seconds
-    deadline_round: Union[None, int]        #: Round-based deadline in terms of seconds
+    deadline_time: Optional[int]            #: Time-based deadline in terms of seconds
+    deadline_round: Optional[int]           #: Round-based deadline in terms of seconds
     last_row: dict                          #: Last row of the log
     start_time: float                       #: Start time of the session
     process_manager: ProcessManager         #: Process Manager
     time_out: float                         #: Time out for any process
 
-    def __init__(self, agentA: AbstractAgent, agentB: AbstractAgent, path: str, deadline_time: Union[None, int], deadline_round: Union[None, int], loggers: list):
+    def __init__(self, agentA: AbstractAgent, agentB: AbstractAgent, path: str, deadline_time: Optional[int], deadline_round: Optional[int], loggers: list):
         """
             Constructor
 
@@ -73,7 +73,7 @@ class Session:
         self.action_history = []
         self.start_time = 0.
         self.round = 0
-        self.time_out = min(60, deadline_time) if deadline_time is not None else 60
+        self.time_out = min(600, deadline_time) if deadline_time is not None else 600
 
         sheet_names = {"Session"}
 
@@ -378,6 +378,8 @@ class Session:
             :return: Log row for tournament
         """
 
+        print(f"{self.agentA.name} vs. {self.agentB.name} is started.")
+
         # Initiate agentA
         initiating_result = self._run_process_manager('A', 'Initiate', opponent_name=self.agentB.name)
 
@@ -410,6 +412,9 @@ class Session:
             else:
                 action = act_result
 
+            if action is None or not isinstance(action, Action):
+                return self.on_error("A", t)
+
             if isinstance(action, Accept) and self.round == 0:  # Forbidden action
                 return self.on_error("A", t)
             if isinstance(action, Accept):
@@ -436,6 +441,9 @@ class Session:
                 return act_result
             else:
                 action = act_result
+
+            if action is None or not isinstance(action, Action):
+                return self.on_error("B", t)
 
             if isinstance(action, Accept):
                 return self.on_acceptance("B", action, t)
