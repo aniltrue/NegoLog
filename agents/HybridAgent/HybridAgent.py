@@ -52,7 +52,7 @@ class HybridAgent(nenv.AbstractAgent):
 
         self.my_last_bids = []
 
-        self.p3 = max(self.p3, self.preference.reservation_value)
+        self.p2 = max(self.p2, self.preference.reservation_value)
 
     def time_based(self, t: float) -> float:
         """
