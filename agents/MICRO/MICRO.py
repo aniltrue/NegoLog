@@ -40,7 +40,7 @@ class MICROAgent(nenv.AbstractAgent):
             return nenv.Offer(self.my_last_bid)
 
         # If the opponent makes enough number of unique bid, then concede
-        ready_to_concede = self.index < len(self.received_bids)
+        ready_to_concede = self.index <= len(self.received_bids)
 
         # Next bid to offer
         self.my_last_bid = self.preference.bids[self.index - 1]
