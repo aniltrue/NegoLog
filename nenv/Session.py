@@ -378,7 +378,7 @@ class Session:
             :return: Log row for tournament
         """
 
-        print(f"{self.agentA.name} vs. {self.agentB.name} is started.")
+        # print(f"{self.agentA.name} vs. {self.agentB.name} is started.")
 
         # Initiate agentA
         initiating_result = self._run_process_manager('A', 'Initiate', opponent_name=self.agentB.name)
