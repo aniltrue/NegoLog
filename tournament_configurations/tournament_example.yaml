@@ -29,7 +29,7 @@ loggers: ['BidSpaceLogger',
           'FinalGraphsLogger',
           'UtilityDistributionLogger',
           'TournamentSummaryLogger',
-          'EstimatedLogger',
+          'EstimatedUtilityLogger',
           'EstimatorOnlyFinalMetricLogger']
 
 ## Opponent Model
