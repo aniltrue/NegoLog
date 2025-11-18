@@ -98,7 +98,7 @@ class BidHistory:
         for i, b in enumerate(copySortedToUtility.history):
             best.add(b)
 
-            if i >= n:
+            if i >= n - 1:
                 break
 
         return best

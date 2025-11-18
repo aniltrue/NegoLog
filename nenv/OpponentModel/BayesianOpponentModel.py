@@ -1,4 +1,6 @@
+import os
 import math
+import copy
 
 from nenv.OpponentModel.AbstractOpponentModel import AbstractOpponentModel
 from nenv.OpponentModel.EstimatedPreference import EstimatedPreference, Preference
@@ -34,7 +36,10 @@ class BayesianOpponentModel(AbstractOpponentModel):
         self.fBiddingHistory = []
         self.issues = reference.issues
         self.fExpectedWeight = [self._pref[issue] for issue in self.issues]
-
+        self.minUtility = None
+        self.maxUtility = None
+        self._isCrashed = False
+        self.deadline_round = int(os.getenv("DEADLINE_ROUND"))
         self.initWeightHyps()
 
         self.fEvaluatorHyps = []
@@ -71,9 +76,9 @@ class BayesianOpponentModel(AbstractOpponentModel):
                             lDiscreteEval[issue.values[j]] = 1000 * j / k
                         else:
                             lDiscreteEval[issue.values[j]] = 1000 * (len(issue.values) - j - 1) / (
-                                        len(issue.values) - k - 1) + 1
+                                    len(issue.values) - k - 1) + 1
 
-                    lEvalHyps.append({"Prob": 0, "Desc": "triangular%d" % k, "DiscreteEval": lDiscreteEval})
+                    lEvalHyps.append({"Prob": 1. / 3, "Desc": "triangular%d" % k, "DiscreteEval": lDiscreteEval})
 
             for eval in lEvalHyps:
                 eval["Prob"] = 1. / len(lEvalHyps)
@@ -180,14 +185,15 @@ class BayesianOpponentModel(AbstractOpponentModel):
                 lUtility += self.getPartialUtility(lBid, j)
 
                 lWeightHyps[j][i]["Prob"] = self.fWeightHyps[j][i]["Prob"] * self.conditionalDistribution(lUtility,
-                                                                                                          self.fPreviousBidUtility) / (lN + 1e-12)
+                                                                                                          self.fPreviousBidUtility) / (
+                                                        lN + 1e-12)
 
         self.fWeightHyps = lWeightHyps
 
     def updateEvaluationFns(self):
         lBid = self.fBiddingHistory[-1]
 
-        lEvaluatorHyps = self.fEvaluatorHyps.copy()
+        lEvaluatorHyps = copy.deepcopy(self.fEvaluatorHyps)
 
         for i in range(len(self.fEvaluatorHyps)):
             lN = 0.
@@ -198,14 +204,14 @@ class BayesianOpponentModel(AbstractOpponentModel):
                 lN += lHyp["Prob"] * self.conditionalDistribution(self.getPartialUtility(lBid, i) +
                                                                   self.getExpectedWeight(i) *
                                                                   self.get_expected_eval(lHyp["DiscreteEval"],
-                                                                                         self.issues[i].values[j]),
+                                                                                         lBid[self.issues[i]]),
                                                                   self.fPreviousBidUtility)
             for j in range(len(self.fEvaluatorHyps[i])):
                 lHyp = self.fEvaluatorHyps[i][j]
                 lEvaluatorHyps[i][j]["Prob"] = lHyp["Prob"] * self.conditionalDistribution(
                     self.getPartialUtility(lBid, i) +
                     self.getExpectedWeight(i) *
-                    self.get_expected_eval(lHyp["DiscreteEval"], self.issues[i].values[j]),
+                    self.get_expected_eval(lHyp["DiscreteEval"], lBid[self.issues[i]]),
                     self.fPreviousBidUtility)
 
                 lEvaluatorHyps[i][j]["Prob"] /= (lN + 1e-12)
@@ -216,6 +222,9 @@ class BayesianOpponentModel(AbstractOpponentModel):
         return pBid in self.fBiddingHistory
 
     def update(self, bid: Bid, t: float):
+        if self.isCrashed():
+            return
+
         if self.haveSeenBefore(bid):
             return
 
@@ -227,7 +236,8 @@ class BayesianOpponentModel(AbstractOpponentModel):
         else:
             self.updateEvaluationFns()
 
-        self.fPreviousBidUtility -= 0.003
+        decrement_rate = 0.9 / self.deadline_round
+        self.fPreviousBidUtility -= decrement_rate
 
         for i in range(len(self.fExpectedWeight)):
             self.fExpectedWeight[i] = self.getExpectedWeight(i)
@@ -241,6 +251,58 @@ class BayesianOpponentModel(AbstractOpponentModel):
             u = u + w * self.getExpectedEvaluationValue(bid, j)
 
         return u
+
+    def findMinMaxUtility(self):
+        from itertools import product
+
+        # Generate all possible combinations of issue values
+        issue_values = [issue.values for issue in self.issues]
+        all_combinations = product(*issue_values)
+
+        self.minUtility = float('inf')
+        self.maxUtility = float('-inf')
+
+        for combination in all_combinations:
+            # Create bid from combination
+            bid_dict = {issue: value for issue, value in zip(self.issues, combination)}
+            bid = Bid(bid_dict)
+
+            # Get expected utility
+            u = self.getExpectedUtility(bid)
+
+            if u < self.minUtility:
+                self.minUtility = u
+            if u > self.maxUtility:
+                self.maxUtility = u
+
+    def getNormalizedUtility(self, bid: Bid) -> float:
+        """Get normalized utility in [0,1] range"""
+        u = self.getExpectedUtility(bid)
+
+        if self.minUtility is None or self.maxUtility is None:
+            self.findMinMaxUtility()
+
+        # Handle edge case where min == max
+        if abs(self.maxUtility - self.minUtility) < 1e-10:
+            if not self._isCrashed:
+                self._isCrashed = True
+                print("Warning: Bayesian opponent model encountered division by zero in normalization")
+            return 0.0
+
+        value = (u - self.minUtility) / (self.maxUtility - self.minUtility)
+
+        # Check for NaN
+        if math.isnan(value):
+            if not self._isCrashed:
+                self._isCrashed = True
+                print("Error: Bayesian scalable encountered NaN and therefore crashed")
+            return 0.0
+
+        return value
+
+    def isCrashed(self) -> bool:
+        """Check if the model has crashed due to NaN"""
+        return self._isCrashed
 
     @property
     def name(self) -> str:
@@ -259,8 +321,11 @@ class BayesianOpponentModel(AbstractOpponentModel):
         for i, issue in enumerate(self.issues):
             self._pref[issue] = self.fExpectedWeight[i]
 
-            for j, value in enumerate(issue.values):
-                self._pref[issue, value] = self.get_expected_eval(self.fEvaluatorHyps[i][j]["DiscreteEval"], value)
+            for value in issue.values:
+                expected_eval = 0.
+                for hyp in self.fEvaluatorHyps[i]:
+                    expected_eval += hyp["Prob"] * self.get_expected_eval(hyp["DiscreteEval"], value)
+                self._pref[issue, value] = expected_eval
 
         self._pref.normalize()
 

@@ -75,7 +75,8 @@ class NiceTitForTat(nenv.AbstractAgent):
     def chooseCounterBid(self, t: float):
         opponent_last_bid = self.opponentHistory.history[-1].bid if len(self.opponentHistory.history) else None
 
-        if self.canUpdateBeliefs(t) and (self.random100.random() < self.NASH_POINT_UPDATE_RATE or self.myNashUtility == 0.):
+        if self.canUpdateBeliefs(t) and (
+                self.random100.random() < self.NASH_POINT_UPDATE_RATE or self.myNashUtility == 0.):
             self.update_my_nash_utility()
 
         my_utility_of_opponent_last_bid = self.get_utility(opponent_last_bid)
@@ -83,14 +84,18 @@ class NiceTitForTat(nenv.AbstractAgent):
         minimum_offered_utility_by_opponent = self.opponentHistory.getMinumumUtility()
         min_utility_of_opponent_first_bids = self.getMinimumUtilityOfOpponentFirstBids(my_utility_of_opponent_last_bid)
 
-        opponent_concession = maximum_offered_utility_by_opponent - minimum_offered_utility_by_opponent
+        opponent_concession = maximum_offered_utility_by_opponent - min_utility_of_opponent_first_bids
 
-        opponent_concede_factor = min(1, opponent_concession / (self.myNashUtility - min_utility_of_opponent_first_bids + 1e-12))
+        denominator = self.myNashUtility - min_utility_of_opponent_first_bids
+        if denominator == 0:
+            opponent_concede_factor = 0.0
+        else:
+            opponent_concede_factor = min(1, opponent_concession / denominator)
 
         my_concession = opponent_concede_factor * (1 - self.myNashUtility)
         my_current_target_utility = 1. - my_concession
 
-        initial_gap = 1 - min_utility_of_opponent_first_bids
+        self.initialGap = 1 - min_utility_of_opponent_first_bids
         gap_to_nash = max(0., my_current_target_utility - self.myNashUtility)
 
         bonus = self.get_bonus(t)
@@ -167,7 +172,6 @@ class NiceTitForTat(nenv.AbstractAgent):
 
         return best_utility_me
 
-
     def get_nash_multiplier(self, gap: float):
         mult = 1.4 - 0.6 * gap
 
@@ -226,7 +230,11 @@ class NiceTitForTat(nenv.AbstractAgent):
         window = time_left
         recent_better_bids = self.opponentHistory.filterBetween(offered_utility, 1, t - window, t)
         n = len(recent_better_bids.history)
-        p = time_left / (window + 1e-12)
+
+        if window == 0:
+            p = 1.0
+        else:
+            p = time_left / window
 
         if p > 1:
             p = 1

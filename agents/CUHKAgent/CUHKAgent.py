@@ -95,9 +95,8 @@ class CUHKAgent(nenv.AbstractAgent):
                 if self.estimateRoundLeft(True, t) > 10:
                     bid = self.BidToOffer(t)
                     IsAccept = self.AcceptOpponentOffer(self.ActionOfOpponent.bid, bid, t)
-                    IsTerminate = t > 1.0
 
-                    if IsAccept and not IsTerminate:
+                    if IsAccept and self.can_accept():
                         action = self.accept_action
                     elif self.concedeToOpponent:
                         bid = self.opponentBidHistory.bid_maximum_from_opponent
@@ -123,11 +122,10 @@ class CUHKAgent(nenv.AbstractAgent):
                                 bid = self.opponentBidHistory.bid_maximum_from_opponent
 
                         IsAccept = self.AcceptOpponentOffer(self.ActionOfOpponent.bid, bid, t)
-                        IsTerminate = t > 1.0
 
-                        if IsAccept and not IsTerminate:
+                        if IsAccept and self.can_accept():
                             action = self.accept_action
-                        elif self.toughAgent:
+                        elif self.toughAgent and self.can_accept():
                             action = self.accept_action
                         else:
                             action = nenv.Offer(bid)
@@ -135,16 +133,15 @@ class CUHKAgent(nenv.AbstractAgent):
                         bid = self.BidToOffer(t)
 
                         IsAccept = self.AcceptOpponentOffer(self.ActionOfOpponent.bid, bid, t)
-                        IsTerminate = t > 1.0
 
-                        if IsAccept and not IsTerminate:
+                        if IsAccept and self.can_accept():
                             action = self.accept_action
                         else:
                             action = nenv.Offer(bid)
 
         self.ownBidHistory.addBid(bid, self.preference)
         end_time = time.time()
-        self.timeLeftAfter = t + (end_time - start_time) / self.totalTime
+        self.timeLeftAfter = t + (end_time - start_time) / self.totalTime if self.totalTime > 0 else t
         self.estimateRoundLeft(False, t)
 
         return action
@@ -166,11 +163,11 @@ class CUHKAgent(nenv.AbstractAgent):
                 self.utilityThreshold = minimumOfBid
         else:
             if t <= self.concedeToDiscountingFactor:
-                minThershold = (self.maximumOfBid * self.discountingFactor) / math.pow(self.discountingFactor, self.concedeToDiscountingFactor)
+                minThershold = (maximumOfBid * self.discountingFactor) / math.pow(self.discountingFactor, self.concedeToDiscountingFactor)
 
-                self.utilityThreshold = self.maximumOfBid - (self.maximumOfBid - minThershold) * math.pow(t / self.concedeToDiscountingFactor, self.alpha1)
+                self.utilityThreshold = maximumOfBid - (maximumOfBid - minThershold) * math.pow(t / self.concedeToDiscountingFactor, self.alpha1)
             else:
-                self.utilityThreshold = (self.maximumOfBid * self.discountingFactor) / math.pow(self.discountingFactor, t)
+                self.utilityThreshold = (maximumOfBid * self.discountingFactor) / math.pow(self.discountingFactor, t)
             minimumOfBid = self.utilityThreshold
 
         bestBidOfferedByOpponent = self.opponentBidHistory.bid_maximum_from_opponent
@@ -222,7 +219,12 @@ class CUHKAgent(nenv.AbstractAgent):
             if self.timeLeftAfter - self.timeLeftBefore > self.maximumTimeOwn:
                 self.maximumTimeOwn = self.timeLeftAfter - self.timeLeftBefore
 
-        round = (self.totalTime - t * self.totalTime) // (self.maximumTimeOfOpponent + self.maximumTimeOwn + 1e-10)
+        total_round = self.maximumTimeOfOpponent + self.maximumTimeOwn
+
+        if total_round == 0:
+            return float('inf')
+
+        round = (self.totalTime - t * self.totalTime) // (total_round)
 
         return round
 

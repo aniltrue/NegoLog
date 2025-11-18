@@ -46,6 +46,8 @@ class bidSearch:
         if self.pref.get_utility(bid) < threshold:
             bid = self.maxBid.copy()
 
+        bid = self.getConvertBidbyFrequencyList(bid)
+
         return bid
 
     def getBidbyNeighborhoodSearch(self, baseBid: nenv.Bid, threshold: float) -> nenv.Bid:
@@ -72,7 +74,7 @@ class bidSearch:
 
             for i in range(self.SA_ITERATION):
                 current_bid = self.SimulatedAnnealingSearch(bid, threshold)
-                current_bid_util = self.pref.get_utility(bid)
+                current_bid_util = self.pref.get_utility(current_bid)
 
                 if current_bid_util <= min and current_bid_util >= threshold:
                     bid = current_bid.copy()

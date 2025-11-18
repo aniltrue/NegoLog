@@ -35,21 +35,6 @@ class HybridAgent(nenv.AbstractAgent):
         self.p2 = 0.55
         self.p3 = 0.5
 
-        domain_size = len(self.preference.bids)
-
-        if domain_size < 450:
-            self.p2 = 0.80
-        elif domain_size < 1500:
-            self.p2 = 0.775
-        elif domain_size < 4500:
-            self.p2 = 0.75
-        elif domain_size < 18000:
-            self.p2 = 0.725
-        elif domain_size < 33000:
-            self.p2 = 0.70
-        else:
-            self.p2 = 0.675
-
         self.my_last_bids = []
 
         self.p2 = max(self.p2, self.preference.reservation_value)

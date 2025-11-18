@@ -2,3 +2,5 @@
 /agent_storage/*
 *.pkl
 /.idea
+__pycache__
+*/__pycache__

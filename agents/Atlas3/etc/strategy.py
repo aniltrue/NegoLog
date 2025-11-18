@@ -1,4 +1,5 @@
 import math
+from typing import Optional
 
 import nenv
 from agents.Atlas3.etc.negotiatingInfo import negotiatingInfo
@@ -28,7 +29,10 @@ class strategy:
         self.rv = self.pref.reservation_value
         self.df = 1.
 
-    def selectAccept(self, offeredBid: nenv.Bid, time: float):
+    def selectAccept(self, offeredBid: Optional[nenv.Bid], time: float):
+        if offeredBid is None:
+            return False
+
         offeredBidUtil = self.pref.get_utility(offeredBid)
 
         if offeredBidUtil >= self.getThreshold(time):
@@ -65,7 +69,7 @@ class strategy:
         q = 1.0
 
         if self.A12 - self.A22 != 0 and 1. - (self.A11 - self.A21)/(self.A12 - self.A22) != 0:
-            q = 1. / (1. - (self.A11 - self.A21)/(self.A12/self.A22))
+            q = 1. / (1. - (self.A11 - self.A21)/(self.A12 - self.A22))
 
         if q < 0. or q > 1.:
             q = 1.

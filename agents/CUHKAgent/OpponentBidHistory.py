@@ -74,54 +74,31 @@ class OpponentBidHistory:
         maxFrequency = 0
         discreteIndex = 0
 
-        if len(candidateBids) < upperSearchLimit:
-            for i in range(len(candidateBids)):
-                maxValue = 0
-                discreteIndex = 0
+        if len(candidateBids) >= upperSearchLimit:
+            candidateBids = ran.sample(candidateBids, upperSearchLimit)
 
-                for j in range(len(issues)):
-                    v = candidateBids[i][issues[j]]
+        for i in range(len(candidateBids)):
+            maxValue = 0
+            discreteIndex = 0
 
-                    if self.opponentBidsStatisticsForDiscrete is None:
-                        pass
-                    elif self.opponentBidsStatisticsForDiscrete[discreteIndex] is not None:
-                        counterPerValue = self.opponentBidsStatisticsForDiscrete[discreteIndex][v]
-                        maxValue += counterPerValue
+            for j in range(len(issues)):
+                v = candidateBids[i][issues[j]]
 
-                    discreteIndex += 1
+                if self.opponentBidsStatisticsForDiscrete is None:
+                    pass
+                elif self.opponentBidsStatisticsForDiscrete[discreteIndex] is not None:
+                    counterPerValue = self.opponentBidsStatisticsForDiscrete[discreteIndex][v]
+                    maxValue += counterPerValue
 
-                if maxValue > maxFrequency:
+                discreteIndex += 1
+
+            if maxValue > maxFrequency:
+                maxFrequency = maxValue
+                maxIndex = i
+            elif maxValue == maxFrequency:
+                if ran.random() < 0.5:
                     maxFrequency = maxValue
                     maxIndex = i
-                elif maxValue == maxFrequency:
-                    if ran.random() < 0.5:
-                        maxFrequency = maxValue
-                        maxIndex = i
-        else:
-            for i in range(upperSearchLimit):
-                maxValue = 0
-                issueIndex = ran.randint(0, len(candidateBids) - 1)
-
-                discreteIndex = 0
-
-                for j in range(len(issues)):
-                    v = candidateBids[issueIndex][issues[j]]
-
-                    if self.opponentBidsStatisticsForDiscrete is None:
-                        pass
-                    elif self.opponentBidsStatisticsForDiscrete[discreteIndex] is not None:
-                        counterPerValue = self.opponentBidsStatisticsForDiscrete[discreteIndex][v]
-                        maxValue += counterPerValue
-
-                    discreteIndex += 1
-
-                if maxValue > maxFrequency:
-                    maxFrequency = maxValue
-                    maxIndex = i
-                elif maxValue == maxFrequency:
-                    if ran.random() < 0.5:
-                        maxFrequency = maxValue
-                        maxIndex = i
 
         if maxIndex == -1:
             return ran.choice(candidateBids)

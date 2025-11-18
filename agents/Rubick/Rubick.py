@@ -27,26 +27,26 @@ class Rubick(nenv.AbstractAgent):
 
         .. [Aydogan2021] Reyhan Aydoğan, Katsuhide Fujita, Tim Baarslag, Catholijn M. Jonker, and Takayuki Ito. ANAC 2017: Repeated multilateral negotiation league. In Advances in Auto- mated Negotiations, pages 101–115, Singapore, 2021. Springer Singapore.
     """
-    lastReceivedBid: nenv.Bid                       # Last received bid
-    history: List[nenv.Bid]                         # Negotiation history of the previous negotiation session
-    parties: List[str]                              # List of part names
-    histOpp0: List[List[float]]                     # History of opponent0
-    histOpp1: List[List[float]]                     # History of opponent1
-    isHistoryAnalyzed: bool                         # Check if the previous history is analyzed, or not
-    numberOfReceivedOffer: int                      # The number of received bids
-    profileOrder: List[int]                         # List of party ids
-    opponentNames: List[str]                        # List of opponent names
-    acceptanceLimits: List[float]                   # Decided acceptance limits
-    maxReceivedBidutil: float                       # Maximum utility of the received bid
-    lastpartyname: str                              # The name of last opponent
-    bestAcceptedBids: List[nenv.Bid]                # List of best accepted bids
-    threshold: float                                # Reservation value
+    lastReceivedBid: nenv.Bid  # Last received bid
+    history: List[nenv.Bid]  # Negotiation history of the previous negotiation session
+    parties: List[str]  # List of part names
+    histOpp0: List[List[float]]  # History of opponent0
+    histOpp1: List[List[float]]  # History of opponent1
+    isHistoryAnalyzed: bool  # Check if the previous history is analyzed, or not
+    numberOfReceivedOffer: int  # The number of received bids
+    profileOrder: List[int]  # List of party ids
+    opponentNames: List[str]  # List of opponent names
+    acceptanceLimits: List[float]  # Decided acceptance limits
+    maxReceivedBidutil: float  # Maximum utility of the received bid
+    lastpartyname: str  # The name of last opponent
+    bestAcceptedBids: List[nenv.Bid]  # List of best accepted bids
+    threshold: float  # Reservation value
 
-    frequentValuesList0: List[Dict[str, int]]       # Frequencies of values for opponent0
-    frequentValuesList1: List[Dict[str, int]]       # Frequencies of values for opponent0
+    frequentValuesList0: List[Dict[str, int]]  # Frequencies of values for opponent0
+    frequentValuesList1: List[Dict[str, int]]  # Frequencies of values for opponent0
 
-    opp0bag = List[str]                             # Bag of values for opponent0
-    opp1bag = List[str]                             # Bag of values for opponent1
+    opp0bag = List[str]  # Bag of values for opponent0
+    opp1bag = List[str]  # Bag of values for opponent1
 
     @property
     def name(self) -> str:
@@ -67,7 +67,6 @@ class Rubick(nenv.AbstractAgent):
         self.bestAcceptedBids = []
         self.threshold = self.preference.reservation_value
         self.maxReceivedBidutil = self.threshold
-
 
         self.frequentValuesList0 = []
         self.frequentValuesList1 = []
@@ -120,9 +119,8 @@ class Rubick(nenv.AbstractAgent):
         if "Opponent" not in self.parties:
             self.sortPartyProfiles("Opponent")
 
-        if len(self.parties) == 3 and len(self.history) != 0 and not self.isHistoryAnalyzed:
+        if len(self.parties) >= 3 and len(self.history) != 0 and not self.isHistoryAnalyzed:
             self.analyzeHistory()
-
 
     def act(self, t: float) -> nenv.Action:
         decisiveUtil = self.checkAcceptance(t)
@@ -183,7 +181,7 @@ class Rubick(nenv.AbstractAgent):
 
             targetUtil = self.maxReceivedBidutil + (1 - self.maxReceivedBidutil) * targetUtil
 
-        if self.preference.get_utility(self.lastReceivedBid) > targetUtil or t > 0.999:     # Acceptance conditions
+        if self.preference.get_utility(self.lastReceivedBid) > targetUtil or t > 0.999:  # Acceptance conditions
             return -1
 
         return targetUtil
@@ -195,7 +193,7 @@ class Rubick(nenv.AbstractAgent):
         :param t: Current negotiation time
         :return: Bid
         """
-        if t > 0.995 and len(self.bestAcceptedBids) != 0:   # Near to deadline
+        if t > 0.995 and len(self.bestAcceptedBids) != 0:  # Near to deadline
             s = len(self.bestAcceptedBids)
 
             if s > 3:
@@ -219,12 +217,18 @@ class Rubick(nenv.AbstractAgent):
             For search a bid, the bags of the opponent must not be empty.
         :return: Check for conditions
         """
-        res = False
 
-        if len(self.opp0bag) > 0 and len(self.opp1bag) > 0 and len(self.opp0bag) == len(self.opp1bag):
-            res = True
+        # For bilateral: only check opp0bag
+        # For multilateral: check both bags
+        if len(self.opp0bag) > 0:
+            if len(self.opp1bag) > 0:
+                # Multilateral: both bags must have same length
+                return len(self.opp0bag) == len(self.opp1bag)
+            else:
+                # Bilateral: only opp0bag needed
+                return True
 
-        return res
+        return False
 
     def searchCandidateBids(self, targetUtil: float) -> Optional[nenv.Bid]:
         """
@@ -242,7 +246,7 @@ class Rubick(nenv.AbstractAgent):
         for bid in self.preference.bids:
             bu = bid.utility
 
-            if bu >= targetUtil:    # The selected bid must have a higher utility value than the target utility.
+            if bu >= targetUtil:  # The selected bid must have a higher utility value than the target utility.
                 score = 0
 
                 # Count intersection values
@@ -251,7 +255,7 @@ class Rubick(nenv.AbstractAgent):
 
                     if valu == self.opp0bag[isn]:
                         score += 1
-                    if valu == self.opp1bag[isn]:
+                    if len(self.opp1bag) > 0 and valu == self.opp1bag[isn]:
                         score += 1
 
                 intersection.append(score)
@@ -259,13 +263,15 @@ class Rubick(nenv.AbstractAgent):
             else:
                 break
 
-        max = -1
+        maxIdx = -1
+        maxVal = -1
         for i in range(len(intersection)):
-            if max < intersection[i]:
-                max = i
+            if maxVal < intersection[i]:
+                maxVal = intersection[i]
+                maxIdx = i
 
-        if len(candidateBids) > 1:
-            return candidateBids[max]
+        if len(candidateBids) > 0:
+            return candidateBids[maxIdx]
 
         return None  # Cannot find
 

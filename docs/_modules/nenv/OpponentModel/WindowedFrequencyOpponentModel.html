@@ -1,22 +1,20 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>nenv.OpponentModel.WindowedFrequencyOpponentModel &mdash; NegoLog 1.0.0 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="../../../_static/documentation_options.js?v=8d563738"></script>
-        <script src="../../../_static/doctools.js?v=888ff710"></script>
-        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -43,7 +41,74 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">NegoLog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">NegoLog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../nenv.html">nenv package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../nenv.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../nenv.html#module-nenv.Action">nenv.Action module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../nenv.html#nenv.Action.Accept"><code class="docutils literal notranslate"><span class="pre">Accept</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../nenv.html#nenv.Action.Action"><code class="docutils literal notranslate"><span class="pre">Action</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../nenv.html#nenv.Action.Offer"><code class="docutils literal notranslate"><span class="pre">Offer</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../nenv.html#module-nenv.Agent">nenv.Agent module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../nenv.html#nenv.Agent.AbstractAgent"><code class="docutils literal notranslate"><span class="pre">AbstractAgent</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../nenv.html#nenv.Agent.AgentClass"><code class="docutils literal notranslate"><span class="pre">AgentClass</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../nenv.html#module-nenv.Bid">nenv.Bid module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../nenv.html#nenv.Bid.Bid"><code class="docutils literal notranslate"><span class="pre">Bid</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../nenv.html#nenv.Bid.IssueIterator"><code class="docutils literal notranslate"><span class="pre">IssueIterator</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../nenv.html#module-nenv.BidSpace">nenv.BidSpace module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../nenv.html#nenv.BidSpace.BidPoint"><code class="docutils literal notranslate"><span class="pre">BidPoint</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../nenv.html#nenv.BidSpace.BidSpace"><code class="docutils literal notranslate"><span class="pre">BidSpace</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../nenv.html#module-nenv.EditablePreference">nenv.EditablePreference module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../nenv.html#nenv.EditablePreference.EditablePreference"><code class="docutils literal notranslate"><span class="pre">EditablePreference</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../nenv.html#module-nenv.Issue">nenv.Issue module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../nenv.html#nenv.Issue.Issue"><code class="docutils literal notranslate"><span class="pre">Issue</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../nenv.html#module-nenv.Preference">nenv.Preference module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../nenv.html#nenv.Preference.Preference"><code class="docutils literal notranslate"><span class="pre">Preference</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../nenv.html#nenv.Preference.domain_loader"><code class="docutils literal notranslate"><span class="pre">domain_loader()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../nenv.html#module-nenv.Session">nenv.Session module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../nenv.html#nenv.Session.Session"><code class="docutils literal notranslate"><span class="pre">Session</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../nenv.html#module-nenv.SessionLogs">nenv.SessionLogs module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../nenv.html#nenv.SessionLogs.SessionLogs"><code class="docutils literal notranslate"><span class="pre">SessionLogs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../nenv.html#module-nenv.SessionManager">nenv.SessionManager module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../nenv.html#nenv.SessionManager.SessionManager"><code class="docutils literal notranslate"><span class="pre">SessionManager</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../nenv.html#module-nenv.Tournament">nenv.Tournament module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../nenv.html#nenv.Tournament.Tournament"><code class="docutils literal notranslate"><span class="pre">Tournament</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../nenv.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="../../../nenv.OpponentModel.html">nenv.OpponentModel package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../nenv.logger.html">nenv.logger package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../../nenv.utils.html">nenv.utils package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../nenv.html#module-nenv">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../agents.html">agents package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../agents.html#module-agents">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -71,18 +136,18 @@
            <div itemprop="articleBody">
              
   <h1>Source code for nenv.OpponentModel.WindowedFrequencyOpponentModel</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
-<span class="kn">from</span> <span class="nn">nenv.Preference</span> <span class="kn">import</span> <span class="n">Preference</span>
-<span class="kn">from</span> <span class="nn">nenv.OpponentModel.EstimatedPreference</span> <span class="kn">import</span> <span class="n">EstimatedPreference</span>
-<span class="kn">from</span> <span class="nn">nenv.OpponentModel.AbstractOpponentModel</span> <span class="kn">import</span> <span class="n">AbstractOpponentModel</span>
-<span class="kn">from</span> <span class="nn">nenv.Bid</span> <span class="kn">import</span> <span class="n">Bid</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">chisquare</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nenv.Preference</span><span class="w"> </span><span class="kn">import</span> <span class="n">Preference</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nenv.OpponentModel.EstimatedPreference</span><span class="w"> </span><span class="kn">import</span> <span class="n">EstimatedPreference</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nenv.OpponentModel.AbstractOpponentModel</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbstractOpponentModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">nenv.Bid</span><span class="w"> </span><span class="kn">import</span> <span class="n">Bid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">chisquare</span>
 
 
 <div class="viewcode-block" id="WindowedFrequencyOpponentModel">
 <a class="viewcode-back" href="../../../nenv.OpponentModel.html#nenv.OpponentModel.WindowedFrequencyOpponentModel.WindowedFrequencyOpponentModel">[docs]</a>
-<span class="k">class</span> <span class="nc">WindowedFrequencyOpponentModel</span><span class="p">(</span><span class="n">AbstractOpponentModel</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">WindowedFrequencyOpponentModel</span><span class="p">(</span><span class="n">AbstractOpponentModel</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        **Windowed frequency-based opponent model**:</span>
 <span class="sd">            It extends the classical frequency-based approach by introducing the window approach. Instead of comparing</span>
@@ -103,13 +168,13 @@
     <span class="n">offers</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Bid</span><span class="p">]</span>
     <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.</span>
     <span class="n">beta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">5.</span>
-    <span class="n">window_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">48</span>
+    <span class="n">window_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">&quot;Frequency Window Opponent Model&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference</span><span class="p">:</span> <span class="n">Preference</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reference</span><span class="p">:</span> <span class="n">Preference</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">reference</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">offers</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -126,7 +191,7 @@
 
 <div class="viewcode-block" id="WindowedFrequencyOpponentModel.update">
 <a class="viewcode-back" href="../../../nenv.OpponentModel.html#nenv.OpponentModel.WindowedFrequencyOpponentModel.WindowedFrequencyOpponentModel.update">[docs]</a>
-    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bid</span><span class="p">:</span> <span class="n">Bid</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bid</span><span class="p">:</span> <span class="n">Bid</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">offers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bid</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">t</span> <span class="o">&gt;</span> <span class="mf">0.8</span><span class="p">:</span>  <span class="c1"># Do Not update in the last rounds.</span>
@@ -151,7 +216,7 @@
 
 <div class="viewcode-block" id="WindowedFrequencyOpponentModel.update_issues">
 <a class="viewcode-back" href="../../../nenv.OpponentModel.html#nenv.OpponentModel.WindowedFrequencyOpponentModel.WindowedFrequencyOpponentModel.update_issues">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_issues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_window</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Bid</span><span class="p">],</span> <span class="n">current_window</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Bid</span><span class="p">],</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_issues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">previous_window</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Bid</span><span class="p">],</span> <span class="n">current_window</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Bid</span><span class="p">],</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            Update issue weights</span>
 
@@ -163,7 +228,7 @@
         <span class="n">not_changed</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">concession</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="k">def</span> <span class="nf">frequency</span><span class="p">(</span><span class="n">window</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">issue_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">issue_obj</span><span class="p">:</span> <span class="n">IssueEstimator</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">frequency</span><span class="p">(</span><span class="n">window</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">issue_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">issue_obj</span><span class="p">:</span> <span class="n">IssueEstimator</span><span class="p">):</span>
             <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
 
             <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">issue_obj</span><span class="o">.</span><span class="n">value_weights</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -203,7 +268,7 @@
 
 <div class="viewcode-block" id="WindowedFrequencyOpponentModel.update_weights">
 <a class="viewcode-back" href="../../../nenv.OpponentModel.html#nenv.OpponentModel.WindowedFrequencyOpponentModel.WindowedFrequencyOpponentModel.update_weights">[docs]</a>
-    <span class="k">def</span> <span class="nf">update_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_weights</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            This method updates the weights</span>
 
@@ -220,7 +285,7 @@
 
 <div class="viewcode-block" id="IssueEstimator">
 <a class="viewcode-back" href="../../../nenv.OpponentModel.html#nenv.OpponentModel.WindowedFrequencyOpponentModel.IssueEstimator">[docs]</a>
-<span class="k">class</span> <span class="nc">IssueEstimator</span><span class="p">:</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">IssueEstimator</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This class is a helpful class for Windowed Frequency Opponent Model</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -229,7 +294,7 @@
     <span class="n">value_counter</span><span class="p">:</span> <span class="nb">dict</span>     <span class="c1">#: The number of observation of values under the issue</span>
     <span class="n">gamma</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.25</span>     <span class="c1">#: The gamma parameter for smoothing</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="nb">list</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value_weights</span> <span class="o">=</span> <span class="p">{</span><span class="n">value</span><span class="p">:</span> <span class="mf">1.</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span><span class="p">}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value_counter</span> <span class="o">=</span> <span class="p">{</span><span class="n">value</span><span class="p">:</span> <span class="mf">1.</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span><span class="p">}</span>
 
@@ -237,7 +302,7 @@
 
 <div class="viewcode-block" id="IssueEstimator.update">
 <a class="viewcode-back" href="../../../nenv.OpponentModel.html#nenv.OpponentModel.WindowedFrequencyOpponentModel.IssueEstimator.update">[docs]</a>
-    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value_counter</span><span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">+=</span> <span class="mf">1.</span>
 
         <span class="n">max_value</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value_counter</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
