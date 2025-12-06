@@ -10,7 +10,8 @@ deadline_round: 100
 # Each string represents the class name of an agent.
 # You can either write the class name from 'agents' Python module or full path to the class.
 # Note that the class must be a subclass of 'AbstractAgent' class.
-agents: ['ParsAgent',
+agents: ['HybridAgent',
+         'ParsAgent',
          'BoulwareAgent',
          'ConcederAgent']
 
@@ -51,4 +52,4 @@ seed: 1234
 # Once all combinations have been decided, this parameter determines whether the session order will be random or not.
 shuffle: False
 # Logger drawing Format: matplotlib-PNG, matplotlib-SVG, plotly
-drawing_format: plotly
+drawing_format: matplotlib-PNG

@@ -3,9 +3,13 @@ from typing import List, Optional, Tuple
 
 import numpy as np
 from scipy.special import erf as scipy_erf
+from sklearn.exceptions import ConvergenceWarning
 from sklearn.gaussian_process import GaussianProcessRegressor, kernels
 
 import nenv
+
+import warnings
+warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
 
 class IAMhaggler(nenv.AbstractAgent):

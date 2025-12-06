@@ -51,4 +51,4 @@ seed: 1234
 # Once all combinations have been decided, this parameter determines whether the session order will be random or not.
 shuffle: False
 # Logger drawing Format: matplotlib-PNG, matplotlib-SVG, plotly
-drawing_format: plotly
+drawing_format: matplotlib-PNG

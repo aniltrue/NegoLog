@@ -12,28 +12,43 @@ class TournamentSummaryLogger(AbstractLogger):
     def on_tournament_end(self, tournament_logs: ExcelLog, agent_names: List[str], domain_names: List[str],
                           estimator_names: List[str]):
         summary = pd.DataFrame(
-            columns=["AgentName", "Avg.Utility", "Std.Utility", "Avg.OpponentUtility", "Std.OpponentUtility",
-                     "Avg.AcceptanceTime", "Std.AcceptanceTime",
-                     "Avg.Round", "Std.Round", "Avg.ProductScore", "Std.ProductScore", "Avg.SocialWelfare",
-                     "Std.SocialWelfare", "Avg.NashDistance", "Std.NashDistance", "Avg.KalaiDistance",
-                     "Std.KalaiDistance", "AcceptanceRate", "Count", "Acceptance", "Failed", "Error", "TimedOut",
-                     "SelfError", "SelfTimedOut"])
+            columns=["AgentName",
+                     "Avg.Utility", "Median Utility", "Std.Utility",
+                     "Avg.OpponentUtility", "Median OpponentUtility", "Std.OpponentUtility",
+                     "Avg.AcceptanceTime", "Median AcceptanceTime", "Std.AcceptanceTime",
+                     "Avg.Round", "Median Round", "Std.Round",
+                     "Avg.ProductScore", "Median ProductScore", "Std.ProductScore",
+                     "Avg.SocialWelfare", "Median SocialWelfare", "Std.SocialWelfare",
+                     "Avg.NashDistance", "Median NashDistance", "Std.NashDistance",
+                     "Avg.KalaiDistance", "Median KalaiDistance", "Std.KalaiDistance",
+                     "AcceptanceRate", "Count", "Acceptance", "Failed", "Error", "TimedOut",
+                     "SelfError", "SelfTimedOut"]
+        )
 
-        summary_acceptance = pd.DataFrame(columns=["AgentName",
-                                                   "Avg.Utility", "Std.Utility", "Avg.OpponentUtility",
-                                                   "Std.OpponentUtility",
-                                                   "Avg.Round", "Std.Round", "Avg.ProductScore", "Std.ProductScore",
-                                                   "Avg.SocialWelfare",
-                                                   "Std.SocialWelfare", "Avg.NashDistance", "Std.NashDistance",
-                                                   "Avg.KalaiDistance",
-                                                   "Std.KalaiDistance", "Count"])
+        summary_acceptance = pd.DataFrame(
+            columns=["AgentName",
+                     "Avg.Utility", "Median Utility", "Std.Utility",
+                     "Avg.OpponentUtility", "Median OpponentUtility", "Std.OpponentUtility",
+                     "Avg.AcceptanceTime", "Median AcceptanceTime", "Std.AcceptanceTime",
+                     "Avg.Round", "Median Round", "Std.Round",
+                     "Avg.ProductScore", "Median ProductScore", "Std.ProductScore",
+                     "Avg.SocialWelfare", "Median SocialWelfare", "Std.SocialWelfare",
+                     "Avg.NashDistance", "Median NashDistance", "Std.NashDistance",
+                     "Avg.KalaiDistance", "Median KalaiDistance", "Std.KalaiDistance",
+                     "Count"]
+        )
 
         summary_without_error = pd.DataFrame(
-            columns=["AgentName", "Avg.Utility", "Std.Utility", "Avg.OpponentUtility", "Std.OpponentUtility",
-                     "Avg.AcceptanceTime", "Std.AcceptanceTime",
-                     "Avg.Round", "Std.Round", "Avg.ProductScore", "Std.ProductScore", "Avg.SocialWelfare",
-                     "Std.SocialWelfare", "Avg.NashDistance", "Std.NashDistance", "Avg.KalaiDistance",
-                     "Std.KalaiDistance", "AcceptanceRate", "Count", "Acceptance", "Failed"]
+            columns=["AgentName",
+                     "Avg.Utility", "Median Utility", "Std.Utility",
+                     "Avg.OpponentUtility", "Median OpponentUtility", "Std.OpponentUtility",
+                     "Avg.AcceptanceTime", "Median AcceptanceTime", "Std.AcceptanceTime",
+                     "Avg.Round", "Median Round", "Std.Round",
+                     "Avg.ProductScore", "Median ProductScore", "Std.ProductScore",
+                     "Avg.SocialWelfare", "Median SocialWelfare", "Std.SocialWelfare",
+                     "Avg.NashDistance", "Median NashDistance", "Std.NashDistance",
+                     "Avg.KalaiDistance", "Median KalaiDistance", "Std.KalaiDistance",
+                     "AcceptanceRate", "Count", "Acceptance", "Failed"]
         )
 
         tournament_results = tournament_logs.to_data_frame("TournamentResults")
@@ -58,10 +73,8 @@ class TournamentSummaryLogger(AbstractLogger):
         summary.sort_values(by="Avg.Utility", inplace=True, ascending=False)
 
         summary_acceptance.sort_values(by="Avg.Utility", inplace=True, ascending=False)
-        # summary_acceptance.drop(columns=["Failed", "Acceptance", "AcceptanceRate", "AcceptanceTime", "Error", "TimedOut", "SelfError", "SelfTimedOut"], inplace=True)
 
         summary_without_error.sort_values(by="Avg.Utility", inplace=True, ascending=False)
-        # summary_without_error.drop(columns=["Error", "TimedOut", "SelfError", "SelfTimedOut"], inplace=True)
 
         with pd.ExcelWriter(self.get_path("summary.xlsx")) as f:
             summary.to_excel(f, sheet_name="Summary", index=False)
@@ -79,20 +92,28 @@ class TournamentSummaryLogger(AbstractLogger):
             return  {
                 "AgentName": agent_name,
                 "Avg.Utility": 0.,
+                "Median Utility": 0.,
                 "Std.Utility": 0.,
                 "Avg.OpponentUtility": 0.,
+                "Median OpponentUtility": 0.,
                 "Std.OpponentUtility": 0.,
                 "Avg.AcceptanceTime": 0.,
+                "Median AcceptanceTime": 0.,
                 "Std.AcceptanceTime": 0.,
                 "Avg.Round": 0.,
+                "Median Round": 0.,
                 "Std.Round": 0.,
                 "Avg.ProductScore": 0.,
+                "Median ProductScore": 0.,
                 "Std.ProductScore": 0.,
                 "Avg.SocialWelfare": 0.,
+                "Median SocialWelfare": 0.,
                 "Std.SocialWelfare": 0.,
                 "Avg.NashDistance": 0.,
+                "Median NashDistance": 0.,
                 "Std.NashDistance": 0.,
                 "Avg.KalaiDistance": 0.,
+                "Median KalaiDistance": 0.,
                 "Std.KalaiDistance": 0.,
                 "AcceptanceRate": 0.,
                 "Count": 0.,
@@ -172,20 +193,28 @@ class TournamentSummaryLogger(AbstractLogger):
         return {
             "AgentName": agent_name,
             "Avg.Utility": np.mean(utilities),
+            "Median Utility": np.median(utilities),
             "Std.Utility": np.std(utilities),
             "Avg.OpponentUtility": np.mean(opponent_utilities),
+            "Median OpponentUtility": np.median(opponent_utilities),
             "Std.OpponentUtility": np.std(opponent_utilities),
             "Avg.AcceptanceTime": np.mean(acceptance_times),
+            "Median AcceptanceTime": np.median(acceptance_times),
             "Std.AcceptanceTime": np.std(acceptance_times),
             "Avg.Round": np.mean(rounds),
+            "Median Round": np.median(rounds),
             "Std.Round": np.std(rounds),
             "Avg.ProductScore": np.mean(product_score),
+            "Median ProductScore": np.median(product_score),
             "Std.ProductScore": np.std(product_score),
             "Avg.SocialWelfare": np.mean(social_welfare),
+            "Median SocialWelfare": np.median(social_welfare),
             "Std.SocialWelfare": np.std(social_welfare),
             "Avg.NashDistance": np.mean(nash_distances),
+            "Median NashDistance": np.median(nash_distances),
             "Std.NashDistance": np.std(nash_distances),
             "Avg.KalaiDistance": np.mean(kalai_distances),
+            "Median KalaiDistance": np.median(kalai_distances),
             "Std.KalaiDistance": np.std(kalai_distances),
             "AcceptanceRate": acceptance_count / total_negotiation,
             "Count": total_negotiation,
@@ -196,4 +225,3 @@ class TournamentSummaryLogger(AbstractLogger):
             "SelfError": self_error_count,
             "SelfTimedOut": self_timed_out_count
         }
-    
