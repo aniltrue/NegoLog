@@ -39,7 +39,6 @@ class BayesianOpponentModel(AbstractOpponentModel):
         self.minUtility = None
         self.maxUtility = None
         self._isCrashed = False
-        self.deadline_round = int(os.getenv("DEADLINE_ROUND"))
         self.initWeightHyps()
 
         self.fEvaluatorHyps = []
@@ -236,8 +235,8 @@ class BayesianOpponentModel(AbstractOpponentModel):
         else:
             self.updateEvaluationFns()
 
-        decrement_rate = 0.9 / self.deadline_round
-        self.fPreviousBidUtility -= decrement_rate
+        decrement_rate = 0.003
+        self.fPreviousBidUtility = max(0., self.fPreviousBidUtility - decrement_rate)
 
         for i in range(len(self.fExpectedWeight)):
             self.fExpectedWeight[i] = self.getExpectedWeight(i)
