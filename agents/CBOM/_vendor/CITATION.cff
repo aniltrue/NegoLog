@@ -1,0 +1,41 @@
+cff-version: 1.2.0
+message: >-
+  If you use CBOM, please cite the paper in preferred-citation and record
+  the software version and commit used.
+type: software
+title: "CBOM: Conflict-Based Opponent Modeling and Negotiation"
+version: 1.1.0
+date-released: "2026-09-09"
+authors:
+  - family-names: Keskin
+    given-names: Mehmet Onur
+repository-code: https://github.com/monurkeskin/CBOM
+url: https://github.com/monurkeskin/CBOM
+license: GPL-3.0-only
+keywords:
+  - opponent modeling
+  - automated negotiation
+  - human-agent negotiation
+  - multi-agent systems
+abstract: >-
+  Maintained implementation of conflict-based opponent modeling and the
+  associated negotiation strategy, with aggregated evidence, bounded candidate
+  search, runnable examples and explicit method provenance.
+preferred-citation:
+  type: article
+  title: Conflict-based negotiation strategy for human-agent negotiation
+  authors:
+    - family-names: Keskin
+      given-names: Mehmet Onur
+    - family-names: Buzcu
+      given-names: Berk
+    - family-names: Aydoğan
+      given-names: Reyhan
+  journal: Applied Intelligence
+  volume: 53
+  start: 29741
+  end: 29757
+  year: 2023
+  month: 11
+  doi: 10.1007/s10489-023-05001-9
+  url: https://doi.org/10.1007/s10489-023-05001-9

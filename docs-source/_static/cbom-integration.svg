@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="420" viewBox="0 0 1000 420" role="img" aria-labelledby="title desc">
+  <title id="title">One CBOM strategy, two languages, three repositories</title>
+  <desc id="desc">Profiles and received offers feed either a Python or native Java CBOM engine. Both run standalone in the CBOM repository or connect through adapters to the NegoLog and NegoLog V2 frameworks for sessions and logs.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#526777"/></marker>
+  </defs>
+  <rect width="1000" height="420" rx="18" fill="#f5f8fa"/>
+  <g font-family="Arial, Helvetica, sans-serif" fill="#162d3d">
+    <text x="32" y="40" font-size="24" font-weight="700">CBOM in your workflow</text>
+    <text x="32" y="66" font-size="15" fill="#455e6f">Same model and strategy components · choose the language and execution environment</text>
+    <rect x="28" y="127" width="192" height="152" rx="12" fill="#ffffff" stroke="#8295a1"/>
+    <text x="124" y="166" text-anchor="middle" font-size="18" font-weight="700">Your negotiation</text>
+    <text x="124" y="200" text-anchor="middle" font-size="16">Own utility profile</text>
+    <text x="124" y="226" text-anchor="middle" font-size="16">Received offers</text>
+    <text x="124" y="252" text-anchor="middle" font-size="16">Time and settings</text>
+    <rect x="270" y="99" width="283" height="91" rx="12" fill="#e2f2ef" stroke="#167767"/>
+    <text x="412" y="129" text-anchor="middle" font-size="18" font-weight="700">Python engine</text>
+    <text x="412" y="155" text-anchor="middle" font-size="15">CBOM model + bidding strategy</text>
+    <text x="412" y="177" text-anchor="middle" font-size="14" fill="#355a54">No runtime dependencies</text>
+    <rect x="270" y="218" width="283" height="91" rx="12" fill="#e7edf8" stroke="#416695"/>
+    <text x="412" y="248" text-anchor="middle" font-size="18" font-weight="700">Native Java engine</text>
+    <text x="412" y="274" text-anchor="middle" font-size="15">CBOM model + bidding strategy</text>
+    <text x="412" y="296" text-anchor="middle" font-size="14" fill="#3e5678">JDK 17+ · persistent process</text>
+    <rect x="625" y="99" width="347" height="91" rx="12" fill="#ffffff" stroke="#8295a1"/>
+    <text x="798" y="128" text-anchor="middle" font-size="18" font-weight="700">Standalone CBOM</text>
+    <text x="798" y="153" text-anchor="middle" font-size="15">Python API or Java API / JAR</text>
+    <text x="798" y="176" text-anchor="middle" font-size="14" fill="#455e6f">Local demos and JSON decision traces</text>
+    <rect x="625" y="218" width="347" height="91" rx="12" fill="#fff2de" stroke="#9a7330"/>
+    <text x="798" y="247" text-anchor="middle" font-size="18" font-weight="700">NegoLog / NegoLog V2</text>
+    <text x="798" y="272" text-anchor="middle" font-size="15">Python and Java agent adapters</text>
+    <text x="798" y="295" text-anchor="middle" font-size="14" fill="#685127">Tournaments, baseline agents and workbooks</text>
+    <g fill="none" stroke="#526777" stroke-width="2" marker-end="url(#arrow)">
+      <path d="M220 177 L244 177 L244 144 L264 144"/>
+      <path d="M220 230 L244 230 L244 263 L264 263"/>
+      <path d="M553 144 L618 144"/>
+      <path d="M553 263 L618 263"/>
+      <path d="M565 144 L588 144 L588 263" marker-end="none"/>
+      <path d="M565 263 L588 263 L588 144" marker-end="none"/>
+    </g>
+    <text x="32" y="354" font-size="16" font-weight="700">Every engine learns from offers, then offers, accepts or ends.</text>
+    <text x="32" y="382" font-size="14" fill="#455e6f">Cite the CBOM method; also cite NegoLog when the framework runs or assesses your experiment.</text>
+  </g>
+</svg>

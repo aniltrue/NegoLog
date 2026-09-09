@@ -1,0 +1,9 @@
+{
+  "reservationValue": 0.3,
+  "issueWeights": {"delivery": 0.2, "support": 0.3, "payment": 0.5},
+  "issues": {
+    "delivery": {"this_week": 0.0, "next_week": 0.6, "next_month": 1.0},
+    "support": {"premium": 0.0, "standard": 0.5, "self_service": 1.0},
+    "payment": {"upfront": 1.0, "30_days": 0.55, "60_days": 0.0}
+  }
+}

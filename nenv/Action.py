@@ -1,15 +1,16 @@
 from nenv.Bid import Bid
 from abc import ABC
+from typing import Optional
 
 
 class Action(ABC):
     """
-        An agent should return a Negotiation Action during negotiation. An Action can be an Offer or an Accept. Also,
-        each action obtains corresponding bid.
+        An agent returns an Offer, Accept, or EndNegotiation action. Only offers
+        and acceptances carry a bid; ending a session yields reservation utility.
     """
-    bid: Bid  #: Corresponding bid
+    bid: Optional[Bid]  #: Corresponding bid, absent when ending negotiation
 
-    def __init__(self, bid: Bid):
+    def __init__(self, bid: Optional[Bid]):
         self.bid = bid
 
 
@@ -45,3 +46,19 @@ class Accept(Offer):
 
     def __eq__(self, other):
         return self.__hash__() == other.__hash__()
+
+
+class EndNegotiation(Action):
+    """End the session without agreement, retaining a human-readable reason."""
+
+    def __init__(self, reason: str = "agent ended negotiation"):
+        if not isinstance(reason, str):
+            raise ValueError("End reason must be a string")
+        super().__init__(None)
+        self.reason = reason or "agent ended negotiation"
+
+    def __str__(self):
+        return "End: " + self.reason
+
+    def __repr__(self):
+        return str(self)

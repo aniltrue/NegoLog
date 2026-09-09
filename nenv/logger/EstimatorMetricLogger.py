@@ -156,10 +156,10 @@ class EstimatorMetricLogger(AbstractLogger):
         ``Session``. Sampled sheets may keep that padding or omit it when saved:
         their measurement rows must retain both ``Round`` and ``Action``.
         An unkeyed row-count mismatch is rejected because its original rounds
-        cannot be recovered reliably. A trailing empty acceptance row may be
+        cannot be recovered reliably. A trailing empty acceptance or end row may be
         absent from legacy metric sheets, as in the default workbook output.
         Empty padding and rows belonging only to other loggers are ignored.
-        Acceptance rows remain excluded from the per-round curves.
+        Acceptance and end rows remain excluded from the per-round curves.
         """
         tournament_results = tournament_logs.to_data_frame()
 
@@ -175,14 +175,14 @@ class EstimatorMetricLogger(AbstractLogger):
             session_log = ExcelLog(file_path=session_path)
             session_rows = session_log.log_rows["Session"]
             metric_columns = self._metric_columns[:6]
-            before_accept = next((index for index, values in enumerate(session_rows)
-                                  if values.get("Action") == "Accept"), len(session_rows))
+            before_terminal = next((index for index, values in enumerate(session_rows)
+                                    if values.get("Action") in {"Accept", "End"}), len(session_rows))
 
             for estimator_name in estimator_names:
                 estimator_rows = session_log.log_rows.get(estimator_name, [])
                 keyed = any(pd.notna(values.get("Round")) or pd.notna(values.get("Action"))
                             for values in estimator_rows)
-                if (not keyed and len(estimator_rows) not in {len(session_rows), before_accept}
+                if (not keyed and len(estimator_rows) not in {len(session_rows), before_terminal}
                         and any(pd.notna(values.get(column)) for values in estimator_rows for column in metric_columns)):
                     raise ValueError(
                         "Unkeyed metric sheet %r does not match the dense Session row count. "
@@ -192,7 +192,7 @@ class EstimatorMetricLogger(AbstractLogger):
                 for row_index, estimator_row in enumerate(estimator_rows):
                     action = (estimator_row.get("Action") if keyed
                               else session_rows[row_index]["Action"])
-                    if action == "Accept":
+                    if action in {"Accept", "End"}:
                         break
                     if not any(pd.notna(estimator_row.get(column)) for column in metric_columns):
                         continue

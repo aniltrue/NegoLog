@@ -9,7 +9,7 @@ from nenv.EditablePreference import EditablePreference
 from nenv import OpponentModel
 from nenv import logger
 from nenv import utils
-from nenv.Action import Offer, Accept, Action
+from nenv.Action import Offer, Accept, Action, EndNegotiation
 from nenv.Agent import AbstractAgent, AgentClass
 from nenv.Session import Session
 from nenv.SessionManager import SessionManager

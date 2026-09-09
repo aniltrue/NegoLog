@@ -6,12 +6,14 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-project = "NegoLog"
+project = "NegoLog V2"
+version = "2.1"
+release = "2.1.0"
 author = "NegoLog contributors"
 extensions = ["sphinx.ext.autodoc"]
 root_doc = "index"
 html_theme = "alabaster"
-html_title = "NegoLog — guides and API"
+html_title = "NegoLog V2 — guides and API"
 html_static_path = ["_static"]
 html_css_files = ["guide.css"]
 autodoc_member_order = "bysource"

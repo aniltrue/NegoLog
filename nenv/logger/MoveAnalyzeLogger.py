@@ -19,7 +19,8 @@ class MoveAnalyzeLogger(AbstractLogger):
     def on_session_end(self, final_row: LogRow, session: Union[Session, SessionLogs]) -> LogRow:
         row = {}
 
-        if len(session.session_log.log_rows["Session"]) == 0:
+        if not any(item.get("Action") == "Offer"
+                   for item in session.session_log.log_rows["Session"]):
             return {"MoveAnalyze": {}}
 
         movement_analyse_a = self.analyze_moves("A", session)
@@ -36,10 +37,14 @@ class MoveAnalyzeLogger(AbstractLogger):
     def analyze_moves(self, agent: str, session: Session) -> dict:
         opponent = "A" if agent == "B" else "B"
 
-        session_log = pd.DataFrame(session.session_log.log_rows["Session"])
-
-        move_self = session_log.loc[(session_log["Who"] == agent) & (session_log["Move"] != "-") & (session_log["Move"] != None), "Move"].to_list()
-        move_opp = session_log.loc[(session_log["Who"] == opponent) & (session_log["Move"] != "-") & (session_log["Move"] != None), "Move"].to_list()
+        session_log = pd.DataFrame(session.session_log.log_rows["Session"]).reindex(
+            columns=["Who", "Action", "Move"])
+        # Terminal rows have no movement; a zero-offer end has no Move column.
+        offers = session_log.loc[session_log["Action"].eq("Offer")
+                                 & session_log["Move"].notna()
+                                 & session_log["Move"].ne("-")]
+        move_self = offers.loc[offers["Who"].eq(agent), "Move"].to_list()
+        move_opp = offers.loc[offers["Who"].eq(opponent), "Move"].to_list()
 
         analyze = {
             "BehaviorSensitivity": calculate_behavior_sensitivity(move_self),

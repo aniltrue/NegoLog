@@ -17,8 +17,7 @@ class DomainGraphsLogger(FinalGraphsLogger):
         tournament_results = tournament_logs.to_data_frame("TournamentResults")
 
         for domain_name in domain_names:
-            domain_name = f"Domain{domain_name}"
-            domain_dir = self.get_path("domains/%s/" % domain_name)
+            domain_dir = self.get_path("domains/Domain%s/" % domain_name)
 
             if not os.path.exists(domain_dir):
                 os.makedirs(domain_dir)

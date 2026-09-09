@@ -314,13 +314,28 @@ def test_unkeyed_compacted_history_fails_instead_of_guessing_rounds(tmp_path):
         EstimatorMetricLogger(str(tmp_path)).get_estimator_results(tournament(2), ["Model"])
 
 
-def test_default_dense_history_allows_the_empty_acceptance_row_to_be_trimmed(tmp_path):
+@pytest.mark.parametrize("terminal_action", ["Accept", "End"])
+def test_default_dense_history_allows_the_empty_terminal_row_to_be_trimmed(tmp_path, terminal_action):
     (tmp_path / "sessions").mkdir()
     workbook = ExcelLog(["Session", "Model"])
     workbook.append({"Session": {"Round": 0, "Action": "Offer"}, "Model": metrics(.1)})
-    workbook.append({"Session": {"Round": 1, "Action": "Accept"}})
+    workbook.append({"Session": {"Round": 1, "Action": terminal_action}})
     path = tmp_path / "sessions/A_B_Domain1.xlsx"
     workbook.save(str(path))
     assert len(ExcelLog(file_path=str(path)).log_rows["Model"]) == 1
+    rmse, _, _ = EstimatorMetricLogger(str(tmp_path)).get_estimator_results(tournament(1), ["Model"])
+    assert rmse["Model"] == [[.1, 1.1], []]
+
+
+@pytest.mark.parametrize("keyed", [True, False])
+def test_end_row_metrics_are_not_added_to_offer_curves(tmp_path, keyed):
+    (tmp_path / "sessions").mkdir()
+    workbook = ExcelLog(["Session", "Model"])
+    for number, action in enumerate(["Offer", "End"]):
+        values = metrics(.1 if number == 0 else .9)
+        if keyed:
+            values.update(Round=number, Action=action)
+        workbook.append({"Session": {"Round": number, "Action": action}, "Model": values})
+    workbook.save(str(tmp_path / "sessions/A_B_Domain1.xlsx"))
     rmse, _, _ = EstimatorMetricLogger(str(tmp_path)).get_estimator_results(tournament(1), ["Model"])
     assert rmse["Model"] == [[.1, 1.1], []]
