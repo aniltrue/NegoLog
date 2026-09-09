@@ -1,5 +1,8 @@
 # NegoLog
 
+See [opponent model, agent and assessment update notes](MAINTENANCE.md) for
+behavior changes, preference API migration and validation.
+
 ## NegoLog: An Integrated Python-based Automated Negotiation Framework with Enhanced Assessment Components
 
 ### IJCAI 2024
