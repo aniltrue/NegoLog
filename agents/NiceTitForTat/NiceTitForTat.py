@@ -40,7 +40,7 @@ class NiceTitForTat(nenv.AbstractAgent):
         self.offeredOpponentBestBid = 0
         self.myNashUtility = 0.
         self.initialGap = 0.
-        self.opponent_model = BayesianOpponentModel(self.preference)
+        self.opponent_model = BayesianOpponentModel(self.preference, deadline_round=self.deadline_round)
 
     def receive_offer(self, bid: Bid, t: float):
         self.opponent_model.update(bid, t)

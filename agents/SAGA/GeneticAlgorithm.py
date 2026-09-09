@@ -73,7 +73,7 @@ class GeneticAlgorithm:
             This method generates a random preferences for the initial population
         :return: Preferences with random weights
         """
-        preference = nenv.OpponentModel.EstimatedPreference(self.reference)
+        preference = nenv.OpponentModel.UniformEstimatedPreference(self.reference)
 
         for issue in preference.issues:
             preference[issue] = self.rnd.random()
@@ -126,7 +126,7 @@ class GeneticAlgorithm:
         alpha = 0.3
         mutate_prob = 0.005
 
-        child = nenv.OpponentModel.EstimatedPreference(self.reference)
+        child = nenv.OpponentModel.UniformEstimatedPreference(self.reference)
 
         # Generate a child
         for issue in child.issues:

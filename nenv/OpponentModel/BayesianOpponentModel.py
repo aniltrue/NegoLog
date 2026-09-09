@@ -1,4 +1,3 @@
-import os
 import math
 import copy
 
@@ -29,8 +28,8 @@ class BayesianOpponentModel(AbstractOpponentModel):
     fExpectedWeight: list
     fBiddingHistory: list
 
-    def __init__(self, reference: Preference):
-        super().__init__(reference)
+    def __init__(self, reference: Preference, deadline_round=None):
+        super().__init__(reference, deadline_round=deadline_round)
 
         self.fPreviousBidUtility = 1.
         self.fBiddingHistory = []
@@ -75,7 +74,7 @@ class BayesianOpponentModel(AbstractOpponentModel):
                             lDiscreteEval[issue.values[j]] = 1000 * j / k
                         else:
                             lDiscreteEval[issue.values[j]] = 1000 * (len(issue.values) - j - 1) / (
-                                    len(issue.values) - k - 1) + 1
+                                        len(issue.values) - k - 1) + 1
 
                     lEvalHyps.append({"Prob": 1. / 3, "Desc": "triangular%d" % k, "DiscreteEval": lDiscreteEval})
 
@@ -184,8 +183,7 @@ class BayesianOpponentModel(AbstractOpponentModel):
                 lUtility += self.getPartialUtility(lBid, j)
 
                 lWeightHyps[j][i]["Prob"] = self.fWeightHyps[j][i]["Prob"] * self.conditionalDistribution(lUtility,
-                                                                                                          self.fPreviousBidUtility) / (
-                                                        lN + 1e-12)
+                                                                                                          self.fPreviousBidUtility) / (lN + 1e-12)
 
         self.fWeightHyps = lWeightHyps
 
@@ -235,8 +233,10 @@ class BayesianOpponentModel(AbstractOpponentModel):
         else:
             self.updateEvaluationFns()
 
-        decrement_rate = 0.003
-        self.fPreviousBidUtility = max(0., self.fPreviousBidUtility - decrement_rate)
+        decrement_rate = 0.9 / self.deadline_round
+        # Keep the likelihood denominator positive if callers feed offers beyond
+        # the configured horizon. Within the horizon the decrement is unchanged.
+        self.fPreviousBidUtility = max(1e-12, self.fPreviousBidUtility - decrement_rate)
 
         for i in range(len(self.fExpectedWeight)):
             self.fExpectedWeight[i] = self.getExpectedWeight(i)
@@ -252,6 +252,7 @@ class BayesianOpponentModel(AbstractOpponentModel):
         return u
 
     def findMinMaxUtility(self):
+        """Find minimum and maximum utilities across all possible bids"""
         from itertools import product
 
         # Generate all possible combinations of issue values
@@ -321,6 +322,7 @@ class BayesianOpponentModel(AbstractOpponentModel):
             self._pref[issue] = self.fExpectedWeight[i]
 
             for value in issue.values:
+                # Compute weighted average using the same normalization as getExpectedEvaluationValue
                 expected_eval = 0.
                 for hyp in self.fEvaluatorHyps[i]:
                     expected_eval += hyp["Prob"] * self.get_expected_eval(hyp["DiscreteEval"], value)

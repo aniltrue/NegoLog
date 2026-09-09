@@ -28,14 +28,15 @@ class WindowedFrequencyOpponentModel(AbstractOpponentModel):
     offers: List[Bid]
     alpha: float = 10.
     beta: float = 5.
-    window_size: int = 48
+    window_size: int
 
     @property
     def name(self) -> str:
         return "Frequency Window Opponent Model"
 
-    def __init__(self, reference: Preference):
-        super().__init__(reference)
+    def __init__(self, reference: Preference, deadline_round=None):
+        super().__init__(reference, deadline_round=deadline_round)
+        self.window_size = 25
         self.offers = []
 
         self.issues = {

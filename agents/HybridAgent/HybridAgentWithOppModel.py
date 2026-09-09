@@ -65,7 +65,7 @@ class HybridAgentWithOppModel(nenv.AbstractAgent):
             self.window_lower_bound = 0.05
 
         # Initiate opponent model
-        self.opponent_model = nenv.OpponentModel.WindowedFrequencyOpponentModel(self.preference)
+        self.opponent_model = nenv.OpponentModel.WindowedFrequencyOpponentModel(self.preference, deadline_round=self.deadline_round)
 
         self.repetition_limit = 10
 

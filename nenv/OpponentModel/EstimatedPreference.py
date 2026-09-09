@@ -1,11 +1,15 @@
+from abc import ABC, abstractmethod
 from nenv.Preference import Preference
 from nenv.Issue import Issue
 
 
-class EstimatedPreference(Preference):
+class EstimatedPreference(Preference, ABC):
     """
-        Preference object is mutual. Thus, Opponent Models (i.e., Estimators) generate EstimatedPreference object which
-        enable to change Issue and Value weights.
+        Abstract mutable preference for opponent estimators.
+
+        Use UniformEstimatedPreference for equal initial weights or
+        CBOMEstimatedPreference for inverse own weights. Custom initializers
+        must implement initialize_weights and normalize their weights.
     """
     def __init__(self, reference: Preference):
         """
@@ -14,13 +18,16 @@ class EstimatedPreference(Preference):
         """
         super(EstimatedPreference, self).__init__(reference.profile_json_path, generate_bids=False)
 
-        for issue in self._issue_weights.keys():
-            self._issue_weights[issue] = 1. - reference.issue_weights[issue]
+        self.initialize_weights(reference)
 
-            for value in issue.values:
-                self._value_weights[issue][value] = 1. - reference.value_weights[issue][value]
+    @abstractmethod
+    def initialize_weights(self, reference: Preference):
+        """
+            Initialize issue and value weights. Must be implemented by subclasses.
 
-        self.normalize()
+        :param reference: Reference Preference to get domain information.
+        """
+        pass
 
     def __getitem__(self, key) -> float:
         """

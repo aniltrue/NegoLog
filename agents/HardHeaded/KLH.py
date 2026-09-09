@@ -86,7 +86,7 @@ class HardHeaded(nenv.AbstractAgent):
         self.random200 = random.Random()
 
         # Initiate the opponent model
-        self.oppUtility = nenv.OpponentModel.EstimatedPreference(self.preference)
+        self.oppUtility = nenv.OpponentModel.UniformEstimatedPreference(self.preference)
 
         w = 1. / self.numberOfIssues
 

@@ -22,7 +22,7 @@ class OpponentInfo:
         self.bestBid = None
         self.domainCompetitiveness = None
         self.leniency = None
-        self.pref = nenv.OpponentModel.EstimatedPreference(pref)
+        self.pref = nenv.OpponentModel.UniformEstimatedPreference(pref)
         self.bidPointWeights = []
         self.agentDifficulty = None
 

@@ -1,9 +1,12 @@
 import math
+from numbers import Integral
 from typing import Optional
 from scipy.stats import spearmanr, kendalltau
 from nenv.Bid import Bid
 from nenv.Preference import Preference
 from nenv.OpponentModel.EstimatedPreference import EstimatedPreference
+from nenv.OpponentModel.UniformEstimatedPreference import UniformEstimatedPreference
+from nenv.OpponentModel.CBOMEstimatedPreference import CBOMEstimatedPreference
 from abc import ABC, abstractmethod
 
 
@@ -24,13 +27,38 @@ class AbstractOpponentModel(ABC):
     """
     _pref: EstimatedPreference  # Estimated preference
 
-    def __init__(self, reference: Preference):
+    DEFAULT_DEADLINE_ROUND = 1000
+
+    def __init__(self, reference: Preference, mode: str = "uniform", deadline_round: Optional[int] = None):
         """
             Constructor
 
             :param reference: Reference preference to get domain information. Generally, the agent's preference is given.
+            :param mode: Initial weights: ``uniform`` (default) or inverse own weights (``cbom``).
+            :param deadline_round: Positive round horizon; ``None`` uses the 1000-round default.
         """
-        self._pref = EstimatedPreference(reference)
+        self.initialize_preference(reference, mode)
+        self.set_deadline(deadline_round)
+
+    def initialize_preference(self, reference: Preference, mode: str = "uniform"):
+        """Select equal weights (uniform) or inverse own weights (cbom)."""
+        initializers = {"uniform": UniformEstimatedPreference, "cbom": CBOMEstimatedPreference}
+        if not isinstance(mode, str) or mode not in initializers:
+            raise ValueError("Unknown preference initialization mode: %r" % (mode,))
+        self._pref = initializers[mode](reference)
+
+    def set_deadline(self, deadline_round: Optional[int] = None):
+        """Configure the positive round horizon before feeding observations.
+
+        A missing round limit, including time-only sessions, uses 1000 rounds.
+        No environment variable is read. Subclasses may call this method even
+        when their constructor does not invoke the base constructor.
+        """
+        if deadline_round is None:
+            deadline_round = self.DEFAULT_DEADLINE_ROUND
+        if isinstance(deadline_round, bool) or not isinstance(deadline_round, Integral) or deadline_round <= 0:
+            raise ValueError("deadline_round must be a positive integer or None")
+        self.deadline_round = int(deadline_round)
 
     @property
     @abstractmethod
