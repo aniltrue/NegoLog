@@ -202,8 +202,12 @@ domain. Arithmetic comparisons allow `1e-14` absolute utility error; selected
 actions and discrete model states must match exactly in the stated parity tests.
 
 Python versions with a different sorting implementation may resolve a cyclic
-ranking differently. Java pins the 3.10 reference instead of depending on the
-JDK's comparator sort. Record the Python version when comparing languages;
+ranking differently, even on short lists: the Python 3.14 CI run exposed
+differences below 64 elements as well as in strategy decisions. Use CPython 3.10
+when comparing Python and Java runs. Java pins this reference instead of depending
+on the JDK's comparator sort. Frozen Python 3.10 protocol responses are replayed
+on every tested Python/JDK combination; live differential tests run on 3.10.
+Record the Python version when comparing languages;
 unrestricted cross-version bitwise identity is not claimed. Sampled search
 remains an explicit approximation to candidate search, with no global optimum
 guarantee.

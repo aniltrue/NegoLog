@@ -96,8 +96,10 @@ Default candidate search is exact up to 50,000 outcomes and sampled above that.
 Sampling limits the candidate pool, not the CBOM update. NegoLog's own domain
 loading and selected loggers can still enumerate large outcome spaces. Record
 language, domain order, search mode, seed and both code versions. Java follows
-CPython 3.10's TimSort for cyclic rankings; the Java guide documents runtime parity
-limits; tests are not an all-domain identity proof.
+CPython 3.10's TimSort for cyclic rankings. Use Python 3.10 for cross-language
+comparisons: newer Python sorting implementations can differ even on short cyclic
+rankings. The Java guide documents the tested parity scope; these tests are not
+an all-domain identity proof.
 
 Understand session endings
 --------------------------

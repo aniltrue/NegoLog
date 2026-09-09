@@ -3,6 +3,7 @@
 import copy
 import importlib
 import json
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -69,5 +70,5 @@ def test_domain_graphs_use_raw_domain_id_and_separate_output_directories(tmp_pat
     logger.on_tournament_end(log, ["CBOM", "Boulware"], ["0", "fixture"], [])
     assert [rows["AgentAUtility"].tolist() for rows, _ in received] == [[.25], [.75]]
     assert [rows["DomainName"].tolist() for rows, _ in received] == [["0"], ["fixture"]]
-    assert [str(tmp_path / "domains" / name) for name in ["Domain0", "Domainfixture"]] == [
-        directory.rstrip("/\\") for _, directory in received]
+    assert [tmp_path / "domains" / name for name in ["Domain0", "Domainfixture"]] == [
+        Path(directory) for _, directory in received]
