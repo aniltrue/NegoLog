@@ -1,5 +1,4 @@
 import math
-import random
 from typing import Optional
 from scipy.stats import spearmanr, kendalltau
 from nenv.Bid import Bid
@@ -77,6 +76,10 @@ class AbstractOpponentModel(ABC):
 
             - **Kendall-Tau**: The ranking correlation between real and estimated bid rankings in that domain.
 
+            Tied utilities receive tied ranks. A rank correlation is undefined
+            (NaN) when either utility vector is constant or has fewer than two
+            bids. Evaluating a model does not consume the negotiation RNG.
+
             .. [Baarslag2013] Tim Baarslag, Mark J.C. Hendrikx, Koen V. Hindriks, and Catholijn M. Jonker. Predicting the performance of opponent models in automated negotiation. In International Joint Conferences on Web Intelligence (WI) and Intelligent Agent Technologies (IAT), 2013 IEEE/WIC/ACM, volume 2, pages 59–66, 2013.
             .. [Keskin2023] Mehmet Onur Keskin, Berk Buzcu, and Reyhan Aydoğan. Conflict-based negotiation strategy for human-agent negotiation. Applied Intelligence, 53(24):29741–29757, dec 2023.
 
@@ -101,14 +104,18 @@ class AbstractOpponentModel(ABC):
 
             rmse = math.sqrt(rmse / len(utilities))
 
-        org_indices = list(range(len(bids)))
-        agent_indices = list(range(len(bids)))
+        original_utilities = [utility[0] for utility in utilities]
+        estimated_utilities = [utility[1] for utility in utilities]
+        ranks_defined = (len(utilities) >= 2 and
+                         len(set(original_utilities)) > 1 and
+                         len(set(estimated_utilities)) > 1)
 
-        random.shuffle(agent_indices)
+        spearman = None
+        if return_spearman:
+            spearman = float(spearmanr(original_utilities, estimated_utilities)[0]) if ranks_defined else math.nan
 
-        agent_indices = sorted(agent_indices, key=lambda i: utilities[i][1], reverse=True)
-
-        spearman, _ = spearmanr(org_indices, agent_indices) if return_spearman else [None, 0.]
-        kendall, _ = kendalltau(org_indices, agent_indices) if return_kendall_tau else [None, 0.]
+        kendall = None
+        if return_kendall_tau:
+            kendall = float(kendalltau(original_utilities, estimated_utilities)[0]) if ranks_defined else math.nan
 
         return rmse, spearman, kendall
