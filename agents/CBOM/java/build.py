@@ -5,6 +5,10 @@ import subprocess
 from pathlib import Path
 
 
+def _run(command: list[str]) -> None:
+    subprocess.run(command, check=True)  # nosec B603
+
+
 def main():
     root = Path(__file__).resolve().parent
     javac = shutil.which("javac")
@@ -16,16 +20,14 @@ def main():
         shutil.rmtree(classes)
     classes.mkdir(parents=True, exist_ok=True)
     sources = sorted((root / "src").rglob("*.java"))
-    subprocess.run([javac, "--release", "17", "-encoding", "UTF-8", "-d", str(classes),
-                    *map(str, sources)], check=True)
+    _run([javac, "--release", "17", "-encoding", "UTF-8", "-d", str(classes), *map(str, sources)])
     shutil.copytree(root / "data", classes / "data", dirs_exist_ok=True)
     metadata = classes / "META-INF"
     metadata.mkdir(exist_ok=True)
     for name in ("LICENSE", "NOTICE", "PSF-LICENSE"):
         shutil.copyfile(root / name, metadata / name)
     destination = root / "build" / "cbom.jar"
-    subprocess.run([jar, "--create", "--file", str(destination), "--main-class", "org.cbom.Main",
-                    "-C", str(classes), "."], check=True)
+    _run([jar, "--create", "--file", str(destination), "--main-class", "org.cbom.Main", "-C", str(classes), "."])
     print(destination)
 
 

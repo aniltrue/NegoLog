@@ -1,9 +1,13 @@
 package org.cbom;
 
 import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /** Small strict JSON codec. Objects retain input order, which resolves CBOM ties. */
+@SuppressWarnings({"PMD.NPathComplexity"})
 public final class Json {
     private Json() {}
 

@@ -2,9 +2,15 @@ package org.cbom;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /** Native Java CBOM bidding and acceptance strategy (paper Algorithm 2). */
+@SuppressWarnings({"PMD.AvoidReassigningParameters", "PMD.NPathComplexity"})
 public final class CBOMAgent {
     private static final double[][] BEHAVIOR_WEIGHTS = {
         {}, {1}, {.25, .75}, {.11, .22, .66}, {.05, .15, .3, .5}

@@ -167,7 +167,7 @@ def test_counteroffer_expires_the_previous_received_offer(agent_class):
     try:
         agent.receive_bid(nenv.Bid({"choice": "b"}), 0.)
         assert agent.act(0.).bid["choice"] == "a"
-        assert type(agent.act(.8)) is nenv.Offer
+        assert isinstance(agent.act(.8), nenv.Offer)
         agent.receive_bid(nenv.Bid({"choice": "b"}), .9)
         assert isinstance(agent.act(.9), nenv.Accept)
     finally:

@@ -28,4 +28,4 @@ from agents.HardHeaded.KLH import HardHeaded
 from agents.IAMhaggler.IAMhaggler import IAMhaggler
 from agents.LinearAgent.LinearAgent import LinearAgent
 from agents.LuckyAgent2022.LuckyAgent2022 import LuckyAgent2022
-from agents.CBOM import CBOMAgent, CBOMJavaAgent
+from agents.CBOM import CBOMAgent, CBOMJavaAgent  # noqa: F401

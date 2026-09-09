@@ -31,7 +31,7 @@ class JavaBridge:
             self.process = subprocess.Popen(
                 command, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                 stderr=self._stderr,
-            )
+            )  # nosec B603
             self._reader = threading.Thread(target=self._read_responses, daemon=True)
             self._reader.start()
         except BaseException:

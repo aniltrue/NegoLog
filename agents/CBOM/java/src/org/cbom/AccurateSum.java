@@ -1,6 +1,7 @@
 package org.cbom;
 
 /** Error-free partial summation, including the final half-even correction. */
+@SuppressWarnings("PMD.NPathComplexity")
 final class AccurateSum {
     private AccurateSum() {}
     static double sum(double[] values) {

@@ -405,7 +405,7 @@ class Session:
                     pass  # Cleanup must not replace the original host failure.
             raise
 
-    def _start(self) -> LogRow:
+    def _start(self) -> LogRow:  # noqa: C901
         """
             This method starts the negotiation.
 

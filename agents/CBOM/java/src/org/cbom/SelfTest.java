@@ -1,6 +1,6 @@
 package org.cbom;
 
-import java.util.*;
+import java.util.Map;
 
 /** Dependency-free native regressions; run with java -jar build/cbom.jar self-test. */
 final class SelfTest {

@@ -1,9 +1,15 @@
 package org.cbom;
 
 import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /** Finite exact or fixed-seed sampled candidate index. */
+@SuppressWarnings({"PMD.AvoidReassigningParameters", "PMD.NPathComplexity"})
 public final class CandidatePool {
     private record Entry(double utility, List<String> encoded) {}
     public record Selection(Map<String, String> bid, double ownUtility, Double opponentUtility,
@@ -61,12 +67,16 @@ public final class CandidatePool {
     private void add(List<String> encoded) { entries.add(new Entry(preference.utility(preference.decode(encoded)), encoded)); }
     public int size() { return entries.size(); }
     public Selection select(double target, double epsilon, Set<List<String>> excluded, Preference opponent) {
-        Preference.unit(target, "Target utility"); Preference.unit(epsilon, "Initial epsilon");
-        if (excluded == null) excluded = Set.of();
-        if (opponent != null && !opponent.domain.equals(preference.domain)) throw new IllegalArgumentException("Opponent profile must have the same ordered domain");
+        Preference.unit(target, "Target utility");
+        Preference.unit(epsilon, "Initial epsilon");
+        Set<List<String>> blocked = excluded == null ? Set.of() : excluded;
+        if (opponent != null && !opponent.domain.equals(preference.domain))
+            throw new IllegalArgumentException("Opponent profile must have the same ordered domain");
         double nearest = Double.POSITIVE_INFINITY;
-        for (Entry e : entries) if (!excluded.contains(e.encoded) && e.utility >= preference.reservation)
+        for (Entry e : entries) {
+            if (!blocked.contains(e.encoded) && e.utility >= preference.reservation)
             nearest = Math.min(nearest, Math.abs(e.utility - target));
+        }
         if (!Double.isFinite(nearest)) throw new NoAvailableBid();
         double steps = Math.max(0, Math.ceil((nearest - epsilon - 1e-12) / .01));
         double width = epsilon + steps * .01;
@@ -75,7 +85,8 @@ public final class CandidatePool {
         double best = Double.NEGATIVE_INFINITY;
         int count = 0;
         for (Entry e : entries) {
-            if (e.utility < lower || e.utility > upper || excluded.contains(e.encoded) || e.utility < preference.reservation) continue;
+            if (e.utility < lower || e.utility > upper || blocked.contains(e.encoded) || e.utility < preference.reservation)
+                continue;
             count++;
             Map<String, String> bid = preference.decode(e.encoded);
             Double other = opponent == null ? null : opponent.utility(bid);

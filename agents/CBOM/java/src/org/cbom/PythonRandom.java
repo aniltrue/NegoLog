@@ -3,6 +3,7 @@ package org.cbom;
 import java.math.BigInteger;
 
 /** MT19937 integer seeding and randbelow follow Python random.Random. */
+@SuppressWarnings("PMD.AvoidReassigningParameters")
 final class PythonRandom {
     private final int[] mt = new int[624];
     private int index = 624;

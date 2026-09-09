@@ -1,7 +1,11 @@
 package org.cbom;
 
 import java.math.BigInteger;
-import java.util.*;
+import java.util.Collections;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /** Immutable additive utility profile; construction never enumerates outcomes. */
 public final class Preference {

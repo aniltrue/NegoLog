@@ -1,6 +1,9 @@
 package org.cbom;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * CPython 3.10 TimSort, preserving the comparison and merge schedule for cycles.
@@ -17,6 +20,7 @@ final class StableOrder {
         return new Sorter<T>(input, compare).sort();
     }
     private record Run(int base, int length) {}
+    @SuppressWarnings({"PMD.AvoidReassigningParameters", "PMD.NPathComplexity"})
     private static final class Sorter<T> {
         private static final int MIN_GALLOP = 7;
         private final Object[] values;
