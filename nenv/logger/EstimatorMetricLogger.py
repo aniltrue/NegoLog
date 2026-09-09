@@ -129,12 +129,12 @@ class EstimatorMetricLogger(AbstractLogger):
 
                     _round = session_log.log_rows["Session"][row_index]["Round"]
 
-                    rmse[estimator_names[0]][_round].append(estimator_row["RMSE_A"])
-                    spearman[estimator_names[0]][_round].append(estimator_row["SpearmanA"])
-                    kendall[estimator_names[0]][_round].append(estimator_row["KendallTauA"])
-                    rmse[estimator_names[0]][_round].append(estimator_row["RMSE_B"])
-                    spearman[estimator_names[0]][_round].append(estimator_row["SpearmanB"])
-                    kendall[estimator_names[0]][_round].append(estimator_row["KendallTauB"])
+                    rmse[estimator_names[i]][_round].append(estimator_row["RMSE_A"])
+                    spearman[estimator_names[i]][_round].append(estimator_row["SpearmanA"])
+                    kendall[estimator_names[i]][_round].append(estimator_row["KendallTauA"])
+                    rmse[estimator_names[i]][_round].append(estimator_row["RMSE_B"])
+                    spearman[estimator_names[i]][_round].append(estimator_row["SpearmanB"])
+                    kendall[estimator_names[i]][_round].append(estimator_row["KendallTauB"])
 
         return rmse, spearman, kendall
 
