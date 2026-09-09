@@ -53,7 +53,7 @@ Already viewing a checkout of this branch? Run the next commands from its root.
 
 ### 2. Install dependencies
 
-**macOS / Linux**
+#### macOS / Linux
 
 ```sh
 python3.10 -m venv .venv
@@ -61,7 +61,10 @@ source .venv/bin/activate
 python -m pip install -r requirements.txt
 ```
 
+<!-- Expandable sections keep optional instructions readable; only their HTML tags need MD033 exceptions. -->
+<!-- markdownlint-disable-next-line MD033 -->
 <details>
+<!-- markdownlint-disable-next-line MD033 -->
 <summary><strong>Windows PowerShell commands</strong></summary>
 
 ```powershell
@@ -73,6 +76,7 @@ python -m pip install -r requirements.txt
 If activation is blocked, use `.\.venv\Scripts\python.exe` in place of `python`
 for the install and run commands. No execution-policy change is required.
 
+<!-- markdownlint-disable-next-line MD033 -->
 </details>
 
 ### 3. Run your first tournament
@@ -194,7 +198,10 @@ Catholijn M. Jonker, Tim Baarslag, and Reyhan Aydoğan. IJCAI 2024, pp. 8640–8
 
 [Download BibTeX](CITATION.bib) · [Machine-readable citation](CITATION.cff)
 
+<!-- Expandable sections keep optional instructions readable; only their HTML tags need MD033 exceptions. -->
+<!-- markdownlint-disable-next-line MD033 -->
 <details>
+<!-- markdownlint-disable-next-line MD033 -->
 <summary>Copy BibTeX</summary>
 
 ```bibtex
@@ -214,6 +221,7 @@ Catholijn M. Jonker, Tim Baarslag, and Reyhan Aydoğan. IJCAI 2024, pp. 8640–8
 }
 ```
 
+<!-- markdownlint-disable-next-line MD033 -->
 </details>
 
 Also record the code revision used in your experiment. Individual agent and
