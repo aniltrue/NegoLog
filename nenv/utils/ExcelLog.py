@@ -99,16 +99,26 @@ class ExcelLog:
             df = pd.read_excel(file_path, sheet_name=sheet_name)
             self.log_rows[sheet_name] = [row for _, row in df.to_dict('index').items()]
 
-    def save(self, file_path: str):
+    def save(self, file_path: str, sparse_sheets: Optional[Set[str]] = None):
         """
             Save to file
 
             :param file_path: File path
+            :param sparse_sheets: Optional sheet names whose empty padding rows
+                should be omitted. Other sheets and the in-memory rows are unchanged.
+                Compacted sheets no longer align by row position with other sheets.
+                Use explicit keys with compatible readers; built-in session metric
+                readers expect dense row alignment. Loading does not restore padding.
             :return: Nothing
         """
+        sparse = sparse_sheets or set()
+
         with pd.ExcelWriter(file_path) as writer:
             for sheet_name in self.sheet_names:
-                df = pd.DataFrame(self.log_rows[sheet_name])
+                rows = self.log_rows[sheet_name]
+                if sheet_name in sparse:
+                    rows = [row for row in rows if row != {}]
+                df = pd.DataFrame(rows)
 
                 df.to_excel(writer, sheet_name=sheet_name, index=False)
 
