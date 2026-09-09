@@ -125,6 +125,17 @@ def test_repeat_suffix_cannot_collide_with_another_domain_name(tmp_path, monkeyp
     module = importlib.import_module("nenv.Tournament")
     manager = importlib.import_module("nenv.SessionManager")
     load = manager.domain_loader
+    read_excel = pd.read_excel
+
+    def catalog_with_synthetic_domain(path, *args, **kwargs):
+        result = read_excel(path, *args, **kwargs)
+        if Path(path) == Path("domains/domains.xlsx"):
+            extra = result.loc[result["DomainName"].astype(str) == "0"].copy()
+            extra["DomainName"] = "0_repeat2"
+            return pd.concat([result, extra], ignore_index=True)
+        return result
+
+    monkeypatch.setattr(module.pd, "read_excel", catalog_with_synthetic_domain)
     monkeypatch.setattr(module, "open_folder", lambda path: None)
     monkeypatch.setattr(manager, "domain_loader", lambda name: load("0"))
     output = tmp_path / "run"

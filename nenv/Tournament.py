@@ -1,15 +1,20 @@
 import datetime
+import importlib
+import inspect
+import math
 import os
+from pathlib import Path
 import random
 import shutil
 import time
 import warnings
 from typing import Union, Set, List, Tuple, Optional
+from numbers import Integral, Real
 import numpy as np
 import pandas as pd
-from nenv.Agent import AgentClass
+from nenv.Agent import AgentClass, AbstractAgent
 from nenv.logger import AbstractLogger, LoggerClass
-from nenv.OpponentModel import OpponentModelClass
+from nenv.OpponentModel import OpponentModelClass, AbstractOpponentModel
 from nenv.SessionManager import SessionManager
 from nenv.utils import ExcelLog, TournamentProcessMonitor, open_folder
 
@@ -60,44 +65,128 @@ class Tournament:
             :param shuffle: Whether shuffle negotiation combinations. *Default False*
         """
 
-        assert deadline_time is not None or deadline_round is not None, "No deadline type is specified."
-        assert deadline_time is None or deadline_time > 0, "Deadline must be positive."
-        assert deadline_round is None or deadline_round > 0, "Deadline must be positive."
+        if deadline_time is None and deadline_round is None:
+            raise ValueError("At least one deadline must be specified.")
+        if deadline_time is not None and (isinstance(deadline_time, bool) or not isinstance(deadline_time, Real)
+                                          or not math.isfinite(deadline_time) or deadline_time <= 0):
+            raise ValueError("deadline_time must be a finite positive number.")
+        if deadline_round is not None and (isinstance(deadline_round, bool) or not isinstance(deadline_round, Integral)
+                                           or deadline_round <= 0):
+            raise ValueError("deadline_round must be a positive integer.")
+        if isinstance(repeat, bool) or not isinstance(repeat, Integral):
+            raise ValueError("repeat must be an integer.")
+        if not isinstance(self_negotiation, bool) or not isinstance(shuffle, bool):
+            raise ValueError("self_negotiation and shuffle must be booleans.")
+        if seed is not None and (isinstance(seed, bool) or not isinstance(seed, Integral) or not 0 <= seed < 2**32):
+            raise ValueError("seed must be an integer from 0 through 2**32 - 1, or None.")
+        self._validate_result_dir(result_dir)
 
         if repeat <= 0:
             warnings.warn("repeat is set to 1.")
             repeat = 1
 
-        assert len(agent_classes) > 0, "Empty list of agent classes."
-        assert len(domains) > 0, "Empty list of domains."
+        if not agent_classes or not domains or isinstance(domains, str):
+            raise ValueError("Agents and domains must be nonempty collections.")
+        if any(isinstance(domain, bool) or not isinstance(domain, (str, Integral))
+               or not str(domain) or any(char in str(domain) for char in "/\\\0") for domain in domains):
+            raise ValueError("Domain identifiers must be nonempty names without path separators.")
 
-        def ordered_classes(classes):
+        def ordered_classes(classes, base_class):
+            if isinstance(classes, (str, bytes)) or classes is None:
+                raise TypeError("Components must be collections of concrete classes.")
+            values = list(classes)
+            if any(not inspect.isclass(value) or not issubclass(value, base_class)
+                   or inspect.isabstract(value) for value in values):
+                raise TypeError(f"Components must be concrete {base_class.__name__} subclasses.")
             if isinstance(classes, (set, frozenset)):
-                return sorted(classes, key=lambda cls: (cls.__module__, cls.__qualname__))
-            return list(dict.fromkeys(classes))
+                return sorted(values, key=lambda cls: (cls.__module__, cls.__qualname__))
+            return list(dict.fromkeys(values))
 
-        self.agent_classes = ordered_classes(agent_classes)
+        self.agent_classes = ordered_classes(agent_classes, AbstractAgent)
         if len(self.agent_classes) < 2 and not self_negotiation:
             raise ValueError("Use at least two different agents or enable self_negotiation.")
-        self.domains = domains
-        self.estimators = ordered_classes(estimator_classes)
+        self.domains = [str(domain) for domain in domains]
+        self.estimators = ordered_classes(estimator_classes, AbstractOpponentModel)
         self.deadline_time = deadline_time
-        self.deadline_round = deadline_round
-        self.loggers = [logger_class(result_dir) for logger_class in ordered_classes(logger_classes)]
+        self.deadline_round = int(deadline_round) if deadline_round is not None else None
+        self.loggers = [logger_class(result_dir) for logger_class in ordered_classes(logger_classes, AbstractLogger)]
         self.result_dir = result_dir
-        self.seed = seed
-        self.repeat = repeat
+        self.seed = int(seed) if seed is not None else None
+        self.repeat = int(repeat)
         self.self_negotiation = self_negotiation
         self.shuffle = shuffle
         self.tournament_process = TournamentProcessMonitor()
         self.killed = False
+        self.cancelled = False
+        self.failure = None
+        self._tournament_logs = None
+
+    @staticmethod
+    def _validate_result_dir(result_dir):
+        """Protect project inputs and ancestor directories from output replacement."""
+        if not isinstance(result_dir, (str, os.PathLike)) or not str(result_dir).strip():
+            raise ValueError("result_dir must be a nonempty directory path.")
+        path = Path(result_dir)
+        target = path.resolve()
+        roots = {Path.cwd().resolve(), Path(__file__).resolve().parents[1]}
+        protected = {root / name for root in roots for name in
+                     ["agents", "nenv", "domains", "domain_generator", "web_framework", "docs", "docs-source",
+                      "tests", ".git", ".github", "tournament_configurations", ".venv"]}
+        if path.is_symlink() or any(target == root or target in root.parents for root in roots):
+            raise ValueError("result_dir cannot replace the project or an ancestor directory.")
+        if any(target == entry or entry in target.parents for entry in protected):
+            raise ValueError("result_dir cannot replace project source, configuration or domain inputs.")
+        if target.exists() and not target.is_dir():
+            raise ValueError("result_dir must be a directory.")
 
     def run(self):
+        """Run the tournament and record failure or cancellation consistently."""
+        self.failure = None
+        self.cancelled = False
+        self._tournament_logs = None
+        try:
+            if self.killed:
+                return
+            self._run()
+        except Exception as error:
+            self.failure = str(error) or type(error).__name__
+            if self._tournament_logs is not None:
+                try:
+                    self._tournament_logs.save(os.path.join(self.result_dir, "results.xlsx"))
+                except Exception as save_error:
+                    warnings.warn(f"Could not save interrupted tournament results: {save_error}")
+            raise
+        finally:
+            if self.failure is not None or self.killed:
+                self.cancelled = self.killed and self.failure is None
+                self.tournament_process.is_active = False
+                self.tournament_process.is_completed = False
+                self.tournament_process.current_session = "Error" if self.failure else "Cancelled"
+                self.tournament_process.last_update_time = time.time() if self.tournament_process.start_time else 0.
+                self.tournament_process.last_update_datetime = datetime.datetime.now()
+
+    def _run(self):
         """
             This method starts the tournament
 
             :return: Nothing
         """
+        # Validate inputs before replacing an earlier result directory.
+        self._validate_result_dir(self.result_dir)
+        self._domain_metadata = pd.read_excel("domains/domains.xlsx", sheet_name="domains", dtype={"DomainName": str})
+        if "DomainName" not in self._domain_metadata:
+            raise ValueError("The domain catalog is missing DomainName.")
+        missing_domains = set(self.domains) - set(self._domain_metadata["DomainName"].dropna())
+        if missing_domains:
+            raise ValueError("Domains missing from the catalog: " + ", ".join(sorted(missing_domains)))
+        loader = importlib.import_module("nenv.SessionManager").domain_loader
+        for domain in self.domains:
+            if self.killed:
+                return
+            loader(domain)
+        if self.killed:
+            return
+
         # Set seed
         if self.seed is not None:
             random.seed(self.seed)
@@ -111,9 +200,6 @@ class Tournament:
         os.makedirs(self.result_dir)
         os.makedirs(os.path.join(os.path.join(self.result_dir, "sessions/")))
 
-        # Set killed flag
-        self.killed = False
-
         # Extract domain information into the result directory
         self.extract_domains()
 
@@ -126,6 +212,7 @@ class Tournament:
 
         # Tournament log file
         tournament_logs = ExcelLog(["TournamentResults"])
+        self._tournament_logs = tournament_logs
 
         tournament_logs.save(os.path.join(self.result_dir, "results.xlsx"))
 
@@ -138,7 +225,10 @@ class Tournament:
 
         session_counts = {}
         used_session_paths = set()
-        for i, (agent_class_1, agent_class_2, domain_name) in enumerate(negotiations):
+        for agent_class_1, agent_class_2, domain_name in negotiations:
+            if self.killed:
+                tournament_logs.save(os.path.join(self.result_dir, "results.xlsx"))
+                return
             # Start session
             session_runner = SessionManager(agent_class_1, agent_class_2, domain_name, self.deadline_time, self.deadline_round, list(self.estimators), self.loggers)
 
@@ -176,6 +266,7 @@ class Tournament:
             print(self.tournament_process.update(f"{session_runner.agentA.name} vs. {session_runner.agentB.name } in Domain: {domain_name}", session_elapsed_time))
 
             if self.killed:  # Check for kill signal
+                tournament_logs.save(os.path.join(self.result_dir, "results.xlsx"))
                 return
 
         self.tournament_process.end()
@@ -211,10 +302,10 @@ class Tournament:
         for domain in self.domains:
             for agent_class_1 in self.agent_classes:
                 for agent_class_2 in self.agent_classes:
-                    if not self.self_negotiation and agent_class_1.__name__ == agent_class_2.__name__:
+                    if not self.self_negotiation and agent_class_1 is agent_class_2:
                         continue
 
-                    for i in range(self.repeat):
+                    for _ in range(self.repeat):
                         combinations.append((agent_class_1, agent_class_2, domain))
 
         if self.shuffle:
@@ -228,16 +319,10 @@ class Tournament:
 
             :return: Nothing
         """
-        full_domains = pd.read_excel("domains/domains.xlsx", sheet_name="domains")
-
-        domains = pd.DataFrame(columns=full_domains.columns[1:])
-
-        domain_counter = 0
-
-        for i, row in full_domains.iterrows():
-            if str(row["DomainName"]) in self.domains:
-                domains.loc[domain_counter] = row
-
-                domain_counter += 1
+        full_domains = getattr(self, "_domain_metadata", None)
+        if full_domains is None:
+            full_domains = pd.read_excel("domains/domains.xlsx", sheet_name="domains", dtype={"DomainName": str})
+        domains = full_domains[full_domains["DomainName"].isin(self.domains)]
+        domains = domains.loc[:, ~domains.columns.str.startswith("Unnamed")]
 
         domains.to_excel(os.path.join(self.result_dir, "domains.xlsx"), sheet_name="domains", index=False)

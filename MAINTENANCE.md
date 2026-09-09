@@ -163,6 +163,60 @@ No automatic compaction is enabled.
 
 ## Validation
 
+### Configuration, domains and run lifecycle
+
+- CLI and web configuration share validation for fields and concrete component
+  types. Time limits must be positive finite numbers; round limits must be
+  positive integers. Single-agent schedules require self-negotiation. The
+  historical fallback from a nonpositive integer repeat count to one is retained.
+- Before replacing output, tournament setup verifies the selected catalog rows
+  by domain name and loads both profiles. Source/input directories, ancestor
+  directories, files and symlink output targets are rejected.
+- Web previews leave stored profiles and the catalog unchanged. Save/create
+  operations replace one catalog entry by its domain identifier; deletion removes
+  the corresponding entries. Saved normalized profiles match the utilities used
+  for the reported domain statistics; older manual profiles could retain values
+  above one while their statistics used normalized utilities. Domain folders and
+  catalog workbooks are each replaced atomically in separate steps. Ordinary
+  catalog write or rename failures restore the prior folder, including removal
+  failures. Process interruption between steps is not a single atomic operation.
+- Both generators accept keyword-only `output_dir`. Staged generation preserves
+  an existing domain when generation fails. Random generation validates and
+  copies ranges, retains the requested constraints, and raises after
+  `max_attempts=1000` unsuccessful candidates by default. Attempts are bounded;
+  large-domain enumeration remains potentially expensive. Infeasible constraints
+  raise `ValueError` rather than silently widening the requested ranges. Bounded
+  issue-weight normalization allocates integer hundredths instead of retrying
+  for floating-point equality, so old seeded domain trajectories may change.
+- Undefined normalized balance scores use JSON `null`. Genius export uses
+  issue weights and bid/utility pairs from the same generated preference.
+- The web process permits one active tournament because RNG and plot settings
+  are shared. Unexpected tournament-level errors close the monitor and retain a
+  nonempty error message; cancellation is retained even before the run starts.
+  Completed session outcomes remain distinct from tournament-level failures.
+
+### Current documentation
+
+The checked-in HTML under `docs/` is a historical snapshot. It does not document
+all model classes or the current abstract preference and metric APIs. The
+[current Sphinx sources](docs-source/README.md) build from this checkout's public
+`nenv` classes into a separate output directory. Documentation dependencies are
+separate from runtime requirements. The documentation workflow creates a review
+artifact and does not deploy the site.
+
+### Constant and single-issue preferences
+
+- Bayesian normalized-utility bounds are invalidated after a new observation,
+  so later queries use the current hypothesis distribution. Finite tied
+  predictions still return zero, without marking the model crashed or blocking
+  future updates.
+- Caduceus2015's utility-space normalization uses equal weights when an issue or
+  value-weight total is zero. Its existing sum-normalization convention remains;
+  positive-total formulas and `init_zero()` behavior are unchanged.
+- RandomDance handles the case where every bid has utility one with a finite
+  self-model that values all offers equally at one. This adds no random draws
+  and leaves the nonconstant-domain formula unchanged.
+
 ### Runtime and portability corrections
 
 - Caduceus2015's utility space uses the concrete inverse initializer; the

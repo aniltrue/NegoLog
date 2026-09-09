@@ -184,8 +184,6 @@ class Session:
         self._run_process_manager('A', 'Terminate', False, is_accept=True, opponent_name=self.agentB.name, t=t)
         self._run_process_manager('B', 'Terminate', False, is_accept=True, opponent_name=self.agentA.name, t=t)
 
-        self.action_history.append(action)
-
         # Tournament log
 
         row = {"TournamentResults": {

@@ -9,6 +9,7 @@ plots, and a local web interface.
 
 [Quickstart](#quickstart) · [Web interface](#web-interface) ·
 [Built-in components](#built-in-components) · [Extend NegoLog](#extend-negolog) ·
+[Documentation](docs-source/README.md) · [Contributing](CONTRIBUTING.md) ·
 [Migration notes](MAINTENANCE.md) · [IJCAI 2024 paper](https://www.ijcai.org/proceedings/2024/998)
 
 > **Updating an existing project?** Read [MAINTENANCE.md](MAINTENANCE.md) first.
@@ -88,6 +89,13 @@ through the registries; custom components can use a full Python path such as
 | `seed`, `shuffle` | Random seed and whether to shuffle the session schedule. See [reproducibility](#validation-and-reproducibility). |
 | `drawing_format` | `matplotlib-PNG`, `matplotlib-SVG`, or `plotly`. |
 
+The CLI and web interface use the same configuration loader. Unknown fields,
+invalid component classes and nonpositive deadlines are rejected; round limits
+must be integers. A single-agent tournament requires `self_negotiation: true`.
+Selected domains must have catalog entries and readable profiles before an
+existing result directory is replaced. Project source/input directories and
+ancestor directories cannot be used as tournament output destinations.
+
 The full bid space grows as the product of the number of values per issue.
 Start with small domains: bid enumeration, bid-space analysis, and per-offer
 assessment can be expensive even when a session has few rounds.
@@ -111,6 +119,40 @@ configuration, and run monitoring. The React build is included in
 [web_framework/](web_framework/), so launching the interface does not require a
 Node.js build. Keep the Flask development server local; it is a desktop research
 interface, not an authenticated multi-user service. Stop it with `Ctrl+C`.
+
+The web interface runs one tournament at a time because random streams and
+plotting settings are process-wide. Finish the active run before changing domains
+or starting another.
+Unexpected tournament-level failures are reported as `Error` with an explanation;
+an individual session that reaches its deadline without agreement remains a
+normal `Failed` outcome. Cancellation requested before startup is retained and
+does not replace earlier results.
+
+### Create and edit domains
+
+The domain editor's preview (`save: false`) updates the preview image without
+changing the stored profiles or domain catalog. Saving updates the existing
+catalog entry instead of adding a duplicate; creation and deletion also keep
+the catalog synchronized. Saved profiles use the same normalized utilities as
+their generated bid-space statistics.
+
+For Python scripts, [generate_domain and generate_random_domain](domain_generator/domain_generator.py)
+accept the keyword-only `output_dir` argument. An alternate directory keeps the
+generated domain files separate from bundled inputs. Generation is staged:
+failure retains an existing domain, while successful generation replaces that
+domain's folder. The web interface manages catalog registration; calling a
+generator directly returns metadata and does not register it in the web catalog.
+Domain folders and catalog workbooks are replaced atomically in separate steps;
+ordinary catalog write or rename failures restore the prior domain. Process
+interruption between these steps is not covered by a single atomic transaction.
+
+Random generation validates the requested ranges and leaves the caller's range
+lists unchanged. It stops with an error after `max_attempts=1000` unsuccessful
+candidates by default; infeasible constraints raise `ValueError` instead of
+silently widening the ranges. Bounded issue-weight normalization uses integer
+hundredths, so the same seed can produce a different domain than older versions.
+This bounds candidate attempts, not the cost of enumerating a large bid space.
+Undefined normalized balance scores are stored as JSON `null`.
 
 ## How the pieces fit
 
@@ -273,6 +315,19 @@ rounds. Instantiate `UniformEstimatedPreference` or `CBOMEstimatedPreference`
 when a concrete estimated profile is needed; `EstimatedPreference` itself is
 abstract. The [migration guide](MAINTENANCE.md#preference-api-migration) describes
 initialization choices and the changed contract.
+
+## Current documentation
+
+[docs-source/](docs-source/README.md) contains focused guides and the current
+public API reference. Follow its build instructions to generate HTML from the
+checked-out `nenv` code in a separate Python 3.10 documentation environment.
+The [documentation workflow](.github/workflows/docs.yml) builds a review artifact;
+it does not deploy a website.
+
+The checked-in HTML in [docs/](docs/README.md) is an older snapshot and omits
+new models and API changes. Use the current sources, this README and
+[MAINTENANCE.md](MAINTENANCE.md) when working with this revision. Contribution
+and validation steps are in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Validation and reproducibility
 

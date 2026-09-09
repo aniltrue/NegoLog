@@ -1,4 +1,5 @@
 from typing import List
+import ast
 
 import nenv
 from nenv.Action import Action
@@ -70,7 +71,15 @@ class SessionLogs:
         if bid_content is None:
             return Bid({})
 
-        bid_dict = json.loads(bid_content.replace("'", '"'))
+        # Current JSON and legacy Python dictionary representations both occur
+        # in workbooks. Literal parsing preserves quotes without executing code.
+        try:
+            bid_dict = json.loads(bid_content)
+        except json.JSONDecodeError:
+            bid_dict = ast.literal_eval(bid_content)
+
+        if not isinstance(bid_dict, dict):
+            raise ValueError("BidContent must describe an issue-value dictionary.")
 
         return Bid(bid_dict)
 
@@ -128,28 +137,35 @@ class SessionLogs:
             :param row: Current tournament row
             :return: Updated tournament row
         """
+        result = row["TournamentResults"]
+        if result.get("Result") != "Acceptance":
+            agent_a_utility = self.agentA.preference.reservation_value
+            agent_b_utility = self.agentB.preference.reservation_value
+            defaults = {
+                "Round": len(self.action_history) // 2,
+                "Time": 1.0,
+                "NumOffer": len(self.action_history),
+                "Who": "-",
+                "Result": "Failed",
+                "AgentAUtility": agent_a_utility,
+                "AgentBUtility": agent_b_utility,
+                "ProductScore": agent_a_utility * agent_b_utility,
+                "SocialWelfare": agent_a_utility + agent_b_utility,
+                "BidContent": None,
+            }
+            # The workbook cannot reconstruct agent errors or timeouts. Retain
+            # the original outcome and fill only missing terminal fields.
+            for key, value in defaults.items():
+                result.setdefault(key, value)
+
+        self.round = int(result["Round"])
         for logger in self.loggers:
-            if 'Result' in row["TournamentResults"] and row["TournamentResults"]["Result"] == 'Acceptance':
+            if result["Result"] == 'Acceptance':
                 update(row, logger.on_accept(row["TournamentResults"]["Who"],
                                              self.parse_bid(row["TournamentResults"]["BidContent"]),
                                              float(row["TournamentResults"]["Time"]),
                                              self))
             else:
-                agent_a_utility = self.agentA.preference.reservation_value
-                agent_b_utility = self.agentB.preference.reservation_value
-
-                row["TournamentResults"]["Round"] = len(self.action_history) // 2
-                self.round = row["TournamentResults"]["Round"]
-                row["TournamentResults"]["Time"] = 1.0
-                row["TournamentResults"]["NumOffer"] = len(self.action_history)
-                row["TournamentResults"]["Who"] = "-"
-                row["TournamentResults"]["Result"] = 'Failed'
-                row["TournamentResults"]["AgentAUtility"] = agent_a_utility
-                row["TournamentResults"]["AgentBUtility"] = agent_b_utility
-                row["TournamentResults"]["ProductScore"] = agent_a_utility * agent_b_utility
-                row["TournamentResults"]["SocialWelfare"] = agent_a_utility + agent_b_utility
-                row["TournamentResults"]["BidContent"] = None
-
                 update(row, logger.on_fail(float(row["TournamentResults"]["Time"]), self))
 
         return row
@@ -170,6 +186,6 @@ class SessionLogs:
 
         # End session logs
         for logger in self.loggers:
-            update(row_tournament, logger.on_session_end(logger, self))
+            update(row_tournament, logger.on_session_end(row_tournament, self))
 
         return row_tournament

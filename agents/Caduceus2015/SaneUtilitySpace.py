@@ -23,9 +23,15 @@ class SaneUtilitySpace(nenv.OpponentModel.CBOMEstimatedPreference):
         issueSum = sum(self.issue_weights.values())
 
         for issue in self.issue_weights.keys():
-            self._issue_weights[issue] /= issueSum
+            if issueSum == 0:
+                self._issue_weights[issue] = 1. / len(self.issue_weights)
+            else:
+                self._issue_weights[issue] /= issueSum
 
             valueSum = sum(self.value_weights[issue].values())
 
             for value in self.value_weights[issue].keys():
-                self._value_weights[issue][value] /= valueSum
+                if valueSum == 0:
+                    self._value_weights[issue][value] = 1. / len(self.value_weights[issue])
+                else:
+                    self._value_weights[issue][value] /= valueSum

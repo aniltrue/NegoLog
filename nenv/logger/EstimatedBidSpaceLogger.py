@@ -21,8 +21,8 @@ class EstimatedBidSpaceLogger(AbstractLogger):
             agentA_utility = session.agentA.preference.get_utility(offer)
             agentB_utility = session.agentB.preference.get_utility(offer)
 
-            estimated_opponent_utilityA = session.agentB.estimators[estimator_id].preference.get_utility(offer)
-            estimated_opponent_utilityB = session.agentA.estimators[estimator_id].preference.get_utility(offer)
+            estimated_opponent_utilityA = session.agentA.estimators[estimator_id].preference.get_utility(offer)
+            estimated_opponent_utilityB = session.agentB.estimators[estimator_id].preference.get_utility(offer)
 
             log = {
                 "EstimatedNashDistanceA": estimated_bid_space_A.nash_distance(

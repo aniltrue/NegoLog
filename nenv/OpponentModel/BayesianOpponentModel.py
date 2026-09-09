@@ -242,6 +242,10 @@ class BayesianOpponentModel(AbstractOpponentModel):
         for i in range(len(self.fExpectedWeight)):
             self.fExpectedWeight[i] = self.getExpectedWeight(i)
 
+        # Normalization bounds belong to the updated hypothesis distribution.
+        self.minUtility = None
+        self.maxUtility = None
+
     def getExpectedUtility(self, bid: Bid) -> float:
         u = 0.
 
@@ -285,9 +289,7 @@ class BayesianOpponentModel(AbstractOpponentModel):
 
         # Handle edge case where min == max
         if abs(self.maxUtility - self.minUtility) < 1e-10:
-            if not self._isCrashed:
-                self._isCrashed = True
-                print("Warning: Bayesian opponent model encountered division by zero in normalization")
+            # Tied finite estimates are valid and must not disable learning.
             return 0.0
 
         value = (u - self.minUtility) / (self.maxUtility - self.minUtility)

@@ -73,6 +73,16 @@ class PlayerData:
         issues = pref.issues
         min = pref.get_utility(bid)
 
+        if min == 1.:
+            # Every outcome is equally optimal; the zero-spread ratio is undefined.
+            for issue in issues:
+                issueData = self.map[issue]
+                for value in issueData.values:
+                    issueData.setValue(value, 1.)
+                issueData.weight = 1. / len(issues)
+                issueData.Locked()
+            return
+
         for issue in issues:
             issueData = self.map[issue]
             bid = pref.bids[-1].copy()
