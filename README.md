@@ -1,4 +1,4 @@
-# NegoLog
+# NegoLog V2
 
 **Build negotiation agents. Run tournaments. Understand their decisions.**
 
@@ -30,8 +30,10 @@ Each agent's **utility profile** scores those bids. A **strategy** decides what
 to offer or accept; an **opponent model** estimates the other side's preferences
 from received offers.
 
-> **Maintenance preview:** these instructions match
-> [PR #2](https://github.com/aniltrue/NegoLog/pull/2), which is awaiting review.
+> **NegoLog V2 update:** these instructions match
+> [PR #2](https://github.com/aniltrue/NegoLog/pull/2), which is awaiting upstream review.
+> The V2 distribution is also available at
+> [monurkeskin/NegoLogV2](https://github.com/monurkeskin/NegoLogV2), version 2.0.0.
 > The clone command below selects that branch. Existing users should read the
 > [migration checklist](MAINTENANCE.md#migration-quick-reference): preference APIs and
 > several model and agent behaviors have changed since the original version.
