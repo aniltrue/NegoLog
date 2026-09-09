@@ -28,7 +28,7 @@ class JavaBridge:
         self._responses = queue.Queue(maxsize=1)
         self._stderr = tempfile.TemporaryFile()
         try:
-            self.process = subprocess.Popen(
+            self.process = subprocess.Popen(  # pylint: disable=consider-using-with
                 command, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                 stderr=self._stderr,
             )  # nosec B603
