@@ -107,8 +107,9 @@ class ExcelLog:
             :param sparse_sheets: Optional sheet names whose empty padding rows
                 should be omitted. Other sheets and the in-memory rows are unchanged.
                 Compacted sheets no longer align by row position with other sheets.
-                Use explicit keys with compatible readers; built-in session metric
-                readers expect dense row alignment. Loading does not restore padding.
+                Use explicit keys with compatible readers. EstimatorMetricLogger
+                supports Round/Action keys; other readers may require dense rows.
+                Loading does not restore padding.
             :return: Nothing
         """
         sparse = sparse_sheets or set()

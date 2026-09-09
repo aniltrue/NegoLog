@@ -19,6 +19,7 @@ class SessionLogs:
     loggers: list                       #: List of Loggers
     log_path: str                       #: Session Log csv path
     action_history: List[Action]        #: List of Action that the agents have taken
+    round: int                         #: Round of the row currently being replayed
 
     def __init__(self, agentA: AbstractAgent, agentB: AbstractAgent, path: str, loggers: list, initiate_agents: bool = False):
         """
@@ -47,6 +48,7 @@ class SessionLogs:
             sheet_names.add(estimator.name)
 
         self.action_history = []
+        self.round = 0
 
         for logger in self.loggers:
             logger_sheet_names = logger.before_session_start(self)
@@ -81,6 +83,7 @@ class SessionLogs:
             :param row_tournament: Tournament log row
             :return: Updated log row
         """
+        self.round = int(row["Round"])
         bid = self.parse_bid(row["BidContent"])
 
         if row["Action"] == 'Accept':
@@ -136,6 +139,7 @@ class SessionLogs:
                 agent_b_utility = self.agentB.preference.reservation_value
 
                 row["TournamentResults"]["Round"] = len(self.action_history) // 2
+                self.round = row["TournamentResults"]["Round"]
                 row["TournamentResults"]["Time"] = 1.0
                 row["TournamentResults"]["NumOffer"] = len(self.action_history)
                 row["TournamentResults"]["Who"] = "-"
