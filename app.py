@@ -1,4 +1,5 @@
 import importlib
+import inspect
 import json
 import os.path
 import shutil
@@ -136,16 +137,14 @@ def fetch_agents():
     try:
         agents = {}
 
-        for file_name in glob.glob("agents/**/*.py", recursive=True):
-            if "ParetoWalker" in file_name or "NegoFormer" in file_name:
-                continue
-
-            module_path = file_name.replace("\\__init__", "").replace("\\", ".").replace(".py", "")
+        for file_name in sorted(glob.glob("agents/**/*.py", recursive=True)):
+            module_path = file_name.replace("\\", "/").removesuffix(".py").replace("/", ".")
+            module_path = module_path.removesuffix(".__init__")
 
             module = importlib.import_module(module_path)
 
             for key, value in module.__dict__.items():
-                if str(type(value)) == "<class 'abc.ABCMeta'>" and issubclass(value, AbstractAgent):
+                if inspect.isclass(value) and issubclass(value, AbstractAgent) and not inspect.isabstract(value):
                     agents[key] = module_path + "." + key
 
         return jsonify({"error": False, "agents": agents})
@@ -324,9 +323,9 @@ def start_tournament():
         with open(tournament_configuration_path, "r") as f:
             configuration = yaml.safe_load(f)
 
-        configuration["agent_classes"] = set([load_agent_class(path) for path in configuration["agents"]])
-        configuration["logger_classes"] = set([load_logger_class(path) for path in configuration["loggers"]])
-        configuration["estimator_classes"] = set([load_estimator_class(path) for path in configuration["estimators"]])
+        configuration["agent_classes"] = [load_agent_class(path) for path in configuration["agents"]]
+        configuration["logger_classes"] = [load_logger_class(path) for path in configuration["loggers"]]
+        configuration["estimator_classes"] = [load_estimator_class(path) for path in configuration["estimators"]]
 
         del configuration["agents"]
         del configuration["loggers"]
@@ -359,14 +358,17 @@ def fetch_tournaments():
         for name, value in tournaments.items():
             tournament_info = {
                 "name": name,
-                "status": "Active" if value.tournament_process.is_active else "Finish",
+                "status": ("Active" if value.tournament_process.is_active else
+                           "Finish" if value.tournament_process.is_completed else "Pending"),
                 "completed_percentage": f"{'%.2f' % (value.tournament_process.completed_percentage * 100.)} %",
                 "estimated_remaining_time": str(value.tournament_process.estimated_remaining_time)
                     if value.tournament_process.estimated_remaining_time is not None else "TBD",
                 "elapsed_time": str(value.tournament_process.elapsed_time),
                 "current": value.tournament_process.current_session,
-                "last_update": str(value.tournament_process.last_update_datetime.strftime('%Y-%m-%d %H:%M:%S')),
-                "start_time": str(value.tournament_process.start_datetime.strftime('%Y-%m-%d %H:%M:%S')),
+                "last_update": (value.tournament_process.last_update_datetime.strftime('%Y-%m-%d %H:%M:%S')
+                                if value.tournament_process.last_update_datetime else "TBD"),
+                "start_time": (value.tournament_process.start_datetime.strftime('%Y-%m-%d %H:%M:%S')
+                               if value.tournament_process.start_datetime else "TBD"),
                 "result_dir": value.result_dir,
                 "full_result_dir": os.path.join(os.getcwd(), value.result_dir)
             }
