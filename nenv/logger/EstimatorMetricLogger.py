@@ -150,10 +150,10 @@ class EstimatorMetricLogger(AbstractLogger):
         # After median round, these metrics may mislead since the number of session dramatically decreases.
         median_round = self.get_median_round(rmse)
 
-        for estimator_name in rmse:
-            rmse[estimator_name] = rmse[estimator_name][:median_round]
-            spearman[estimator_name] = spearman[estimator_name][:median_round]
-            kendall[estimator_name] = kendall[estimator_name][:median_round]
+        # Slice the plotted means without modifying the caller's observations.
+        rmse_mean = {name: values[:median_round] for name, values in rmse_mean.items()}
+        spearman_mean = {name: values[:median_round] for name, values in spearman_mean.items()}
+        kendall_mean = {name: values[:median_round] for name, values in kendall_mean.items()}
 
         draw_line(rmse_mean, self.get_path("opponent model/estimator_rmse_until_median_round"), "Rounds", "RMSE")
         draw_line(spearman_mean, self.get_path("opponent model/estimator_spearman_until_median_round"), "Rounds",
