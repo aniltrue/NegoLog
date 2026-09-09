@@ -22,3 +22,5 @@ from nenv.OpponentModel.ExpectationCOMBOpponentModel import ExpectationCOMBOppon
 from nenv.OpponentModel.RegressionCOMBOpponentModel import RegressionCOMBOpponentModel
 from nenv.OpponentModel.UniformEstimatedPreference import UniformEstimatedPreference
 from nenv.OpponentModel.CBOMEstimatedPreference import CBOMEstimatedPreference
+
+from nenv.OpponentModel.CUHKFrequencyOpponentModel import CUHKFrequencyOpponentModel
