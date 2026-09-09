@@ -100,7 +100,7 @@ From the repository root, with the same environment activated:
 python app.py
 ```
 
-Open **http://127.0.0.1:5000**. To choose another port:
+Open **<http://127.0.0.1:5000>**. To choose another port:
 
 ```sh
 python app.py -p 5001
@@ -175,9 +175,6 @@ These descriptions identify implemented behavior, not measured performance ranki
 
 The [agent registry](agents/__init__.py) exports the following class names:
 
-<details>
-<summary>Show all agent names for YAML configuration</summary>
-
 ```text
 AgentBuyog               AgentGG                 AgentKN
 AhBuNeAgent              Atlas3Agent             BoulwareAgent
@@ -189,8 +186,6 @@ NiceTitForTat            ParsAgent               ParsCatAgent
 PonPokoAgent             RandomDance             Rubick
 SAGAAgent                YXAgent
 ```
-
-</details>
 
 Individual implementations retain their source references and attributions.
 See [agent behavior changes](MAINTENANCE.md#existing-agents) when migrating
@@ -296,6 +291,12 @@ performance advantage over another framework.
 The [test workflow](.github/workflows/tests.yml) runs the same suite on Python
 3.10 with Linux, Windows and macOS runners. Runtime checks include callback
 failures, repeated-session files, cached bid integrity and web entry points.
+
+Rule-specific lint comments identify intentional test assertions, expected
+abstract-class failures, exact-type compatibility guards and legacy attribute
+names. Multiline docstrings use a first-line summary; local `D213` exceptions
+resolve the conflicting second-line convention. These comments do not disable
+the analyzers or skip the tests.
 
 For an experiment, retain the Git commit, YAML configuration, input profiles,
 Python/dependency versions, seed and output directory. The YAML seed sets the

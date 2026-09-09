@@ -16,6 +16,7 @@ from nenv.utils.utility_metrics import utility_pairs
 
 class Model(AbstractOpponentModel):
     def __init__(self, preference):
+        """Use the supplied preference to exercise assessment customization."""
         self._pref = preference
 
     @property
@@ -102,7 +103,7 @@ def test_nonstandard_bid_iterator_is_respected():
             return iter([("color", "blue")])
 
     custom = CustomBid(reference.bids[0].content, .9)
-    true, predicted = utility_pairs(SimpleNamespace(bids=[custom]), estimate, vectorized=True)
+    _, predicted = utility_pairs(SimpleNamespace(bids=[custom]), estimate, vectorized=True)
     assert predicted.tolist() == [estimate.get_utility(custom)]
 
 
@@ -129,7 +130,6 @@ def test_float32_weights_keep_scalar_rounding():
 
 
 def test_custom_weight_view_does_not_override_additive_storage_semantics(monkeypatch):
-    from nenv.Preference import Preference
     reference, estimate = preferences()
     monkeypatch.setattr(Preference, "issue_weights", property(
         lambda self: {issue: weight / 2 for issue, weight in self._issue_weights.items()}))
@@ -138,7 +138,8 @@ def test_custom_weight_view_does_not_override_additive_storage_semantics(monkeyp
 
 def test_base_utility_override_before_lazy_module_import_is_respected():
     import os
-    import subprocess
+    # Isolate import order in the current Python interpreter.
+    import subprocess  # nosec B404
     import sys
     code = '''
 from nenv import Preference, EditablePreference
@@ -147,7 +148,8 @@ from nenv.utils.utility_metrics import utility_pairs
 pref = EditablePreference({'issue': 1.}, {'issue': {'a': 1., 'b': .5}})
 assert utility_pairs(pref, pref, vectorized=True)[1].tolist() == [.42, .42]
 '''
-    subprocess.run([sys.executable, "-c", code], check=True,
+    # The executable and script are trusted test inputs; no shell is involved.
+    subprocess.run([sys.executable, "-c", code], check=True,  # nosec B603
                    env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"})
 
 
@@ -272,20 +274,22 @@ def test_optional_metrics_preserve_model_initialization_and_deadline_api(stored_
             pass
 
     with pytest.raises(TypeError):
-        EstimatedPreference(stored_reference)
+        # Instantiation must fail: this is the abstract API's negative test.
+        EstimatedPreference(stored_reference)  # pylint: disable=abstract-class-instantiated
     default = ConfigurableModel(stored_reference)
-    assert type(default.preference) is UniformEstimatedPreference
+    # The contract selects this exact implementation, not an arbitrary subclass.
+    assert type(default.preference) is UniformEstimatedPreference  # pylint: disable=unidiomatic-typecheck
     assert default.deadline_round == 1000
     assert [default.preference[issue] for issue in default.preference.issues] == [.5, .5]
     inverse = ConfigurableModel(stored_reference, "cbom", 17)
-    assert type(inverse.preference) is CBOMEstimatedPreference
+    assert type(inverse.preference) is CBOMEstimatedPreference  # pylint: disable=unidiomatic-typecheck
     assert inverse.deadline_round == 17
     assert [inverse.preference[issue] for issue in inverse.preference.issues] == pytest.approx([.3, .7])
     assert len(inverse.calculate_error(stored_reference, vectorized=True)) == 3
     inverse.calculate_additional_metrics(stored_reference, pearson=True, mape=True, vectorized=True)
     assert inverse.deadline_round == 17
     inverse.initialize_preference(stored_reference, "uniform")
-    assert type(inverse.preference) is UniformEstimatedPreference
+    assert type(inverse.preference) is UniformEstimatedPreference  # pylint: disable=unidiomatic-typecheck
     assert inverse.deadline_round == 17
     inverse.set_deadline(None)
     assert inverse.deadline_round == 1000

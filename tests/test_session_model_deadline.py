@@ -10,6 +10,7 @@ from nenv.SessionManager import SessionManager
 
 class LegacyConstructorModel(AbstractOpponentModel):
     def __init__(self, reference):
+        """Retain the reference without invoking the base constructor."""
         # A third-party implementation may not call super().__init__.
         self.reference = reference
 
@@ -23,6 +24,7 @@ class LegacyConstructorModel(AbstractOpponentModel):
 
 class RecordingAgent:
     def __init__(self, preference, session_time, estimators):
+        """Record the horizons visible during agent construction."""
         self.preference = preference
         self.session_time = session_time
         self.estimators = estimators

@@ -10,6 +10,7 @@ from nenv.OpponentModel.AbstractOpponentModel import AbstractOpponentModel
 
 class TableModel(AbstractOpponentModel):
     def __init__(self, estimates):
+        """Expose fixed estimates independently of model-learning behavior."""
         self._pref = SimpleNamespace(get_utility=lambda bid: estimates[bid.key])
 
     @property

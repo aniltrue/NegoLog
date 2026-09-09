@@ -1,4 +1,5 @@
 """Actual public framework integration with legacy model initialization."""
+# Pytest assertions are intentional; this rule only recognizes tests importing pytest.
 import importlib
 import json
 from pathlib import Path
@@ -51,21 +52,21 @@ def test_sampling_and_wrapper_work_in_public_session_and_round_extractor(tmp_pat
     (tmp_path / "sessions").mkdir()
     path = tmp_path / "sessions/Cycler_Cycler_Domain1.xlsx"
     result = manager.run(str(path))
-    assert result["TournamentResults"]["Result"] == "Failed"
-    assert result["TournamentResults"]["Round"] == 6
+    assert result["TournamentResults"]["Result"] == "Failed"  # nosemgrep: python_assert_rule-assert-used
+    assert result["TournamentResults"]["Round"] == 6  # nosemgrep: python_assert_rule-assert-used
     names = [model.name for model in manager.agentA.estimators]
     tournament = ExcelLog(["TournamentResults"])
     tournament.append(result)
-    rmse, spearman, kendall = logger.get_estimator_results(tournament, names)
+    rmse, _spearman, _kendall = logger.get_estimator_results(tournament, names)
     for name in names:
         for round_number in range(6):
-            assert bool(rmse[name][round_number]) == (round_number % 2 == 0)
-        assert all(np.isfinite(value) for values in rmse[name] for value in values)
+            assert bool(rmse[name][round_number]) == (round_number % 2 == 0)  # nosemgrep: python_assert_rule-assert-used
+        assert all(np.isfinite(value) for values in rmse[name] for value in values)  # nosemgrep: python_assert_rule-assert-used
 
 
 def test_environment_uses_this_checkout_and_preexisting_agents_remain_available():
     import agents
-    assert Path(nenv.__file__).resolve().parent.parent == Path(__file__).resolve().parents[1]
+    assert Path(nenv.__file__).resolve().parent.parent == Path(__file__).resolve().parents[1]  # nosemgrep: python_assert_rule-assert-used
     for name in ["Rubick", "HardHeaded", "CUHKAgent", "HybridAgent", "HybridAgentWithOppModel",
                  "NiceTitForTat", "IAMhaggler", "PonPokoAgent", "AgentBuyog", "SAGAAgent"]:
-        assert getattr(agents, name)
+        assert getattr(agents, name)  # nosemgrep: python_assert_rule-assert-used

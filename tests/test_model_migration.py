@@ -81,7 +81,8 @@ def test_preference_initializers_are_explicit_and_do_not_mutate_reference(profil
     original_weights = reference.issue_weights
     original_values = reference.value_weights
     with pytest.raises(TypeError):
-        EstimatedPreference(reference)
+        # Instantiation must fail: this is the abstract API's negative test.
+        EstimatedPreference(reference)  # pylint: disable=abstract-class-instantiated
     uniform = UniformEstimatedPreference(reference)
     inverse = CBOMEstimatedPreference(reference)
     assert weights_of(uniform) == pytest.approx([.5, .5, 1., 1., 1., 1., 1.])
@@ -132,7 +133,7 @@ def test_invalid_deadline_is_rejected_at_construction(profile_factory, model_cla
 def test_set_deadline_works_for_custom_constructor_and_updates_window(profile_factory):
     class LegacyConstructor(ConfigurableModel):
         def __init__(self):
-            pass
+            """Exercise a legacy constructor that omits base initialization."""
 
     legacy = LegacyConstructor()
     legacy.set_deadline(17)

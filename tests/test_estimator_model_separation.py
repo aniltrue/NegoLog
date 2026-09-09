@@ -1,4 +1,5 @@
 """Real Excel inputs and captured plot data for generic logger regressions."""
+# Pytest assertions are intentional; this rule only recognizes tests importing pytest.
 from nenv.logger.EstimatorMetricLogger import EstimatorMetricLogger
 from nenv.utils.ExcelLog import ExcelLog
 
@@ -17,8 +18,8 @@ def test_multiple_models_remain_separate(tmp_path):
     tournament = ExcelLog(['TournamentResults'])
     tournament.append({'TournamentResults': {'AgentA': 'A', 'AgentB': 'B', 'DomainName': '1', 'Round': 1}})
     rmse, spearman, kendall = EstimatorMetricLogger(str(tmp_path)).get_estimator_results(tournament, ['First', 'Second'])
-    assert rmse == {'First': [[1., 2.], [1., 2.]], 'Second': [[10., 11.], [10., 11.]]}
-    assert spearman['First'][0] == [3., 4.]
-    assert spearman['Second'][0] == [12., 13.]
-    assert kendall['First'][0] == [5., 6.]
-    assert kendall['Second'][0] == [14., 15.]
+    assert rmse == {'First': [[1., 2.], [1., 2.]], 'Second': [[10., 11.], [10., 11.]]}  # nosemgrep: python_assert_rule-assert-used
+    assert spearman['First'][0] == [3., 4.]  # nosemgrep: python_assert_rule-assert-used
+    assert spearman['Second'][0] == [12., 13.]  # nosemgrep: python_assert_rule-assert-used
+    assert kendall['First'][0] == [5., 6.]  # nosemgrep: python_assert_rule-assert-used
+    assert kendall['Second'][0] == [14., 15.]  # nosemgrep: python_assert_rule-assert-used

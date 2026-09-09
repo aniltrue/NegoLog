@@ -20,7 +20,9 @@ METRIC_COLUMNS = {
 
 class CountingModel(AbstractOpponentModel):
     """A public API extension with observable measurement and update calls."""
+
     def __init__(self, preference, name="Model", values=(.1, .2, .3)):
+        """Initialize fixed metrics and counters for sampling assertions."""
         super().__init__(preference)
         self.model_name = name
         self.values = values
