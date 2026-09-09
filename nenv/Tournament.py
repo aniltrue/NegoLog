@@ -165,12 +165,8 @@ class Tournament:
                 self.tournament_process.last_update_time = time.time() if self.tournament_process.start_time else 0.
                 self.tournament_process.last_update_datetime = datetime.datetime.now()
 
-    def _run(self):
-        """
-            This method starts the tournament
-
-            :return: Nothing
-        """
+    def _preflight(self):
+        """Validate selected inputs before replacing output, respecting cancellation."""
         # Validate inputs before replacing an earlier result directory.
         self._validate_result_dir(self.result_dir)
         self._domain_metadata = pd.read_excel("domains/domains.xlsx", sheet_name="domains", dtype={"DomainName": str})
@@ -182,11 +178,12 @@ class Tournament:
         loader = importlib.import_module("nenv.SessionManager").domain_loader
         for domain in self.domains:
             if self.killed:
-                return
+                return False
             loader(domain)
-        if self.killed:
-            return
+        return not self.killed
 
+    def _prepare_output(self):
+        """Initialize the random streams and replace the validated output folder."""
         # Set seed
         if self.seed is not None:
             random.seed(self.seed)
@@ -202,6 +199,12 @@ class Tournament:
 
         # Extract domain information into the result directory
         self.extract_domains()
+
+    def _run(self):
+        """Run validated sessions and dispatch the final logger summaries."""
+        if not self._preflight():
+            return
+        self._prepare_output()
 
         # Get all combinations
         negotiations = self.generate_combinations()
@@ -234,15 +237,7 @@ class Tournament:
 
             session_path = "%s_%s_Domain%s.xlsx" % \
                            (session_runner.agentA.name, session_runner.agentB.name, domain_name)
-            base_path = session_path
-            occurrence = session_counts.get(base_path, 0) + 1
-            if occurrence > 1:
-                session_path = base_path.removesuffix(".xlsx") + f"_repeat{occurrence}.xlsx"
-            while session_path in used_session_paths:
-                occurrence += 1
-                session_path = base_path.removesuffix(".xlsx") + f"_repeat{occurrence}.xlsx"
-            session_counts[base_path] = occurrence
-            used_session_paths.add(session_path)
+            session_path = self._next_session_path(session_path, session_counts, used_session_paths)
 
             session_start_time = time.time()
             tournament_logs.append(session_runner.run(os.path.join(self.result_dir, "sessions/", session_path)))
@@ -290,6 +285,20 @@ class Tournament:
 
         # Show folder
         open_folder(self.result_dir)
+
+    @staticmethod
+    def _next_session_path(session_path, session_counts, used_session_paths):
+        """Reserve a unique workbook path across repeats and domain-name collisions."""
+        base_path = session_path
+        occurrence = session_counts.get(base_path, 0) + 1
+        if occurrence > 1:
+            session_path = base_path.removesuffix(".xlsx") + f"_repeat{occurrence}.xlsx"
+        while session_path in used_session_paths:
+            occurrence += 1
+            session_path = base_path.removesuffix(".xlsx") + f"_repeat{occurrence}.xlsx"
+        session_counts[base_path] = occurrence
+        used_session_paths.add(session_path)
+        return session_path
 
     def generate_combinations(self) -> List[Tuple[AgentClass, AgentClass, str]]:
         """

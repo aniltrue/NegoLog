@@ -1,5 +1,10 @@
 """Exercise public row iteration and assignment independently of Excel output."""
 
+from collections import UserDict
+from pathlib import Path
+import subprocess
+import sys
+
 import pytest
 
 from nenv.utils.ExcelLog import ExcelLog
@@ -63,10 +68,36 @@ def test_all_documented_assignment_forms_preserve_other_cells():
     assert log[0, "Session"] == {"Value": 4, "Keep": 7}
 
 
-def test_row_assignment_rejects_non_mapping_values():
-    """Reject nonmapping row values without changing existing cells."""
+@pytest.mark.parametrize("key,value", [(0, 3), (0, UserDict({"Session": {"Value": 9}})),
+                                      ((0, "Session"), 3), ((0, "Session"), [("Value", 9)])])
+def test_row_assignment_requires_dictionary_values(key, value):
+    """Require dictionaries for row assignments without changing existing cells."""
     log = ExcelLog(["Session"])
     log.append({"Session": {"Value": 1}})
-    with pytest.raises((TypeError, AssertionError)):
-        log[0, "Session"] = 3
+    with pytest.raises(TypeError):
+        log[key] = value
     assert log[0, "Session"] == {"Value": 1}
+
+
+def test_row_assignment_validation_survives_optimized_python():
+    """Reject iterable replacements even when Python removes assert statements."""
+    script = """
+from collections import UserDict
+from nenv.utils.ExcelLog import ExcelLog
+
+for key, value in [(0, UserDict({"Session": {"Value": 9}})),
+                   ((0, "Session"), [("Value", 9)])]:
+    log = ExcelLog(["Session"])
+    log.append({"Session": {"Value": 1}})
+    try:
+        log[key] = value
+    except TypeError:
+        if log[0, "Session"] != {"Value": 1}:
+            raise RuntimeError("Rejected assignment modified the log.")
+    else:
+        raise RuntimeError("Optimized Python accepted a non-dictionary assignment.")
+"""
+    result = subprocess.run([sys.executable, "-O", "-c", script],
+                            cwd=Path(__file__).resolve().parents[1],
+                            capture_output=True, text=True, timeout=30, check=False)
+    assert result.returncode == 0, result.stderr

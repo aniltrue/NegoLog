@@ -35,6 +35,7 @@ def agents():
 
 class RecordingLogger(AbstractLogger):
     """Record the terminal result received by the session-end callback."""
+
     def on_session_end(self, final_row, session):
         """Expose the supplied terminal outcome in a separate result sheet."""
         return {"Recorded": {"Result": final_row["TournamentResults"]["Result"]}}

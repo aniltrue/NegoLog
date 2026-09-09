@@ -215,13 +215,15 @@ class ExcelLog:
 
     def __setitem__(self, key: Union[int, Tuple[int, str], Tuple[int, str, str]], value: Union[LogRow, Dict[str, Any], Any]):
         if isinstance(key, int):
-            assert isinstance(value, dict), "If `key` is Integer, `value` must be LogRow"
+            if not isinstance(value, dict):
+                raise TypeError("If `key` is Integer, `value` must be LogRow")
 
             for sheet_name in value:
                 self.log_rows[sheet_name][key].update(value[sheet_name])
         elif (isinstance(key, tuple) and len(key) == 2
               and isinstance(key[0], int) and isinstance(key[1], str)):
-            assert isinstance(value, dict), "If `key` is (int, str), `value` must be Dict[str, Any]"
+            if not isinstance(value, dict):
+                raise TypeError("If `key` is (int, str), `value` must be Dict[str, Any]")
 
             self.log_rows[key[1]][key[0]].update(value)
 

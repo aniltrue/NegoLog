@@ -56,14 +56,16 @@ def test_path_checks_reject_abstract_or_wrong_component_types(client, route, pat
 def delayed_threads(monkeypatch):
     """Capture background jobs so tests control their start time."""
     jobs = []
+
     class DelayedThread:
         """Defer a background target until the test explicitly executes it."""
+
         def __init__(self, target, args, daemon):
             """Capture the target call without starting a background thread."""
             jobs.append(lambda: target(*args))
+
         def start(self):
             """Leave the captured job pending for deterministic lifecycle checks."""
-            pass
     monkeypatch.setattr(web.threading, "Thread", DelayedThread)
     return jobs
 

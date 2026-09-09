@@ -120,6 +120,11 @@ configuration, and run monitoring. The React build is included in
 Node.js build. Keep the Flask development server local; it is a desktop research
 interface, not an authenticated multi-user service. Stop it with `Ctrl+C`.
 
+Web requests must use a loopback host and the page's own origin. Local HTTP
+clients without an `Origin` header remain supported. Custom component paths
+execute Python plugin code: use only trusted components and configurations;
+class validation does not sandbox them.
+
 The web interface runs one tournament at a time because random streams and
 plotting settings are process-wide. Finish the active run before changing domains
 or starting another.

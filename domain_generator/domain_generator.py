@@ -346,7 +346,6 @@ def generate_random_domain(name: str,
                            has_randomness: bool = True,
                            *, output_dir=None, max_attempts: int = 1000):
     """Generate a domain within fixed constraints, or fail after max_attempts."""
-
     issue_size_range = _range(issue_size_range, None, "issue_size_range", integer=True, minimum=1, maximum=26)
     value_size_range = _range(value_size_range, None, "value_size_range", integer=True, minimum=1, maximum=26)
     opposition_range = _range(opposition_range, DOMAIN_OPPOSITION_RANGE, "opposition_range", minimum=0)

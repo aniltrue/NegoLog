@@ -104,6 +104,7 @@ def test_plot_failure_keeps_prior_domain(workspace, monkeypatch):
     root, _ = workspace
     create()
     original = snapshot(root)
+
     def fail_plot(*args, **kwargs):
         """Simulate plot generation failure before replacing saved output."""
         raise OSError("plot unavailable")
@@ -200,6 +201,7 @@ def test_domain_removal_rolls_back_if_catalog_cannot_be_written(workspace, monke
     root, client = workspace
     create()
     original = snapshot(root)
+
     def fail_write(*args, **kwargs):
         """Simulate a catalog write failure before publishing the domain change."""
         raise OSError("catalog is unavailable")
@@ -214,6 +216,7 @@ def test_saved_edit_keeps_profiles_if_catalog_write_fails(workspace, monkeypatch
     root, client = workspace
     create()
     original = snapshot(root)
+
     def fail_write(*args, **kwargs):
         """Simulate a catalog write failure before publishing the domain change."""
         raise OSError("catalog unavailable")
@@ -231,6 +234,7 @@ def test_saved_edit_rolls_back_if_catalog_publication_fails(workspace, monkeypat
     create()
     original = snapshot(root)
     replace = Path.replace
+
     def fail_catalog_replace(source, target):
         """Simulate failure when replacing the staged domain catalog workbook."""
         if Path(target) == Path("domains/domains.xlsx"):

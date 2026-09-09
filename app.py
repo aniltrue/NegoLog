@@ -7,11 +7,12 @@ import os.path
 import threading
 from typing import Dict
 from io import BytesIO
+from ipaddress import ip_address
 from pathlib import Path
 from string import ascii_uppercase
 from tempfile import TemporaryDirectory
+from urllib.parse import urlsplit
 from flask import Flask, request, jsonify, render_template, send_file
-from flask_cors import CORS
 import nenv
 from domain_generator.domain_generator import generate_random_domain, generate_domain as generate_single_domain
 from nenv import AbstractAgent
@@ -27,12 +28,40 @@ from nenv.utils.OSUtils import open_folder as utils_open_folder
 app = Flask(__name__, template_folder="web_framework/", static_folder="web_framework/",
             static_url_path="")
 app.config['SECRET_KEY'] = 'secret!'
-CORS(app, resources={r"/*": {"origins": "*"}})
 
 tournaments: Dict[str, nenv.Tournament] = {}
 _state_lock = threading.RLock()
 _running_tournaments = set()
 _preview_images = {}
+
+
+def _origin(value):
+    """Parse an HTTP origin without accepting credentials or URL suffixes."""
+    parsed = urlsplit(value)
+    if parsed.scheme not in {"http", "https"}:
+        raise ValueError("Invalid origin scheme.")
+    if parsed.username is not None or parsed.password is not None:
+        raise ValueError("Origins cannot contain credentials.")
+    if parsed.path or parsed.query or parsed.fragment:
+        raise ValueError("Origins cannot contain a path, query or fragment.")
+    return parsed.scheme, parsed.hostname, parsed.port or (443 if parsed.scheme == "https" else 80)
+
+
+@app.before_request
+def require_local_origin():
+    """Reject foreign browser callers before any local plugin or file action."""
+    try:
+        expected = _origin(f"{request.scheme}://{request.host}")
+        if expected[1] != "localhost" and not ip_address(expected[1]).is_loopback:
+            raise ValueError("The Web interface requires a loopback host.")
+        origin = request.headers.get("Origin")
+        if origin is not None and _origin(origin) != expected:
+            raise ValueError("The browser origin must match this Web interface.")
+        if request.headers.get("Sec-Fetch-Site") in {"cross-site", "same-site"}:
+            raise ValueError("The browser request must come from this origin.")
+    except (ValueError, TypeError):
+        return jsonify({"error": True, "errorMessage": "Use the local Web interface from its own origin."}), 403
+    return None
 
 
 def _request_data():

@@ -12,6 +12,9 @@ def _load_class(class_path, default_module, base_class):
     module_path, separator, name = class_path.rpartition(".")
     if not separator:
         module_path, name = default_module, class_path
+    # Local operators choose trusted executable plugins. Web callers first pass
+    # the app's loopback/same-origin guard; subclass checks are not a sandbox.
+    # nosemgrep: python.lang.security.audit.non-literal-import.non-literal-import
     value = getattr(importlib.import_module(module_path), name)
     if not inspect.isclass(value) or not issubclass(value, base_class) or inspect.isabstract(value):
         raise TypeError(f"{class_path} must be a concrete {base_class.__name__} subclass.")
