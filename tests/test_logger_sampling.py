@@ -34,7 +34,8 @@ class CountingModel(AbstractOpponentModel):
     def update(self, bid, time):
         self.updates += 1
 
-    def calculate_error(self, reference, return_rmse=True, return_spearman=True, return_kendall_tau=True):
+    def calculate_error(self, reference, return_rmse=True, return_spearman=True, return_kendall_tau=True,
+                        *, vectorized=False):
         self.measurements += 1
         return self.values
 

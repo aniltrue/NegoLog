@@ -24,3 +24,12 @@ from nenv.OpponentModel.UniformEstimatedPreference import UniformEstimatedPrefer
 from nenv.OpponentModel.CBOMEstimatedPreference import CBOMEstimatedPreference
 
 from nenv.OpponentModel.CUHKFrequencyOpponentModel import CUHKFrequencyOpponentModel
+
+__all__ = [
+    "AbstractOpponentModel", "OpponentModelClass", "EstimatedPreference",
+    "UniformEstimatedPreference", "CBOMEstimatedPreference",
+    "ClassicFrequencyOpponentModel", "WindowedFrequencyOpponentModel",
+    "BayesianOpponentModel", "ConflictBasedOpponentModel", "CUHKOpponentModel",
+    "CUHKFrequencyOpponentModel", "StepwiseCOMBOpponentModel",
+    "ExpectationCOMBOpponentModel", "RegressionCOMBOpponentModel",
+]
