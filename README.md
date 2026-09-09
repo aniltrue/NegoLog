@@ -1,153 +1,318 @@
 # NegoLog
 
-See [opponent model, agent and assessment update notes](MAINTENANCE.md) for
-behavior changes, preference API migration and validation.
+**A Python framework for bilateral automated negotiation and opponent-model assessment.**
 
-## NegoLog: An Integrated Python-based Automated Negotiation Framework with Enhanced Assessment Components
+Develop bidding and acceptance strategies, estimate an opponent's preferences,
+and evaluate both through configurable tournaments. NegoLog combines
+an extensible negotiation environment, bundled agents and domains, Excel logs,
+plots, and a local web interface.
 
-### IJCAI 2024
+[Quickstart](#quickstart) · [Web interface](#web-interface) ·
+[Built-in components](#built-in-components) · [Extend NegoLog](#extend-negolog) ·
+[Migration notes](MAINTENANCE.md) · [IJCAI 2024 paper](https://www.ijcai.org/proceedings/2024/998)
 
-## Table of Contents
-- [Overview](#overview)
-  - [Abstract](#abstract)
-  - [Features](#features)
-- [Install](#install)
-- [Usage](#usage)
-  - [Command Line](#command-line)
-  - [Web-Based User Interface](#web-based-user-interface)
-- [Development](#development)
-  - [Agent Strategy](#agent-strategy)
-  - [Opponent Model](#opponent-model)
-  - [Custom Logger](#custom-logger)
-- [Citation](#citation)
-- [License](#license)
+> **Updating an existing project?** Read [MAINTENANCE.md](MAINTENANCE.md) first.
+> `EstimatedPreference` is now abstract, base models initialize with uniform
+> weights, and several model and agent policies have changed. This branch should
+> not be treated as a drop-in reproduction of experiments from earlier commits.
 
-## Overview
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg)](https://www.python.org/downloads/release/python-31011/)
-[![Version 1.0](https://img.shields.io/badge/version-1.0-blue.svg)](https://github.com/aniltrue/NegoLog)
-[![status developing](https://img.shields.io/badge/status-developing-g.svg)](https://github.com/aniltrue/NegoLog)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/a0fa8198e61b4ac98d8c3b473dcf3658)](https://app.codacy.com/gh/aniltrue/NegoLog/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+## Quickstart
 
-### Abstract
-The complexity of automated negotiation research calls for dedicated, user-friendly research frameworks that facilitate advanced analytics, comprehensive loggers, visualization tools, and auto-generated domains and preference profiles. This paper introduces NegoLog, a platform that provides advanced and customizable analysis modules to agent developers for exhaustive performance evaluation. NegoLog introduces an automated scenario and tournament generation tool in its Web-based user interface so that the agent developers can adjust the competitiveness and complexity of the negotiations. One of the key novelties of the NegoLog is an individual assessment of preference estimation models independent of the strategies. 
+Use **Python 3.10** and run the following commands from a terminal. The dependency
+versions in [requirements.txt](requirements.txt) target that interpreter.
 
-### Features
-NegoLog is an automated bilateral negotiation framework to develop and analyze sophisticated intelligent agents. NegoLog provides:
-
-- Easy-to-use negotiation library called **nenv** (**N**egotiation **ENV**ironment)
-- **AbstractOpponentModel** class within NegoLog serves as a pivotal component that separates opponent model development from the negotiation process. This innovative architecture allows NegoLog to provide received bids to estimators from the perspective of agents during negotiation. This design choice allows individual evaluation of preference estimation performance of the opponent models without directly utilizing in an agent strategy.
-- NegoLog introduces noval **Analytics and Visualization Module** called **logger**. NegoLog offers a range of built-in loggers designed to provide detailed negotiation logs, advanced analysis for evaluating agent strategy and opponent models, and statistical graphs. The evaluations are performed from three aspects: *negotiation process*, *negotiation outcome*, and *preference estimation*.
-- **AbstractLogger** class, employing callback mechanisms, empowers researchers and developers to easily implement their own *loggers* within NegoLog. This functionality enables customized analyses, logs, and graphs to be effortlessly integrated into the framework, providing users with enhanced flexibility for their specific research or development needs.
-- **Domain Generator Tool** facilitates the creation of diverse negotiation scenarios based on user-defined parameters. This innovative tool automatically generates multiple negotiation domains, empowering users to manipulate the utility distribution and tailor scenarios to their specific needs.
-- **Web-based User Interface** to generate diverse scenarios, manipulate tournament configurations, run & monitor tournaments in a user-friendly fashion.
-
-## Install
-> **_NOTE:_** This project Python project is tested in [Python 3.10](https://www.python.org/downloads/release/python-31011/), Windows 10 and Ubuntu 18.04.
-> Creating a [virtual environment](https://docs.python.org/3.10/library/venv.html) is recommended.
-
-You can install this Python project from the scratch, by following steps:
-
-1. Download whole project from [GitHub](https://github.com/aniltrue/NegoLog).
-2. Install [Python 3](https://www.python.org/downloads/release/python-31011/)
-3. Download & install required Python libraries via `pip`, as shown below:
-    ```bash
-    pip install -r requirements.txt 
-    ```
-4. You can run a tournament as described in [Usage](#usage)
-
-## Usage
-NegoLog is accessible through the console (i.e., command line) and a user-friendly Web-based interface.
-
-### Command Line
-You can start a negotiation tournament with `run.py` Python script by providing a tournament configuration. Tournament configuration is saved in a [YAML](https://yaml.org/) file. An example command line to run on console:
-```bash
-python run.py tournament_example.yaml
+```sh
+git clone https://github.com/aniltrue/NegoLog.git
+cd NegoLog
+python3.10 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+python run.py tournament_configurations/quickstart.yaml
 ```
 
-> **_NOTE:_** You can create or edit your own [YAML](https://yaml.org/) file to customize a tournament.
+Already have a checkout? Start with the virtual-environment step in its root.
+On Windows PowerShell, create the environment with `py -3.10 -m venv .venv`
+and activate it with `.\.venv\Scripts\Activate.ps1`.
 
-### Web-Based User Interface
-[![backend Flask](https://img.shields.io/badge/backend-Flask-blue.svg)](https://flask.palletsprojects.com/en/3.0.x/)
-[![frontend React](https://img.shields.io/badge/frontend-React-blue.svg)](https://react.dev/)
-[![Boostrap 5.2](https://img.shields.io/badge/boostrap-5.2-blue.svg)](https://getbootstrap.com/docs/5.2/getting-started/introduction/)
+The [quickstart configuration](tournament_configurations/quickstart.yaml) runs
+**BoulwareAgent and ConcederAgent in two sessions**, swapping their roles on the
+bundled domain `0` (27 possible bids). Each session has a 20-round limit. Two
+opponent models observe the negotiations, and three loggers record outcomes,
+bid-space distances and estimation accuracy. This is a small functional example,
+not a performance benchmark.
 
-NegoLog provides a web-based user interface to generate negotiation scenarios, create and edit tournament configurations, run and monitor tournaments. To run the web application, the following command line should be called:
-```bash
+> A tournament replaces the contents of its configured `result_dir` when it
+> starts. The example uses `results/quickstart`; change that path before running
+> again if you want to retain the earlier output.
+
+### Read the results
+
+The quickstart writes:
+
+```text
+results/quickstart/
+├── domains.xlsx                 # Domain metadata used in this run
+├── results.xlsx                 # One outcome row per session + logger sheets
+├── results_backup.xlsx          # Snapshot before tournament-level analysis
+├── summary.xlsx                 # Per-agent outcome summaries
+├── sessions/
+│   ├── Boulware_Conceder_Domain0.xlsx
+│   └── Conceder_Boulware_Domain0.xlsx
+└── opponent model/
+    ├── estimator_summary.xlsx   # Final estimation statistics
+    └── ...                     # RMSE and rank-correlation PNGs + CSV data
+```
+
+Open `results.xlsx` for outcomes, `summary.xlsx` for agent comparisons, and the
+session workbooks for individual offers and model measurements. An agreement is
+one possible outcome; a deadline without agreement is also a valid session
+result. Each outcome's `FilePath` identifies its session workbook; repeated
+pairings keep separate files with `_repeat2`, `_repeat3`, ... suffixes.
+Depending on the platform, the CLI opens the results folder when it finishes.
+
+### Configure a tournament
+
+Copy `quickstart.yaml` and change the fields below. Built-in class names resolve
+through the registries; custom components can use a full Python path such as
+`my_loggers.SampledMetrics`.
+
+| Setting | Meaning |
+| --- | --- |
+| `agents` | Negotiating strategies. Both role orders are included. |
+| `domains` | Quoted domain identifiers, e.g. `["0", "1"]`, from [domains/](domains/). Each domain contains the two preference profiles. |
+| `estimators` | Models attached to each agent for observation and assessment. Use `[]` to omit them. |
+| `loggers` | Analyses to run. `TournamentSummaryLogger` uses distance columns supplied by `BidSpaceLogger`; the example includes both. |
+| `deadline_round`, `deadline_time` | A positive round limit and/or time limit in seconds. Use `null` for the unused limit; at least one must be set. |
+| `self_negotiation`, `repeat` | Whether to include same-agent pairings, and how many times to run each pairing. |
+| `result_dir` | Output directory, replaced at the start of the run. |
+| `seed`, `shuffle` | Random seed and whether to shuffle the session schedule. See [reproducibility](#validation-and-reproducibility). |
+| `drawing_format` | `matplotlib-PNG`, `matplotlib-SVG`, or `plotly`. |
+
+The full bid space grows as the product of the number of values per issue.
+Start with small domains: bid enumeration, bid-space analysis, and per-offer
+assessment can be expensive even when a session has few rounds.
+
+## Web interface
+
+From the repository root, with the same environment activated:
+
+```sh
 python app.py
 ```
 
-To specify port:
-```bash
-python app.py -p [PORT]
+Open **http://127.0.0.1:5000**. To choose another port:
+
+```sh
+python app.py -p 5001
 ```
 
-or 
+The local interface supports domain generation and editing, tournament
+configuration, and run monitoring. The React build is included in
+[web_framework/](web_framework/), so launching the interface does not require a
+Node.js build. Keep the Flask development server local; it is a desktop research
+interface, not an authenticated multi-user service. Stop it with `Ctrl+C`.
 
-```bash
-python app.py -port [PORT]
+## How the pieces fit
+
+```mermaid
+flowchart LR
+    Config["YAML configuration"] --> Tournament["Tournament"]
+    Profiles["Domain + two preference profiles"] --> Session["Negotiation session"]
+    Tournament --> Session
+    Session <--> Agents["Agents: offer or accept"]
+    Session --> Models["Models: observe received offers"]
+    Session --> Loggers["Logger callbacks"]
+    Models --> Loggers
+    Loggers --> Results["Excel workbooks + plots"]
 ```
 
-## Development
+The [`nenv`](nenv/) library represents discrete multi-issue bids and additive
+utility profiles. A session alternates offers and acceptance decisions between
+two agents. The framework passes each received offer to that agent's configured
+estimators; loggers can compare the resulting estimates against the opponent's
+true profile for evaluation.
 
-### Agent Strategy
-Agents aim to reach a joint decision within a limited time through negotiation without fully revealing their 
-preferences. During negotiation, agents must decide what to offer and when to accept the opponent's offer. To
-facilitate this process, *AbstractAgent* class provides a framework for developing negotiating agents. Each agent
-must extend *AbstractAgent* class to implement its specific negotiation strategy.
+**Strategy quality and model accuracy are separate questions.** Adding a model
+to `estimators` does not automatically make an agent use it to choose offers.
+An agent must explicitly use an opponent model in its policy. Evaluation loggers
+have access to both true profiles; an agent's strategy receives its own profile.
 
-**Components**:
-Negotiating agents can be formulated as consisting of three main components [Baarslag *et al.* 2014](https://doi.org/10.1007/978-4-431-54758-7_4):
-  - **Bidding Strategy**:  Determines what to offer.
-  - **Acceptance Strategy**: Decides when to accept the opponent's offer
-  - **Opponent Model**: Estimates the preferences of the opponent.
+| Code | Responsibility |
+| --- | --- |
+| [nenv/Agent.py](nenv/Agent.py) | Agent interface and received-offer handling |
+| [nenv/Session.py](nenv/Session.py), [SessionManager.py](nenv/SessionManager.py) | Session lifecycle, deadlines and component setup |
+| [nenv/Tournament.py](nenv/Tournament.py) | Domain/pairing schedule and tournament output |
+| [nenv/OpponentModel/](nenv/OpponentModel/) | Preference estimation and model-assessment APIs |
+| [nenv/logger/](nenv/logger/) | Session and tournament analysis callbacks |
+| [agents/](agents/), [domains/](domains/) | Bundled strategies and preference profiles |
+| [tests/](tests/) | Numerical, migration, logging and integration checks |
 
-  By extending *AbstractAgent* class, *bidding strategy* and *acceptance strategy* are implemented to develop an agent.
-  
-> **Note**: To implement an opponent model, see also [*Opponent Model*](#opponent-model) development.
+## Built-in components
 
-**Methods**:
-To extend *AbstractAgent* class, following methods must be implemented:
-  - **initiate**: Use this method to initialize required variables instead of the constructor.
-  - **name**: Each agent must have a unique name for logging purposes.
-  - **receive_offer**: This method is called when an offer is received. Generally, the opponent model can be updated in this method.
-  - **act**: This method determines the action that the agent takes. It should include the *bidding strategy* and *acceptance strategy*.
-  - **terminate**: This method is called at the end of the negotiation session.
+### Nine opponent models
 
-### Opponent Model
-Estimators (i.e., Opponent Model) predicts the opponent's preferences during a negotiation. Each Opponent Model
-should be a subclass of *AbstractOpponentModel*. They should generate *EstimatedPreference* object which is the
-predicted preferences of the opponent agent. 
+Use these exact class names in the `estimators` list. The
+[model registry](nenv/OpponentModel/__init__.py) is the source of truth.
 
-This separated structure (from the agent strategy) enables to independently develop and evaluate preference estimators via *loggers*.
+| Class | Estimation approach / relevant distinction |
+| --- | --- |
+| `ClassicFrequencyOpponentModel` | Frequency-based issue and value weighting |
+| `WindowedFrequencyOpponentModel` | Frequency observations with a 25-offer comparison window |
+| `BayesianOpponentModel` | Weight/evaluation hypotheses with a deadline-scaled concession assumption |
+| `ConflictBasedOpponentModel` | Offer comparisons, conflicts and preference ordering |
+| `CUHKOpponentModel` | Value frequencies with equal issue weights; counting continues beyond 100 distinct bids |
+| `CUHKFrequencyOpponentModel` | Adapter for the public CUHK agent helper's counting rule; value-count updates stop at the 101st distinct bid |
+| `StepwiseCOMBOpponentModel` | Weight/evaluation hypotheses using consecutive-offer utility differences |
+| `ExpectationCOMBOpponentModel` | Weight/evaluation hypotheses using a historical-mean comparison |
+| `RegressionCOMBOpponentModel` | Weight/evaluation hypotheses using time/utility regression and a deadline-scaled window |
 
-**Methods**:
-To extend  *AbstractOpponentModel* class, following methods must be implemented:
-  - **name**: Each estimator must have a unique name for logging purposes.
-  - **update**: This method is called when an offer is received from the opponent.
-  - **preference**: This method returns the estimated preferences of the opponent as an *EstimatedPreference* object.
+The two CUHK classes implement different update contracts. Neither is an alias
+for the complete `CUHKAgent` strategy. See the [model notes](MAINTENANCE.md#opponent-models)
+and [adapter policy](MAINTENANCE.md#public-cuhk-frequency-adapter) before comparing them.
+These descriptions identify implemented behavior, not measured performance rankings.
+
+### 26 negotiating agents
+
+The [agent registry](agents/__init__.py) exports the following class names:
+
+<details>
+<summary>Show all agent names for YAML configuration</summary>
+
+```text
+AgentBuyog               AgentGG                 AgentKN
+AhBuNeAgent              Atlas3Agent             BoulwareAgent
+Caduceus                 Caduceus2015            ConcederAgent
+CUHKAgent                HardHeaded              HybridAgent
+HybridAgentWithOppModel  IAMhaggler              Kawaii
+LinearAgent              LuckyAgent2022          MICROAgent
+NiceTitForTat            ParsAgent               ParsCatAgent
+PonPokoAgent             RandomDance             Rubick
+SAGAAgent                YXAgent
+```
+
+</details>
+
+Individual implementations retain their source references and attributions.
+See [agent behavior changes](MAINTENANCE.md#existing-agents) when migrating
+an existing comparison.
+
+## Assess opponent models
+
+The Python API can evaluate an estimator independently of a full tournament.
+This example uses a bundled profile as evaluation ground truth and one
+illustrative observation:
+
+```python
+from nenv import Preference
+from nenv.OpponentModel import BayesianOpponentModel
+
+own = Preference("domains/domain0/profileA.json")
+truth = Preference("domains/domain0/profileB.json")
+model = BayesianOpponentModel(own, deadline_round=20)
+model.update(truth.bids[0], t=0.0)
+
+rmse, spearman, kendall = model.calculate_error(truth)
+extra = model.calculate_additional_metrics(truth, pearson=True, mape=True)
+```
+
+`calculate_error` returns the existing three-value tuple. Correlations compare
+utilities of the same bids and preserve ties. A constant estimate, such as an
+unobserved uniform model, has undefined rank correlation (`NaN`), not perfect
+accuracy. Preserve that distinction when aggregating results.
+
+Two options are explicit opt-ins:
+
+- `calculate_error(truth, vectorized=True)` enables additive batch evaluation
+  for supported standard preferences; custom utility implementations fall back
+  to scalar evaluation. No persistent utility cache is introduced.
+- `calculate_additional_metrics` returns only requested named statistics.
+  Pearson is undefined for constant vectors. MAPE is a percentage and returns
+  `NaN` if any true utility is zero; `zero_utility="raise"` requests an error.
+  These options do not add columns to existing loggers automatically.
+
+### Choose the measurement cost
+
+`EstimatorMetricLogger` evaluates every offer by default.
+`EstimatorOnlyFinalMetricLogger` evaluates at the end of a session. To sample
+per-round metrics in a YAML tournament, save this as `my_loggers.py` in the
+repository root:
+
+```python
+from nenv.logger import EstimatorMetricLogger
 
 
-### Custom Logger
-NegoLog provides customizable **Analytics and Visualization Modules** called *logger* for advanced analysis, 
-comprehensive logs and statistical graphs. **AbstractLogger** class, employing callback mechanisms, empowers 
-researchers and developers to easily implement their own *loggers* within NegoLog.
+class SampledMetrics(EstimatorMetricLogger):
+    def __init__(self, log_dir):
+        super().__init__(log_dir, sample_every=5)
+```
 
-> **Note**: Each *logger* must be a subclass of **AbstractLogger** class.
+Replace `EstimatorMetricLogger` with `my_loggers.SampledMetrics` in the YAML's
+`loggers` list. This measures offers from both sides in rounds 0, 5, 10, ...,
+plus the terminal state. Models still receive every offer. Sampling includes
+explicit `Round` and `Action` keys; class-based YAML configuration cannot pass
+constructor keyword arguments directly.
 
-**Methods & Callbacks**:
-  - **initiate**: Use this method to initialize required variables instead of the constructor.
-  - **before_session_start**: This callback is invoked before each session starts.
-  - **on_offer**: This callback is invoked when an offer is proposed. **Round-based** logs and analysis can be conducted in this method. This method should return logs as a dictionary for *session* log file.
-  - **on_accept**:: This callback is invoked when the negotiation session ends **with** an agreement. This method should return logs as a dictionary for *session* log file.
-  - **on_fail**: This callback is invoked when the negotiation session ends **without** any agreement. This method should return logs as a dictionary for *session* log file.
-  - **on_session_end**: This callback is invoked after the negotiation session ends. **Session-based** logs and analysis can be conducted in this method. This method should return logs as a dictionary for *tournament* log file.
-  - **on_tournament_end**: This callback is invoked after the tournament ends. **Tournament-based** logs, analysis and graph generation can be conducted in this method.
-  - **get_path**: The directory path for logs & results.
+The [sampling and sparse-log notes](MAINTENANCE.md#optional-sampling-and-round-keys)
+explain replay requirements and the opt-in `ExcelLog.save(..., sparse_sheets=...)`
+API. Keep default dense output when using consumers that depend on row alignment.
+
+## Extend NegoLog
+
+Custom components use the same interfaces as the bundled implementations:
+
+| Component | Required implementation | Starting point |
+| --- | --- | --- |
+| Agent | `name` property, `initiate(opponent_name)`, `receive_offer(bid, t)`, `act(t)` returning an `Offer` or `Accept` | [ConcederAgent](agents/conceder/Conceder.py) |
+| Opponent model | `name` property and `update(bid, t)`; the base class supplies `preference` | [ClassicFrequencyOpponentModel](nenv/OpponentModel/ClassicFrequencyOpponentModel.py) |
+| Logger | Override the callbacks needed for the analysis; return sheet-to-column mappings for log rows | [BidSpaceLogger](nenv/logger/BidSpaceLogger.py) |
+
+For agents, initialize per-session state in `initiate`; `terminate` is an
+optional cleanup hook. Do not update framework-managed estimators again in
+`receive_offer`, because received-offer handling already updates them.
+Use distinct component display names so logs can identify their results.
+
+Custom models should call the base constructor and support
+`set_deadline(deadline_round)` before observations. Round-limited sessions pass
+the actual horizon; time-only sessions and standalone models default to 1000
+rounds. Instantiate `UniformEstimatedPreference` or `CBOMEstimatedPreference`
+when a concrete estimated profile is needed; `EstimatedPreference` itself is
+abstract. The [migration guide](MAINTENANCE.md#preference-api-migration) describes
+initialization choices and the changed contract.
+
+## Validation and reproducibility
+
+Run the local tests with the same Python 3.10 environment:
+
+```sh
+python -m pip install "pytest>=8.4,<9"
+python -m pytest -q tests
+```
+
+The tests exercise numerical fixtures, model and agent behavior, logging, and
+component integration. Passing them establishes those checked behaviors; it does
+not establish published-paper equivalence, universal agent robustness, or a
+performance advantage over another framework.
+
+The [test workflow](.github/workflows/tests.yml) runs the same suite on Python
+3.10 with Linux, Windows and macOS runners. Runtime checks include callback
+failures, repeated-session files, cached bid integrity and web entry points.
+
+For an experiment, retain the Git commit, YAML configuration, input profiles,
+Python/dependency versions, seed and output directory. The YAML seed sets the
+framework's Python and NumPy random streams; it is not a guarantee of bitwise
+reproduction across agents, machines or wall-clock deadlines. Some agents manage
+their own randomness. Prefer explicit round limits for small deterministic checks
+and record role order and repetition when interpreting comparisons.
+
+Per-offer metrics can affect elapsed time in time-limited sessions. Undefined
+correlations can propagate through summaries, and some historical model display
+names exceed Excel's 31-character worksheet limit. Further migration and known
+limitations are documented in [MAINTENANCE.md](MAINTENANCE.md#validation).
 
 ## Citation
 
-If you use our code in your research, please cite our paper:
+If NegoLog supports your research, please cite the
+[IJCAI 2024 Demo Track paper](https://www.ijcai.org/proceedings/2024/998):
 
 ```bibtex
 @inproceedings{ijcai2024p998,
@@ -166,21 +331,14 @@ If you use our code in your research, please cite our paper:
 }
 ```
 
-## License
+## License and authorship
 
 NegoLog framework & library
+
 Copyright (C) 2024 Anıl Doğru & M. Onur Keskin & Reyhan Aydoğan
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 3
-of the License.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+Distributed under the [GNU General Public License, version 3](LICENSE).
+This software is provided without any warranty, including the implied warranties
+of merchantability or fitness for a particular purpose. Individual agent and
+model implementations retain their references and attribution in their source
+files.

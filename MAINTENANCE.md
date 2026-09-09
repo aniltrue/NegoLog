@@ -163,6 +163,36 @@ No automatic compaction is enabled.
 
 ## Validation
 
+### Runtime and portability corrections
+
+- Caduceus2015's utility space uses the concrete inverse initializer; the
+  abstract-base migration no longer prevents it or the Caduceus portfolio
+  from responding to an offer.
+- SAGA clamps the early acceptance ratio below its target to zero before
+  exponentiation. This avoids NaN or greater-than-one probabilities while
+  retaining the existing random draw and above-target formula.
+- IAMhaggler uses its existing opening curve until an observed time slot has
+  closed, instead of fitting a regression to empty history.
+- RandomDance copies a candidate before changing its issue values; it no
+  longer corrupts the preference's cached bids during initialization.
+- Bid-to-bid and bid-to-dictionary equality compare the complete content.
+  Content hashes ignore issue insertion order, so equal bids share dictionary
+  and set entries. Do not mutate a bid's content while it is a dictionary key.
+- Callback exceptions reach the session's Error result, including failures in
+  initialization. Deliberately cancelled Python callbacks retain TimedOut
+  status. Thread cancellation still depends on Python tracing; it is not a
+  process-isolation guarantee for blocking native code.
+- Repeated sessions keep distinct workbooks, including when a domain name
+  resembles a repetition suffix. Result FilePath values identify each file;
+  built-in readers also resolve these files after moving the results folder.
+- List order is preserved for configured classes. Set inputs are sorted by
+  module/class name before scheduling; duplicate entries are removed.
+- A tournament with no measured offers can finish its error summaries without
+  generating fictitious zero-valued curves. Empty round statistics remain NaN.
+- Web agent discovery handles both path separators and excludes abstract
+  classes. Bundled UI requests use the page's origin, including custom ports;
+  polling a newly registered tournament safely reports Pending.
+
 Use Python 3.10 with the repository's `requirements.txt` and `pytest`:
 
 ```sh
@@ -173,8 +203,8 @@ Tests use small synthetic preferences. They check local behavior and API
 integration; they are not a tournament benchmark or evidence of a performance
 improvement. Historical experiment outputs are not rewritten by these changes.
 
-Two existing limitations are observable in these tests: SAGA can produce a NaN
-acceptance probability for a very low-utility offer (the exercised case still
-returns a valid counteroffer), and the existing Classic Frequency model name
-exceeds Excel's 31-character sheet-title limit. Neither behavior is introduced
-by this update; some Excel applications may reject that existing sheet name.
+The existing Classic Frequency model name exceeds Excel's 31-character sheet
+title limit; some Excel applications may reject that existing sheet name.
+Legacy dependencies can emit deprecation warnings, and IAMhaggler's Gaussian
+process can emit convergence warnings on small histories. Finite-output checks
+do not establish convergence or negotiation-performance improvements.

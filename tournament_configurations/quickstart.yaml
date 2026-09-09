@@ -1,0 +1,28 @@
+# Run from the repository root:
+#   python run.py tournament_configurations/quickstart.yaml
+# Two role-swapped sessions on a bundled 27-bid domain.
+deadline_time: null
+deadline_round: 20
+
+agents:
+  - BoulwareAgent
+  - ConcederAgent
+domains:
+  - "0"
+
+# BidSpaceLogger supplies the distance columns used by TournamentSummaryLogger.
+loggers:
+  - BidSpaceLogger
+  - TournamentSummaryLogger
+  - EstimatorMetricLogger
+estimators:
+  - BayesianOpponentModel
+  - CUHKFrequencyOpponentModel
+
+self_negotiation: false
+repeat: 1
+# A new run replaces this directory. Change it to retain an earlier run.
+result_dir: results/quickstart
+seed: 1234
+shuffle: false
+drawing_format: matplotlib-PNG
