@@ -2,7 +2,8 @@
 
 from collections import UserDict
 from pathlib import Path
-import subprocess
+# The regression uses only this interpreter and a fixed local script.
+import subprocess  # nosec B404
 import sys
 
 import pytest
@@ -97,7 +98,8 @@ for key, value in [(0, UserDict({"Session": {"Value": 9}})),
     else:
         raise RuntimeError("Optimized Python accepted a non-dictionary assignment.")
 """
-    result = subprocess.run([sys.executable, "-O", "-c", script],
+    # No shell or external command input: exercise a fixed optimized-Python fixture.
+    result = subprocess.run([sys.executable, "-O", "-c", script],  # nosec B603
                             cwd=Path(__file__).resolve().parents[1],
                             capture_output=True, text=True, timeout=30, check=False)
     assert result.returncode == 0, result.stderr
