@@ -1,0 +1,56 @@
+cff-version: 1.2.0
+message: >-
+  If you use NegoLog in your research, please cite the IJCAI 2024 paper
+  listed in preferred-citation and record the code revision used.
+type: software
+title: NegoLog
+authors:
+  - family-names: Doğru
+    given-names: Anıl
+  - family-names: Keskin
+    given-names: Mehmet Onur
+  - family-names: Aydoğan
+    given-names: Reyhan
+repository-code: https://github.com/aniltrue/NegoLog
+url: https://github.com/aniltrue/NegoLog
+license: GPL-3.0
+abstract: >-
+  A Python framework for bilateral automated negotiation and
+  opponent-model assessment, with configurable tournaments,
+  negotiation agents, preference estimators, logs and a local web interface.
+keywords:
+  - automated negotiation
+  - multi-agent systems
+  - opponent modeling
+  - negotiation simulation
+preferred-citation:
+  type: conference-paper
+  title: >-
+    NegoLog: An Integrated Python-based Automated Negotiation Framework
+    with Enhanced Assessment Components
+  authors:
+    - family-names: Doğru
+      given-names: Anıl
+    - family-names: Keskin
+      given-names: Mehmet Onur
+    - family-names: Jonker
+      given-names: Catholijn M.
+    - family-names: Baarslag
+      given-names: Tim
+    - family-names: Aydoğan
+      given-names: Reyhan
+  collection-title: >-
+    Proceedings of the Thirty-Third International Joint Conference on
+    Artificial Intelligence, IJCAI-24
+  publisher:
+    name: International Joint Conferences on Artificial Intelligence Organization
+  editors:
+    - family-names: Larson
+      given-names: Kate
+  start: 8640
+  end: 8643
+  year: 2024
+  month: 8
+  notes: Demo Track
+  doi: 10.24963/ijcai.2024/998
+  url: https://doi.org/10.24963/ijcai.2024/998

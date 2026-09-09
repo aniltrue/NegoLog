@@ -58,7 +58,11 @@ class EstimatedParetoLogger(AbstractLogger):
 
         for estimator in session.agentA.estimators:
             estimator_results = session.session_log.to_data_frame(estimator.name)
-            estimator_results.dropna(inplace=True)
+            # Other loggers share this sheet. Undefined rank correlations must
+            # not discard otherwise valid frontier measurements.
+            estimator_results = estimator_results.reindex(
+                columns=["PrecisionA", "RecallA", "F1A", "PrecisionB", "RecallB", "F1B"]
+            ).dropna()
 
             row[estimator.name] = {
                 "PrecisionA": np.mean(estimator_results["PrecisionA"].to_list()) if len(
@@ -112,8 +116,9 @@ class EstimatedParetoLogger(AbstractLogger):
             if bid_point not in estimated_pareto:
                 fn += 1.
 
-        recall = tp / (tp + fp)
-        precision = tp / (tp + fn)
-        f1 = 2 * precision * recall / (precision + recall)
+        # Empty predictions/frontiers and disjoint sets have zero scores.
+        precision = tp / (tp + fp) if tp + fp else 0.
+        recall = tp / (tp + fn) if tp + fn else 0.
+        f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.
 
         return precision, recall, f1

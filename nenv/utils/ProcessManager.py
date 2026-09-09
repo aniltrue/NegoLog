@@ -37,18 +37,17 @@ class ProcessManager:
             :return: None
         """
 
-        # Handle different kind of arguments.
-        if not args:
+        try:
+            # Handle different kinds of arguments.
+            if not args:
                 return_dict["return_val"] = self.process()
-        elif isinstance(args, list):
+            elif isinstance(args, list):
                 return_dict["return_val"] = self.process(*args)
-        else:
+            else:
                 return_dict["return_val"] = self.process(**args)
-        """
         except Exception as e:  # Keep the exception
             return_dict["exception"] = e
             return_dict["has_exception"] = True
-        """
 
     def run(self, process: Callable, timeout: float, args: Union[list, dict, None] = None) -> object:
         """

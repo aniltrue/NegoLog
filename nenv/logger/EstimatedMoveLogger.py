@@ -8,6 +8,11 @@ import numpy as np
 import os
 
 
+def _ratio_or_nan(numerator, denominator):
+    """Keep an undefined classification ratio as NaN without dividing by zero."""
+    return numerator / denominator if denominator != 0 else np.nan
+
+
 class EstimatedMoveLogger(AbstractLogger):
     """
         *EstimatedUtilityLogger* logs estimated move extracted via Estimators. At the end of the tournament, this logger
@@ -94,7 +99,8 @@ class EstimatedMoveLogger(AbstractLogger):
                 "FN": np.mean(list(fn[estimator_id].values())),
                 "Recall": np.mean(list(recall[estimator_id].values())),
                 "Precision": np.mean(list(precision[estimator_id].values())),
-                "F1": np.mean(list(f1[estimator_id].values()))
+                "F1": np.mean(list(f1[estimator_id].values())),
+                "Accuracy": accuracy[estimator_id],
             }
 
         df.to_excel(self.get_path("opponent model/estimator_move_performance.xlsx"), sheet_name="Move Classification")
@@ -109,11 +115,7 @@ class EstimatedMoveLogger(AbstractLogger):
         accuracy = [0. for _ in range(len(estimator_names))]
 
         for row in tournament_logs.log_rows["TournamentResults"]:
-            agent_a = row["AgentA"]
-            agent_b = row["AgentB"]
-            domain_name = "Domain%d" % int(row["DomainName"])
-
-            session_path = self.get_path(f"sessions/{agent_a}_{agent_b}_{domain_name}.xlsx")
+            session_path = self.get_session_path(row)
             session_log = ExcelLog(file_path=session_path)
 
             for i in range(len(estimator_names)):
@@ -141,7 +143,7 @@ class EstimatedMoveLogger(AbstractLogger):
                         accuracy[i] += 1
 
         for estimator_id in range(len(estimator_names)):
-            accuracy[estimator_id] /= np.sum(confusion_matrices[estimator_id])
+            accuracy[estimator_id] = _ratio_or_nan(accuracy[estimator_id], np.sum(confusion_matrices[estimator_id]))
 
         return accuracy, confusion_matrices
 
@@ -166,11 +168,11 @@ class EstimatedMoveLogger(AbstractLogger):
                     fn[estimator_id][moves[i]] += confusion_matrices[estimator_id][i][j]
                     fp[estimator_id][moves[i]] += confusion_matrices[estimator_id][j][i]
 
-        recall = [{move: tp[i][move] / (tp[i][move] + fn[i][move]) for move in moves} for i in
+        recall = [{move: _ratio_or_nan(tp[i][move], tp[i][move] + fn[i][move]) for move in moves} for i in
                   range(len(estimator_names))]
-        precision = [{move: tp[i][move] / (tp[i][move] + fp[i][move]) for move in moves} for i in
+        precision = [{move: _ratio_or_nan(tp[i][move], tp[i][move] + fp[i][move]) for move in moves} for i in
                      range(len(estimator_names))]
-        f1 = [{move: 2 * recall[i][move] * precision[i][move] / (recall[i][move] + precision[i][move]) for move in
+        f1 = [{move: _ratio_or_nan(2 * recall[i][move] * precision[i][move], recall[i][move] + precision[i][move]) for move in
                moves} for i in range(len(estimator_names))]
 
         return tp, fp, fn, recall, precision, f1

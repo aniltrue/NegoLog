@@ -1,150 +1,210 @@
-# NegoLog
+# NegoLog V2
 
-## NegoLog: An Integrated Python-based Automated Negotiation Framework with Enhanced Assessment Components
+**Build negotiation agents. Run tournaments. Understand their decisions.**
 
-### IJCAI 2024
+NegoLog is a **Python framework for bilateral automated negotiation and
+opponent-model assessment**. Two agents negotiate over a domain, exchange offers,
+and try to reach an agreement. You choose the strategies, preference profiles,
+deadlines and analyses; NegoLog runs the sessions and produces inspectable logs
+and plots.
 
-## Table of Contents
-- [Overview](#overview)
-  - [Abstract](#abstract)
-  - [Features](#features)
-- [Install](#install)
-- [Usage](#usage)
-  - [Command Line](#command-line)
-  - [Web-Based User Interface](#web-based-user-interface)
-- [Development](#development)
-  - [Agent Strategy](#agent-strategy)
-  - [Opponent Model](#opponent-model)
-  - [Custom Logger](#custom-logger)
-- [Citation](#citation)
-- [License](#license)
+[Start here](#quickstart) · [Usage guides](docs-source/README.md) ·
+[Component catalog](docs-source/components.rst) ·
+[IJCAI 2024 paper](https://www.ijcai.org/proceedings/2024/998) ·
+[Cite NegoLog](#cite-negolog) · [Get help](#help-and-contributing)
 
-## Overview
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg)](https://www.python.org/downloads/release/python-31011/)
-[![Version 1.0](https://img.shields.io/badge/version-1.0-blue.svg)](https://github.com/aniltrue/NegoLog)
-[![status developing](https://img.shields.io/badge/status-developing-g.svg)](https://github.com/aniltrue/NegoLog)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/a0fa8198e61b4ac98d8c3b473dcf3658)](https://app.codacy.com/gh/aniltrue/NegoLog/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+![NegoLog workflow: configure a domain, agents and analyses; run negotiation sessions; inspect outcomes, offer histories and model accuracy.](docs-source/_static/workflow.svg)
 
-### Abstract
-The complexity of automated negotiation research calls for dedicated, user-friendly research frameworks that facilitate advanced analytics, comprehensive loggers, visualization tools, and auto-generated domains and preference profiles. This paper introduces NegoLog, a platform that provides advanced and customizable analysis modules to agent developers for exhaustive performance evaluation. NegoLog introduces an automated scenario and tournament generation tool in its Web-based user interface so that the agent developers can adjust the competitiveness and complexity of the negotiations. One of the key novelties of the NegoLog is an individual assessment of preference estimation models independent of the strategies. 
+## What can I do with NegoLog?
 
-### Features
-NegoLog is an automated bilateral negotiation framework to develop and analyze sophisticated intelligent agents. NegoLog provides:
+| Your task | What NegoLog provides | Start with |
+| --- | --- | --- |
+| Develop a negotiation agent | Bidding and acceptance interfaces, session management, and **26 bundled agents** | [Add an agent](docs-source/tutorials.rst#add-your-first-agent-module) |
+| Study opponent preferences | **Nine opponent models**, true-profile assessment, and per-offer or final-session metrics | [Choose models and loggers](docs-source/components.rst) |
+| Run a comparison | Configurable pairings, both role orders, repeated sessions, Excel summaries and plots | [Your first tournament](#quickstart) |
+| Explore negotiation domains | Bundled discrete domains, a generator, profile editing and a local web interface | [Use the web interface](#web-interface) |
 
-- Easy-to-use negotiation library called **nenv** (**N**egotiation **ENV**ironment)
-- **AbstractOpponentModel** class within NegoLog serves as a pivotal component that separates opponent model development from the negotiation process. This innovative architecture allows NegoLog to provide received bids to estimators from the perspective of agents during negotiation. This design choice allows individual evaluation of preference estimation performance of the opponent models without directly utilizing in an agent strategy.
-- NegoLog introduces noval **Analytics and Visualization Module** called **logger**. NegoLog offers a range of built-in loggers designed to provide detailed negotiation logs, advanced analysis for evaluating agent strategy and opponent models, and statistical graphs. The evaluations are performed from three aspects: *negotiation process*, *negotiation outcome*, and *preference estimation*.
-- **AbstractLogger** class, employing callback mechanisms, empowers researchers and developers to easily implement their own *loggers* within NegoLog. This functionality enables customized analyses, logs, and graphs to be effortlessly integrated into the framework, providing users with enhanced flexibility for their specific research or development needs.
-- **Domain Generator Tool** facilitates the creation of diverse negotiation scenarios based on user-defined parameters. This innovative tool automatically generates multiple negotiation domains, empowering users to manipulate the utility distribution and tailor scenarios to their specific needs.
-- **Web-based User Interface** to generate diverse scenarios, manipulate tournament configurations, run & monitor tournaments in a user-friendly fashion.
+New to automated negotiation? An **issue** is a topic such as delivery time; a
+**value** is one choice for that issue. A **bid** assigns a value to every issue.
+Each agent's **utility profile** scores those bids. A **strategy** decides what
+to offer or accept; an **opponent model** estimates the other side's preferences
+from received offers.
 
-## Install
-> **_NOTE:_** This project Python project is tested in [Python 3.10](https://www.python.org/downloads/release/python-31011/), Windows 10 and Ubuntu 18.04.
-> Creating a [virtual environment](https://docs.python.org/3.10/library/venv.html) is recommended.
+> **NegoLog V2 update:** these instructions match
+> [PR #2](https://github.com/aniltrue/NegoLog/pull/2), which is awaiting upstream review.
+> The V2 distribution is also available at
+> [monurkeskin/NegoLogV2](https://github.com/monurkeskin/NegoLogV2), version 2.0.0.
+> The clone command below selects that branch. Existing users should read the
+> [migration checklist](MAINTENANCE.md#migration-quick-reference): preference APIs and
+> several model and agent behaviors have changed since the original version.
 
-You can install this Python project from the scratch, by following steps:
+## Quickstart
 
-1. Download whole project from [GitHub](https://github.com/aniltrue/NegoLog).
-2. Install [Python 3](https://www.python.org/downloads/release/python-31011/)
-3. Download & install required Python libraries via `pip`, as shown below:
-    ```bash
-    pip install -r requirements.txt 
-    ```
-4. You can run a tournament as described in [Usage](#usage)
+You need **Git and Python 3.10**. The dependency constraints and automated checks
+target Python 3.10 on Linux, Windows and macOS. Installation needs internet
+access; the bundled example runs locally on the CPU.
 
-## Usage
-NegoLog is accessible through the console (i.e., command line) and a user-friendly Web-based interface.
+### 1. Get the code
 
-### Command Line
-You can start a negotiation tournament with `run.py` Python script by providing a tournament configuration. Tournament configuration is saved in a [YAML](https://yaml.org/) file. An example command line to run on console:
-```bash
-python run.py tournament_example.yaml
+```sh
+git clone --branch maintenance/agent-model-framework-updates --single-branch https://github.com/aniltrue/NegoLog.git
+cd NegoLog
 ```
 
-> **_NOTE:_** You can create or edit your own [YAML](https://yaml.org/) file to customize a tournament.
+Already viewing a checkout of this branch? Run the next commands from its root.
 
-### Web-Based User Interface
-[![backend Flask](https://img.shields.io/badge/backend-Flask-blue.svg)](https://flask.palletsprojects.com/en/3.0.x/)
-[![frontend React](https://img.shields.io/badge/frontend-React-blue.svg)](https://react.dev/)
-[![Boostrap 5.2](https://img.shields.io/badge/boostrap-5.2-blue.svg)](https://getbootstrap.com/docs/5.2/getting-started/introduction/)
+### 2. Install dependencies
 
-NegoLog provides a web-based user interface to generate negotiation scenarios, create and edit tournament configurations, run and monitor tournaments. To run the web application, the following command line should be called:
-```bash
+#### macOS / Linux
+
+```sh
+python3.10 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+```
+
+<!-- Expandable sections keep optional instructions readable; only their HTML tags need MD033 exceptions. -->
+<!-- markdownlint-disable-next-line MD033 -->
+<details>
+<!-- markdownlint-disable-next-line MD033 -->
+<summary><strong>Windows PowerShell commands</strong></summary>
+
+```powershell
+py -3.10 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+```
+
+If activation is blocked, use `.\.venv\Scripts\python.exe` in place of `python`
+for the install and run commands. No execution-policy change is required.
+
+<!-- markdownlint-disable-next-line MD033 -->
+</details>
+
+### 3. Run your first tournament
+
+```sh
+python run.py tournament_configurations/quickstart.yaml
+```
+
+This runs **Boulware and Conceder in two sessions**, swapping their roles on
+domain `0`: three issues, three values each, **27 possible bids**. Each session
+has a **20-round limit**. Two opponent models observe the negotiations while
+loggers record outcomes and estimation accuracy. The example checks your setup;
+it does not establish a performance ranking.
+
+**Expected result:** the terminal prints `Analysis have been completed.` and
+`results/quickstart/results.xlsx` contains two outcome rows. The results folder
+may open automatically in your file manager. A session can validly end without
+agreement when its deadline is reached.
+
+> Each run replaces its configured `result_dir`. Before rerunning, save the
+> previous output or choose a new directory in the YAML configuration.
+
+### 4. Read the results
+
+| File in `results/quickstart/` | Use it to answer |
+| --- | --- |
+| `results.xlsx` | Which sessions reached agreement, and what utilities did the agents obtain? |
+| `summary.xlsx` | How do outcomes aggregate for each agent? |
+| `sessions/Boulware_Conceder_Domain0.xlsx` | What offers and model measurements led to this outcome? |
+| `sessions/Conceder_Boulware_Domain0.xlsx` | What happened with the roles reversed? |
+| `opponent model/` | How accurate were the estimated preferences? Open the summary workbook, metric plots and CSVs. |
+| `domains.xlsx` | Which domain metadata accompanied this run? |
+
+The [first-run guide](docs-source/getting-started.rst) walks through workbook
+sheets and metric meanings. If a command fails, use
+[troubleshooting](docs-source/troubleshooting.rst).
+
+## Make it your experiment
+
+Copy [quickstart.yaml](tournament_configurations/quickstart.yaml) to
+`tournament_configurations/my_tournament.yaml`, change `result_dir`, then run:
+
+```sh
+python run.py tournament_configurations/my_tournament.yaml
+```
+
+Change one setting at a time:
+
+| To… | Edit… |
+| --- | --- |
+| Compare other strategies | `agents`, using exact class names from the [catalog](docs-source/components.rst) |
+| Try another domain | `domains`, using quoted identifiers such as `["0", "1"]` |
+| Evaluate another estimator | `estimators`; use `[]` to omit models |
+| Change the workload | `deadline_round`, `deadline_time` and `repeat`; at least one positive deadline is required |
+| Select analyses | `loggers`; keep `BidSpaceLogger` with `TournamentSummaryLogger` |
+| Export vector plots | `drawing_format: matplotlib-SVG` |
+
+For `n` distinct agents, `d` domains and `r` repetitions, a tournament without
+self-negotiation runs **`n × (n − 1) × d × r` sessions**. Start small: domain bid
+spaces grow as the product of their issue sizes, and per-offer metrics add work.
+
+**Model accuracy and agent performance answer different questions.** Listing a
+model under `estimators` makes it observe offers; a strategy must explicitly use
+that model to change its decisions. Evaluation loggers can access both true
+profiles, while an agent receives its own profile.
+
+Record the commit, YAML, profiles, dependency versions and seed with your
+results. A seed helps reproduce random choices but does not guarantee identical
+outcomes across all agents, machines or wall-clock deadlines. See the
+[reproducibility checklist](docs-source/tutorials.rst#prepare-a-reproducible-study).
+
+## Web interface
+
+Prefer a visual workflow? From the repository root, in the same environment:
+
+```sh
 python app.py
 ```
 
-To specify port:
-```bash
-python app.py -p [PORT]
-```
+Open **<http://127.0.0.1:5000>**. Browse domains, inspect profiles and bid spaces,
+edit tournament settings, and monitor a run. The React build is bundled, so no
+Node.js build is needed. Use `python app.py -p 5001` if port 5000 is occupied,
+then open <http://127.0.0.1:5001>. Stop the server with `Ctrl+C`.
 
-or 
+![The bundled NegoLog web interface displaying negotiation domains and their properties.](docs-source/_static/web-interface.png)
 
-```bash
-python app.py -port [PORT]
-```
+The [web walkthrough](docs-source/getting-started.rst#try-the-same-workflow-in-the-browser)
+explains the controls. This is a local research interface: keep the development
+server on loopback, use trusted configurations and plugins, and finish the active
+tournament before starting another or modifying domains. Operational details
+are in [running and storing experiments](docs-source/runs.rst).
 
-## Development
+## Learn and extend
 
-### Agent Strategy
-Agents aim to reach a joint decision within a limited time through negotiation without fully revealing their 
-preferences. During negotiation, agents must decide what to offer and when to accept the opponent's offer. To
-facilitate this process, *AbstractAgent* class provides a framework for developing negotiating agents. Each agent
-must extend *AbstractAgent* class to implement its specific negotiation strategy.
+| Next step | Guide |
+| --- | --- |
+| Understand the first run and its outputs | [Getting started](docs-source/getting-started.rst) |
+| Write a YAML, add an agent module, sample metrics | [Practical tutorials](docs-source/tutorials.rst) |
+| Choose bundled agents, models and loggers | [Component catalog](docs-source/components.rst) |
+| Implement a preference estimator or interpret its scores | [Opponent-model API](docs-source/models.rst) |
+| Add analysis callbacks and understand log sheets | [Logging API](docs-source/logging.rst) |
+| Navigate the framework interfaces | [Core API](docs-source/api.rst) |
+| Upgrade existing code or compare behavior across revisions | [Migration and validation notes](MAINTENANCE.md) |
 
-**Components**:
-Negotiating agents can be formulated as consisting of three main components [Baarslag *et al.* 2014](https://doi.org/10.1007/978-4-431-54758-7_4):
-  - **Bidding Strategy**:  Determines what to offer.
-  - **Acceptance Strategy**: Decides when to accept the opponent's offer
-  - **Opponent Model**: Estimates the preferences of the opponent.
+The [documentation entry point](docs-source/README.md) explains how to browse
+these guides on GitHub or build searchable HTML locally. The checked-in
+[older HTML snapshot](docs/README.md) is retained for historical reference;
+use `docs-source/` for this revision's guides and API.
 
-  By extending *AbstractAgent* class, *bidding strategy* and *acceptance strategy* are implemented to develop an agent.
-  
-> **Note**: To implement an opponent model, see also [*Opponent Model*](#opponent-model) development.
+## Cite NegoLog
 
-**Methods**:
-To extend *AbstractAgent* class, following methods must be implemented:
-  - **initiate**: Use this method to initialize required variables instead of the constructor.
-  - **name**: Each agent must have a unique name for logging purposes.
-  - **receive_offer**: This method is called when an offer is received. Generally, the opponent model can be updated in this method.
-  - **act**: This method determines the action that the agent takes. It should include the *bidding strategy* and *acceptance strategy*.
-  - **terminate**: This method is called at the end of the negotiation session.
+If NegoLog supports your research, please cite our
+[IJCAI 2024 Demo Track paper](https://www.ijcai.org/proceedings/2024/998):
 
-### Opponent Model
-Estimators (i.e., Opponent Model) predicts the opponent's preferences during a negotiation. Each Opponent Model
-should be a subclass of *AbstractOpponentModel*. They should generate *EstimatedPreference* object which is the
-predicted preferences of the opponent agent. 
+**NegoLog: An Integrated Python-based Automated Negotiation Framework with
+Enhanced Assessment Components** — Anıl Doğru, Mehmet Onur Keskin,
+Catholijn M. Jonker, Tim Baarslag, and Reyhan Aydoğan. IJCAI 2024, pp. 8640–8643.
+[DOI: 10.24963/ijcai.2024/998](https://doi.org/10.24963/ijcai.2024/998).
 
-This separated structure (from the agent strategy) enables to independently develop and evaluate preference estimators via *loggers*.
+[Download BibTeX](CITATION.bib) · [Machine-readable citation](CITATION.cff)
 
-**Methods**:
-To extend  *AbstractOpponentModel* class, following methods must be implemented:
-  - **name**: Each estimator must have a unique name for logging purposes.
-  - **update**: This method is called when an offer is received from the opponent.
-  - **preference**: This method returns the estimated preferences of the opponent as an *EstimatedPreference* object.
-
-
-### Custom Logger
-NegoLog provides customizable **Analytics and Visualization Modules** called *logger* for advanced analysis, 
-comprehensive logs and statistical graphs. **AbstractLogger** class, employing callback mechanisms, empowers 
-researchers and developers to easily implement their own *loggers* within NegoLog.
-
-> **Note**: Each *logger* must be a subclass of **AbstractLogger** class.
-
-**Methods & Callbacks**:
-  - **initiate**: Use this method to initialize required variables instead of the constructor.
-  - **before_session_start**: This callback is invoked before each session starts.
-  - **on_offer**: This callback is invoked when an offer is proposed. **Round-based** logs and analysis can be conducted in this method. This method should return logs as a dictionary for *session* log file.
-  - **on_accept**:: This callback is invoked when the negotiation session ends **with** an agreement. This method should return logs as a dictionary for *session* log file.
-  - **on_fail**: This callback is invoked when the negotiation session ends **without** any agreement. This method should return logs as a dictionary for *session* log file.
-  - **on_session_end**: This callback is invoked after the negotiation session ends. **Session-based** logs and analysis can be conducted in this method. This method should return logs as a dictionary for *tournament* log file.
-  - **on_tournament_end**: This callback is invoked after the tournament ends. **Tournament-based** logs, analysis and graph generation can be conducted in this method.
-  - **get_path**: The directory path for logs & results.
-
-## Citation
-
-If you use our code in your research, please cite our paper:
+<!-- Expandable sections keep optional instructions readable; only their HTML tags need MD033 exceptions. -->
+<!-- markdownlint-disable-next-line MD033 -->
+<details>
+<!-- markdownlint-disable-next-line MD033 -->
+<summary>Copy BibTeX</summary>
 
 ```bibtex
 @inproceedings{ijcai2024p998,
@@ -163,21 +223,23 @@ If you use our code in your research, please cite our paper:
 }
 ```
 
-## License
+<!-- markdownlint-disable-next-line MD033 -->
+</details>
 
-NegoLog framework & library
-Copyright (C) 2024 Anıl Doğru & M. Onur Keskin & Reyhan Aydoğan
+Also record the code revision used in your experiment. Individual agent and
+model implementations retain their own references; cite the relevant original
+methods when your work relies on them.
 
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 3
-of the License.
+## Help and contributing
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+Start with [troubleshooting](docs-source/troubleshooting.rst). If the issue
+persists, [open an issue](https://github.com/aniltrue/NegoLog/issues) with your
+revision, environment, minimal configuration and traceback. The
+[contribution guide](CONTRIBUTING.md) covers bug reports, documentation fixes,
+new components, and the checks to run before a pull request.
 
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+## License and authorship
+
+Copyright (C) 2024 Anıl Doğru & M. Onur Keskin & Reyhan Aydoğan.
+Distributed under the [GNU General Public License, version 3](LICENSE), without
+warranty. Agent and model implementations retain their attribution in the source.

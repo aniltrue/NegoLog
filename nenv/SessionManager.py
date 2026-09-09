@@ -19,7 +19,7 @@ class SessionManager:
     agentB: AbstractAgent            #: AgentB object
     session: Session                 #: Negotiation session object
     deadline_time: Optional[int]    #: The time-based deadline in terms of seconds
-    deadline_time: Optional[int]    #: The round-based in terms of number of rounds
+    deadline_round: Optional[int]   #: The round-based deadline in number of rounds
 
     def __init__(self, agentA_class: AgentClass, agentB_class: AgentClass, domain_name: str, deadline_time: Optional[int], deadline_round: Optional[int], estimators: List[OpponentModelClass], loggers: List[LoggerClass]):
         """
@@ -41,8 +41,20 @@ class SessionManager:
         self.prefA, self.prefB = domain_loader(domain_name)
         self.domain_no = domain_name
 
-        self.agentA = agentA_class(self.prefA, deadline_round if deadline_time is None else deadline_time, [estimator(self.prefA) for estimator in estimators])
-        self.agentB = agentB_class(self.prefB, deadline_round if deadline_time is None else deadline_time, [estimator(self.prefB) for estimator in estimators])
+        def initialize_estimators(preference):
+            models = [estimator(preference) for estimator in estimators]
+            for model in models:
+                # Preserve the one-argument constructor used by custom models.
+                model.set_deadline(deadline_round)
+            return models
+
+        self.agentA = agentA_class(self.prefA, deadline_round if deadline_time is None else deadline_time, initialize_estimators(self.prefA))
+        self.agentB = agentB_class(self.prefB, deadline_round if deadline_time is None else deadline_time, initialize_estimators(self.prefB))
+
+        # Agents may create their own models in initiate(), which Session calls
+        # after construction. Keep the round limit distinct from seconds.
+        self.agentA.deadline_round = deadline_round
+        self.agentB.deadline_round = deadline_round
 
         self.session = None
         self.deadline_time = deadline_time

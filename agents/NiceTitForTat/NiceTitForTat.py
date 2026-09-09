@@ -40,7 +40,7 @@ class NiceTitForTat(nenv.AbstractAgent):
         self.offeredOpponentBestBid = 0
         self.myNashUtility = 0.
         self.initialGap = 0.
-        self.opponent_model = BayesianOpponentModel(self.preference)
+        self.opponent_model = BayesianOpponentModel(self.preference, deadline_round=self.deadline_round)
 
     def receive_offer(self, bid: Bid, t: float):
         self.opponent_model.update(bid, t)
@@ -59,7 +59,7 @@ class NiceTitForTat(nenv.AbstractAgent):
 
         counter_bid = self.chooseCounterBid(t)
 
-        if self.isAcceptable(counter_bid, t) and self.can_accept():
+        if self.can_accept() and self.isAcceptable(counter_bid, t):
             return self.makeAcceptAction(t)
 
         self.myHistory.history.append(BidDetails(counter_bid, self.get_utility(counter_bid), t))
@@ -75,8 +75,7 @@ class NiceTitForTat(nenv.AbstractAgent):
     def chooseCounterBid(self, t: float):
         opponent_last_bid = self.opponentHistory.history[-1].bid if len(self.opponentHistory.history) else None
 
-        if self.canUpdateBeliefs(t) and (
-                self.random100.random() < self.NASH_POINT_UPDATE_RATE or self.myNashUtility == 0.):
+        if self.canUpdateBeliefs(t):
             self.update_my_nash_utility()
 
         my_utility_of_opponent_last_bid = self.get_utility(opponent_last_bid)

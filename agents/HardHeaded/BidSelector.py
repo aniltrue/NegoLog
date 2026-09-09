@@ -40,4 +40,4 @@ class BidSelector:
 
                     d -= 0.00000001
 
-            self.BidList = TempBids
+                self.BidList = TempBids

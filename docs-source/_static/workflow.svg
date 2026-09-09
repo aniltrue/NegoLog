@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="330" viewBox="0 0 1120 330" role="img" aria-labelledby="title description">
+  <title id="title">From a negotiation configuration to inspectable results</title>
+  <desc id="description">Configure a domain with two utility profiles, agents, models and loggers. Agents exchange offers in negotiation sessions while opponent models observe received offers. Inspect outcomes, offer histories, utility plots and model accuracy in Excel workbooks and plots.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#567187"/>
+    </marker>
+  </defs>
+  <rect width="1120" height="330" rx="16" fill="#f5f8fb"/>
+  <g font-family="system-ui, -apple-system, Segoe UI, sans-serif">
+    <g fill="#fff" stroke="#cedce6" stroke-width="1.5">
+      <rect x="22" y="22" width="316" height="238" rx="12"/>
+      <rect x="386" y="22" width="348" height="238" rx="12"/>
+      <rect x="782" y="22" width="316" height="238" rx="12"/>
+    </g>
+    <g font-size="13" font-weight="700" letter-spacing="1.5" fill="#125b80">
+      <text x="44" y="52">01 / CONFIGURE</text>
+      <text x="408" y="52">02 / NEGOTIATE</text>
+      <text x="804" y="52">03 / INSPECT</text>
+    </g>
+    <g font-size="23" font-weight="700" fill="#163d59">
+      <text x="44" y="86">Set up your comparison</text>
+      <text x="408" y="86">Run negotiation sessions</text>
+      <text x="804" y="86">Understand the results</text>
+    </g>
+    <g font-size="17" fill="#203047">
+      <text x="44" y="125">Domain + two utility profiles</text>
+      <text x="44" y="157">Agents, models and loggers</text>
+      <text x="44" y="189">Deadlines, repeats and seed</text>
+      <text x="44" y="232" font-size="15" fill="#506578">YAML file or local web interface</text>
+      <text x="804" y="125">Agreement and utility outcomes</text>
+      <text x="804" y="157">Offer histories and bid-space plots</text>
+      <text x="804" y="189">Opponent-model accuracy</text>
+      <text x="804" y="232" font-size="15" fill="#506578">Excel workbooks, plots and CSVs*</text>
+    </g>
+    <g fill="#eaf3f8" stroke="#c5d9e7">
+      <rect x="408" y="106" width="108" height="43" rx="8"/>
+      <rect x="604" y="106" width="108" height="43" rx="8"/>
+    </g>
+    <g font-size="17" font-weight="600" text-anchor="middle" fill="#163d59">
+      <text x="462" y="133">Agent A</text>
+      <text x="658" y="133">Agent B</text>
+    </g>
+    <g stroke="#567187" stroke-width="2" fill="none" marker-end="url(#arrow)">
+      <path d="M 345 137 H 377"/>
+      <path d="M 741 137 H 773"/>
+      <path d="M 526 121 H 594"/>
+      <path d="M 594 137 H 526"/>
+      <path d="M 560 153 V 172"/>
+    </g>
+    <g font-size="16" text-anchor="middle" fill="#203047">
+      <text x="560" y="197">Models observe received offers</text>
+      <text x="560" y="232" font-size="15" fill="#506578">Loggers record and assess each run</text>
+    </g>
+    <text x="560" y="298" font-size="15" text-anchor="middle" fill="#506578">* Outputs depend on your selected loggers. Model assessment and agent strategy are separate choices.</text>
+  </g>
+</svg>

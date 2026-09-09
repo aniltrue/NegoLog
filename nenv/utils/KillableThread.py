@@ -33,8 +33,14 @@ class KillableThread(threading.Thread):
             :return: Nothing
         """
         sys.settrace(self.globaltrace)
-        self.__run_backup()
-        self.run = self.__run_backup
+        try:
+            self.__run_backup()
+        except SystemExit:
+            if not self.__killed:
+                raise
+        finally:
+            sys.settrace(None)
+            self.run = self.__run_backup
 
     def globaltrace(self, frame, event, arg):
         """

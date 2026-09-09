@@ -38,6 +38,7 @@ class AbstractAgent(ABC):
     last_received_bids: List[Bid]               #: The history of received bids from the opponent
     estimators: List[AbstractOpponentModel]     #: The list of Provided Opponent Model by the tournament settings
     session_time: int                           #: The maximum time (in terms of seconds) of the current session
+    deadline_round: Optional[int] = None        #: Round limit supplied by SessionManager, if available
 
     def __init__(self, preference: Preference, session_time: int, estimators: List[AbstractOpponentModel]):
         """

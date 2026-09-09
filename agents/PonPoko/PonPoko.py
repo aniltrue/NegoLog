@@ -35,7 +35,7 @@ class PonPokoAgent(nenv.AbstractAgent):
         self.threshold_low = .99
         self.threshold_high = 1.0
 
-        self.pattern = random.choice(list(range(self.PATTERN_SIZE + 1)))
+        self.pattern = random.randint(0, self.PATTERN_SIZE - 1)
 
     def receive_offer(self, bid: Bid, t: float):
         self.lastReceivedBid = bid.copy()

@@ -305,6 +305,11 @@ class Preference:
         return self.bids[-1].copy()
 
 
+# Keep the original method identity for optional batch evaluation. Defining it
+# here also detects utility overrides installed before the batch module loads.
+_ADDITIVE_GET_UTILITY = Preference.get_utility
+
+
 def domain_loader(domain_name: str) -> (Preference, Preference):
     """
         This method generates the Preferences for both parties based on the given domain no.

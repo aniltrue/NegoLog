@@ -119,7 +119,7 @@ class Rubick(nenv.AbstractAgent):
         if "Opponent" not in self.parties:
             self.sortPartyProfiles("Opponent")
 
-        if len(self.parties) >= 3 and len(self.history) != 0 and not self.isHistoryAnalyzed:
+        if len(self.parties) >= 2 and len(self.history) != 0 and not self.isHistoryAnalyzed:
             self.analyzeHistory()
 
     def act(self, t: float) -> nenv.Action:
@@ -313,10 +313,12 @@ class Rubick(nenv.AbstractAgent):
         medianEvalValues1 = []
 
         for i in range(len(self.frequentValuesList0)):
-            medianEvalValues0.append(self.median(self.frequentValuesList0[i]))
-            medianEvalValues1.append(self.median(self.frequentValuesList1[i]))
+            medianEvalValues0.append(self.mean(self.frequentValuesList0[i]))
+            medianEvalValues1.append(self.mean(self.frequentValuesList1[i]))
 
         for i in range(len(self.frequentValuesList0)):
+            opp0priors = []
+            opp1priors = []
             for val in self.frequentValuesList0[i].keys():
                 if self.frequentValuesList0[i][val] >= medianEvalValues0[i]:
                     opp0priors.append(val)
@@ -330,6 +332,12 @@ class Rubick(nenv.AbstractAgent):
 
             if len(opp1priors) > 0:
                 self.opp1bag.append(random.choice(opp1priors))
+
+    def mean(self, fvl: dict) -> float:
+        """Return the mean frequency of values in one issue."""
+        if len(fvl) == 0:
+            return 0.0
+        return sum(fvl.values()) / len(fvl)
 
     def median(self, fvl: dict) -> float:
         """

@@ -1,5 +1,4 @@
 from typing import Dict, List, Set, TypeVar, Any, Union, Tuple, Optional
-from nenv.utils.TypeCheck import TypeCheck
 
 import pandas as pd
 
@@ -40,7 +39,7 @@ class LogRowIterator:
         self.index = 0
 
     def __next__(self) -> (int, LogRow):
-        if self.index < len(self.log_rows):
+        if self.index < max((len(rows) for rows in self.log_rows.values()), default=0):
 
             row: LogRow = {}
 
@@ -99,16 +98,27 @@ class ExcelLog:
             df = pd.read_excel(file_path, sheet_name=sheet_name)
             self.log_rows[sheet_name] = [row for _, row in df.to_dict('index').items()]
 
-    def save(self, file_path: str):
+    def save(self, file_path: str, sparse_sheets: Optional[Set[str]] = None):
         """
             Save to file
 
             :param file_path: File path
+            :param sparse_sheets: Optional sheet names whose empty padding rows
+                should be omitted. Other sheets and the in-memory rows are unchanged.
+                Compacted sheets no longer align by row position with other sheets.
+                Use explicit keys with compatible readers. EstimatorMetricLogger
+                supports Round/Action keys; other readers may require dense rows.
+                Loading does not restore padding.
             :return: Nothing
         """
+        sparse = sparse_sheets or set()
+
         with pd.ExcelWriter(file_path) as writer:
             for sheet_name in self.sheet_names:
-                df = pd.DataFrame(self.log_rows[sheet_name])
+                rows = self.log_rows[sheet_name]
+                if sheet_name in sparse:
+                    rows = [row for row in rows if row != {}]
+                df = pd.DataFrame(rows)
 
                 df.to_excel(writer, sheet_name=sheet_name, index=False)
 
@@ -136,7 +146,7 @@ class ExcelLog:
         for sheet_name in row:
             if sheet_name not in self.sheet_names:
                 self.sheet_names.add(sheet_name)
-                self.log_rows[sheet_name] = []
+                self.log_rows[sheet_name] = [{} for _ in range(len(self))]
 
     def append(self, row: LogRow):
         """
@@ -164,8 +174,7 @@ class ExcelLog:
         self.__update_sheet_names(row)
 
         if row_index == -1:
-            for sheet_name in row:
-                row_index = max(row_index, len(self.log_rows[sheet_name]) - 1)
+            row_index = max(0, len(self) - 1)
 
         for sheet_name in row:
             if row_index < len(self.log_rows[sheet_name]):
@@ -206,16 +215,20 @@ class ExcelLog:
 
     def __setitem__(self, key: Union[int, Tuple[int, str], Tuple[int, str, str]], value: Union[LogRow, Dict[str, Any], Any]):
         if isinstance(key, int):
-            assert TypeCheck[LogRow]().check(value), "If `key` is Integer, `value` must be LogRow"
+            if not isinstance(value, dict):
+                raise TypeError("If `key` is Integer, `value` must be LogRow")
 
             for sheet_name in value:
                 self.log_rows[sheet_name][key].update(value[sheet_name])
-        elif TypeCheck[Tuple[int, str]]().check(key):
-            assert TypeCheck[Dict[str, Any]]().check(key), "If `key` is (int, str), `value` must be Dict[str, Any]"
+        elif (isinstance(key, tuple) and len(key) == 2
+              and isinstance(key[0], int) and isinstance(key[1], str)):
+            if not isinstance(value, dict):
+                raise TypeError("If `key` is (int, str), `value` must be Dict[str, Any]")
 
             self.log_rows[key[1]][key[0]].update(value)
 
-        elif TypeCheck[Tuple[int, str, str]]().check(key):
+        elif (isinstance(key, tuple) and len(key) == 3
+              and isinstance(key[0], int) and isinstance(key[1], str) and isinstance(key[2], str)):
             self.log_rows[key[1]][key[0]][key[2]] = value
 
         else:
@@ -227,7 +240,4 @@ class ExcelLog:
 
             :return: The number of log rows
         """
-        for key, values in self.log_rows.items():
-            return len(values)
-
-        return 0
+        return max((len(rows) for rows in self.log_rows.values()), default=0)

@@ -1,6 +1,5 @@
 import math
 import random
-import time
 from typing import List, Optional
 
 import nenv
@@ -75,7 +74,6 @@ class CUHKAgent(nenv.AbstractAgent):
         return "CUHKAgent"
 
     def act(self, t: float) -> nenv.Action:
-        start_time = time.time()
         action: nenv.Action
 
         self.timeLeftBefore = t
@@ -140,8 +138,7 @@ class CUHKAgent(nenv.AbstractAgent):
                             action = nenv.Offer(bid)
 
         self.ownBidHistory.addBid(bid, self.preference)
-        end_time = time.time()
-        self.timeLeftAfter = t + (end_time - start_time) / self.totalTime if self.totalTime > 0 else t
+        self.timeLeftAfter = t
         self.estimateRoundLeft(False, t)
 
         return action
@@ -162,7 +159,9 @@ class CUHKAgent(nenv.AbstractAgent):
             if self.utilityThreshold > minimumOfBid:
                 self.utilityThreshold = minimumOfBid
         else:
-            if t <= self.concedeToDiscountingFactor:
+            if self.discountingFactor == 1:
+                self.utilityThreshold = maximumOfBid - (maximumOfBid - self.reservationValue) * math.pow(t, self.alpha1)
+            elif t <= self.concedeToDiscountingFactor:
                 minThershold = (maximumOfBid * self.discountingFactor) / math.pow(self.discountingFactor, self.concedeToDiscountingFactor)
 
                 self.utilityThreshold = maximumOfBid - (maximumOfBid - minThershold) * math.pow(t / self.concedeToDiscountingFactor, self.alpha1)

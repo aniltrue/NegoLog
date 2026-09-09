@@ -59,11 +59,7 @@ class Bid:
         if (not isinstance(other, Bid)) and (not isinstance(other, dict)):
             return False
 
-        for issue in self.content.keys():
-            if other[issue] != self.content[issue]:
-                return False
-
-        return True
+        return self.content == (other.content if isinstance(other, Bid) else other)
 
     def __iter__(self):
         """
@@ -115,7 +111,7 @@ class Bid:
 
             :return: Hash value of the bid
         """
-        return self.content.__str__().__hash__()
+        return hash(frozenset(self.content.items()))
 
     def __str__(self):
         """
@@ -209,3 +205,10 @@ class Bid:
         bid.utility = -1.
 
         return bid
+
+
+# Optional additive evaluation must respect customized iteration, even when a
+# caller changes a base-class method before importing the assessment helper.
+_STANDARD_BID_ITER = Bid.__iter__
+_STANDARD_ISSUE_ITER_INIT = IssueIterator.__init__
+_STANDARD_ISSUE_ITER_NEXT = IssueIterator.__next__

@@ -46,6 +46,28 @@ class AbstractLogger(ABC):
 
         pass
 
+    # Keep the first-line summary (D212), rather than the conflicting D213 convention.
+    def get_session_path(self, row: dict) -> str:  # noqa: D213
+        """Resolve a recorded session, including repetitions and moved outputs.
+
+        Older tournament workbooks may lack FilePath; retain their conventional
+        filename fallback. Prefer a matching file in this result directory so
+        copied tournament folders do not read an older copy elsewhere.
+        """
+        recorded = row.get("FilePath")
+        if isinstance(recorded, str) and recorded:
+            filename = recorded.replace("\\", "/").rsplit("/", 1)[-1]
+            local_path = self.get_path(os.path.join("sessions", filename))
+            if os.path.isfile(local_path):
+                return local_path
+            if os.path.isfile(recorded):
+                return recorded
+            return local_path
+        domain = row["DomainName"]
+        if isinstance(domain, float) and domain.is_integer():
+            domain = int(domain)
+        return self.get_path(f"sessions/{row['AgentA']}_{row['AgentB']}_Domain{domain}.xlsx")
+
     def before_session_start(self, session: Union[Session, SessionLogs]) -> List[str]:
         """
             This method is for initiating the logger with the given negotiation session information.

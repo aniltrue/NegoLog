@@ -1,274 +1,269 @@
-from typing import List, Set
+from typing import List, Dict, Tuple, Optional, Any
+from functools import cmp_to_key
+from collections import deque
 from nenv.OpponentModel.AbstractOpponentModel import AbstractOpponentModel
 from nenv.Preference import Preference
 from nenv.Bid import Bid
 
-
 class ConflictBasedOpponentModel(AbstractOpponentModel):
     """
-        **Conflict-based opponent model**:
-            It tries to extract the maximum information gained with limited interaction. It presents a conflict-based
-            opponent modeling technique which resolves the conflicts by ordering the issues and values.
-            The proposed model out-performs them despite the diversity of participants’ negotiation behaviors. Besides,
-            the conflict-based opponent model estimates the entire bid space much more successfully than its competitors
-            in automated negotiation sessions when a small portion of the outcome space was explored. [Keskin2023]_
+    **Conflict-based opponent model**:
+    Uses stored offer comparisons and majority ordering to estimate preferences.
+    Ordinal issue orders are mapped to normalized rank-sum weights.
 
-        .. [Keskin2023] Keskin, M.O., Buzcu, B. & Aydoğan, R. Conflict-based negotiation strategy for human-agent negotiation. Appl Intell 53, 29741–29757 (2023). <https://doi.org/10.1007/s10489-023-05001-9>
+    Based on conflict-based opponent modeling described by Keskin, M.O., Buzcu, B.
+    and Aydogan, R. (2023), Applied Intelligence 53, 29741-29757.
+    https://doi.org/10.1007/s10489-023-05001-9
+
+    Key Features:
+    *   **Comparison Map (CM)**: Persistently stores all historical offer comparisons.
+    *   **Conflict Extraction**: Recalculates conflicts from the full history at every step.
+    *   **Majority Rule**: Updates beliefs based on the majority of accumulated evidence.
     """
 
-    opponent_history: List[Bid]
-
     def __init__(self, reference: Preference):
-        super().__init__(reference)
-        self.opponent_history = []
+        super().__init__(reference, mode='cbom')
+
+        # Domain info extracted from reference preference
+        self.domain: Dict[str, List[str]] = {
+            issue.name: list(issue.values) for issue in self.preference.issues
+        }
+
+        # O: Offer history (deque for sliding window)
+        self.max_history_size = 1000
+        self.opponent_offer_history: deque[Dict[str, str]] = deque(maxlen=self.max_history_size)
+
+        # CM: Comparison Map.
+        # Stores list of (old_offer, new_offer, diffs)
+        self.CM: List[Tuple[Dict[str, str], Dict[str, str], List[Tuple[str, str, str]]]] = []
+
+        # Beliefs
+        self.value_ordering: Dict[str, List[str]] = {}
+        self.issue_ordering: List[str] = []
+
+        # Initialize beliefs based on agent's inverse preferences
+        self._initialize_beliefs_from_agent()
+
+        # Initial utility estimation
+        self._estimateOppUtilitySpace()
 
     @property
     def name(self) -> str:
         return "Conflict-Based Opponent Model"
 
     def update(self, bid: Bid, t: float):
-        self.opponent_history.append(bid)
-
-        # Dictionary that keeps number of same values as keys, and compared offers list as values.
-        comparables_dict = {}
-
-        for i in range(len(self.opponent_history)):
-            for j in range(i + 1, len(self.opponent_history)):
-                # Compare current and next bid's issue values. If they are same, add to the list
-
-                # Create comparison variable for history offers.
-                comparison_pair = ComparisonObject(self.opponent_history[i], self.opponent_history[j])
-
-                # Check if this pair already exists in dict, append otherwise with same value count as a key
-                comparing_issues_size = comparison_pair.comparing_issues_size
-
-                # If count does not exist, create new empty list to append later on.
-                if comparing_issues_size not in comparables_dict:
-                    comparables_dict[comparing_issues_size] = []
-
-                if comparison_pair not in comparables_dict[comparing_issues_size]:
-                    comparables_dict[comparing_issues_size].append(comparison_pair)
-
-        # List that keeps importance of the issues in descending order.
-        # idx 0 is more important than idx 1
-        # Initially at semi-random (the order which the values were inserted)
-
-        issues_orderings = self.preference.issues
-        value_orderings = {issue.name: issue.values for issue in self.preference.issues}
-        issue_size = len(issues_orderings)
-
-        all_pairwise_comparisons = {key: [] for key in issues_orderings}
-        # "issue_name": (first_value, second_value)
-
-        ground_truths = []  # list of 1 value pairwise comparisons
-
-        # comparison pair size 1 equals comparing only 1 value, the rest of the values are the same
-        for comparison_item in comparables_dict.get(1, []):
-            for (issue_name, first_value, second_value) in comparison_item:
-                first_value_idx = value_orderings[issue_name].index(first_value)
-                second_value_idx = value_orderings[issue_name].index(second_value)
-
-                all_pairwise_comparisons[issue_name].append((first_value, second_value))
-                ground_truths.append((first_value, second_value))
-
-                value_orderings[issue_name][first_value_idx], value_orderings[issue_name][second_value_idx] = value_orderings[issue_name][second_value_idx], value_orderings[issue_name][first_value_idx]
-
-        for issue, ordering in value_orderings.items():
-            for first_item, second_item in all_pairwise_comparisons[issue]:
-                first_value_idx = ordering.index(first_item)
-                second_value_idx = ordering.index(second_item)
-
-                if first_value_idx > second_value_idx:
-                    ordering[first_value_idx], ordering[second_value_idx] = ordering[second_value_idx], ordering[first_value_idx]
-
-        while True:
-            prev_size = sum(map(len, all_pairwise_comparisons.values()))
-            for comparing_amount in range(2, issue_size):
-                list_of_comparisons = comparables_dict.get(comparing_amount, [])
-
-                for comparison_item in list_of_comparisons:
-                    conflicts = []
-
-                    for (issue_name, first_value, second_value) in comparison_item:
-                        # first condition: if the reverse of what is proposed by this comparison item
-                        # (e.g., the first_value > second_value) see if it is contradicted by the ground truths.
-                        # and ignore it.
-
-                        if (second_value, first_value) in ground_truths:
-                            continue
-
-                        if (second_value, first_value) in all_pairwise_comparisons[issue_name]:
-                            conflicts.append(issue_name)
-
-                    # if issue_size = 4, and we are evaluation by pairs (comparing_amount = 2)
-                    # then 4 - 2 - 1 = 1 conflicts means 1 conflicting value is enough to
-                    # determine that one value is weighted higher than the rest.
-
-                    if len(conflicts) == issue_size - comparing_amount - 1:
-                        final_issues = [issue for issue in issues_orderings if issue not in conflicts]
-
-                        for issue in final_issues:
-                            if issue in comparison_item.comparing_issues:
-                                if comparison_item[issue] in all_pairwise_comparisons[issue]:
-                                    continue
-
-                                all_pairwise_comparisons[issue].append(comparison_item[issue])
-
-            if prev_size == sum(map(len, all_pairwise_comparisons.values())):
-                break
-
-        for issue, ordering in value_orderings.items():
-            for first_item, second_item in all_pairwise_comparisons[issue]:
-                first_item_idx = ordering.index(first_item)
-                second_item_idx = ordering.index(second_item)
-
-                if first_item_idx > second_item_idx:
-                    ordering[first_item_idx], ordering[second_item_idx] = ordering[second_item_idx], ordering[
-                        first_item_idx]
-        # swap_code:
-
-        # value_orderings[issue_name][first_value_idx], value_orderings[issue_name][second_value_idx] = value_orderings[
-        #    issue_name][second_value_idx], value_orderings[issue_name][first_value_idx]
-        # second phase is we evaluate and gather information on the rest of the comparison sizes
-
-        conflict_count = {}
-
-        for comparing_issues_size, comparison_pair_list in comparables_dict.items():
-            for comparison_pair in comparison_pair_list:
-                comparing_issues = comparison_pair.comparing_issues
-                conflict_issues = []
-
-                for issue_name, first_value, second_value in comparison_pair:
-                    ordering_for_issue_values = value_orderings[issue_name]
-
-                    # given the values are held in descending order, this is a conflict
-                    if ordering_for_issue_values.index(str(second_value)) < ordering_for_issue_values.index(str(first_value)):
-                        conflict_issues.append(issue_name)
-
-                if len(conflict_issues) == comparing_issues_size - 1:
-                    conflict_count[tuple(comparing_issues)] = conflict_count.get(tuple(comparing_issues), 0) + 1
-
-        # The conflicts are sorted by count, so the most count conflict will have the highest precedence
-        # Since they are applied in order of their counts
-
-        conflict_count_sorted_values = dict(sorted(conflict_count.items(), key=lambda item: item[1]))
-
-        for conflict, amount in conflict_count_sorted_values.items():
-            non_conflict_issues = [issue for issue in issues_orderings.copy() if issue not in conflict]
-
-            # first_value is an earlier bid than second_value
-            # the orderings are held in descending order
-            # these conflicts are captured based on the fact that the first value is supposed to be higher
-            # but they are actually not, therefore, the conflicting issues are the issues that should be
-            # lower in value given our assumption of human concession in negotiations
-            # code block below swaps the issue ordering based on above
-            # since conflicting issue is considered to be causing the lowness, it must be swapped
-            # with the non-conflicting comparing issues.
-
-            for conflict_issue in conflict:
-                for non_conflict_issue in non_conflict_issues:
-                    conflict_idx = issues_orderings.index(conflict_issue)
-                    non_conflict_idx = issues_orderings.index(non_conflict_issue)
-
-                    if conflict_idx < non_conflict_idx:
-                        issues_orderings[conflict_idx], issues_orderings[non_conflict_idx] = issues_orderings[non_conflict_idx], issues_orderings[conflict_idx]
-
-            issue_weights = [0] * issue_size
-            issues_mid = (issue_size - 1) // 2
-            diff = 1 / issue_size
-            issue_weights[issues_mid] = diff
-            sum_diffs = diff
-
-            for i in range(1, issue_size // 2 + 1):
-                target = issues_mid + i
-                if target < issue_size:
-                    target_next = issue_weights[issues_mid + i - 1]
-                    diff = target_next + target_next / issue_size
-                    sum_diffs += diff
-                    issue_weights[target] = diff
-
-                target = issues_mid - i
-                if target < issue_size:
-                    target_prev = issue_weights[issues_mid - i + 1]
-                    diff = target_prev - target_prev / issue_size
-                    sum_diffs += diff
-                    issue_weights[target] = diff
-
-            issue_weights = [issue / sum_diffs for issue in issue_weights]
-            issue_weights.reverse()
-
-            value_weights = {}
-            for issue, values in value_orderings.items():
-                expected = []
-
-                for i in range(1, len(values) + 1):
-                    expected.append(i / len(values))
-
-                expected.reverse()
-                value_weights[issue] = dict(zip(values, expected))
-
-            self._pref._value_weights = value_weights
-            self._pref._issue_weights = dict(zip(issues_orderings, issue_weights))
-
-
-class ComparisonObject:
-    """
-        Helper class for Conflict-Based Opponent Model
-    """
-
-    def __init__(self, first_offer: Bid, second_offer: Bid):
-        self.comparing_issues = []
-        self.first_offer, self.second_offer = self.reduce_elements(
-            first_offer, second_offer
-        )
-
-        # self.comparing_issues = set(self.comparing_issues)
-
-        self.comparing_issues_size = len(self.comparing_issues)
-
-    def __repr__(self):
-        return self.__str__()
-
-    def __str__(self):
-        return str(self.first_offer) + " > " + str(self.second_offer)
-
-    def __eq__(self, other):
         """
-        Takes comparison object as input as returns true if they are same otherwise false.
+        Update the model with a new bid from the opponent.
         """
-        return self.__str__() == other.__str__()
+        # Convert Bid to simple dict (Offer)
+        new_offer = {issue.name: str(bid[issue]) for issue in self.preference.issues}
 
-    def __hash__(self):
-        return self.__str__().__hash__()
+        # 1. Update History and Comparison Map (CM)
+        # Compare NEW offer against all OLD offers in history
+        for old_offer in self.opponent_offer_history:
+            diffs = self._find_differences(old_offer, new_offer)
+            if diffs:
+                self.CM.append((old_offer, new_offer, diffs))
 
-    def __iter__(self):
-        for i in set(self.first_offer).intersection(set(self.second_offer)):
-            yield (i,) + (self.first_offer[i], self.second_offer[i])
+        # Add new offer to history
+        self.opponent_offer_history.append(new_offer)
 
-    def __getitem__(self, issue):
-        return (self.first_offer[issue], self.second_offer[issue])
+        # 2. Extract Conflicts (AC)
+        # Re-calculate counts from the full Comparison Map
+        vc_counts: Dict[str, Dict[Tuple[str, str], int]] = {
+            issue: {} for issue in self.domain
+        }
+        ic_counts: Dict[Tuple[str, str], int] = {}
 
-    def reduce_elements(self, first_offer: Bid, second_offer: Bid):  # fix this with lambdas
-        a = {}
-        b = {}
-        full_a = {}
-        full_b = {}
+        for _old_offer, _current_offer, diffs in self.CM:
+            # Single-issue difference: Strong evidence for value preference
+            if len(diffs) == 1:
+                issue, v_old, v_new = diffs[0]
+                # Evidence: v_old > v_new (Concession Assumption)
+                self._increment_vc(vc_counts, issue, v_old, v_new)
 
-        for key in first_offer.content.keys():
-            full_a[key] = first_offer[key]
-            full_b[key] = second_offer[key]
+            # Multi-issue difference: Evidence for issue importance
+            elif len(diffs) > 1:
+                gains: List[str] = []
+                losses: List[str] = []
 
-            if first_offer[key] != second_offer[key]:
-                a[key] = first_offer[key]
-                b[key] = second_offer[key]
-                self.comparing_issues.append(key)
+                for issue, v_old, v_new in diffs:
+                    # Check if v_old > v_new (Loss) or v_new > v_old (Gain) according to CURRENT belief
+                    if self._is_preferred(issue, v_old, v_new):
+                        losses.append(issue)
+                    elif self._is_preferred(issue, v_new, v_old):
+                        gains.append(issue)
 
-        if len(a) == 0:
-            self.comparing_issues = set(full_a)
+                # Concession Assumption: Total Losses > Total Gains
+                # Implies Issues in Losses are more important than Issues in Gains
+                for loss_issue in losses:
+                    for gain_issue in gains:
+                        self._increment_ic(ic_counts, loss_issue, gain_issue)
 
-            return full_a, full_b
+        # 3. Update Value Ordering (Majority Rule)
+        new_value_ordering = {}
+        for issue in self.domain:
+            values = list(self.domain[issue])
 
-        return a, b
+            def compare_values(v1: str, v2: str) -> int:
+                # Count(v1 > v2)
+                c1 = vc_counts[issue].get((v1, v2), 0)
+                # Count(v2 > v1)
+                c2 = vc_counts[issue].get((v2, v1), 0)
 
-    def is_comparable(self, other):
-        return self.comparing_issues in other.comparing_issues
+                if c1 > c2:
+                    return 1 # v1 > v2
+                elif c2 > c1:
+                    return -1 # v2 > v1
+                else:
+                    # Tie-breaker: Stick to previous belief
+                    idx1 = self._get_rank(issue, v1)
+                    idx2 = self._get_rank(issue, v2)
+                    return 1 if idx1 > idx2 else -1
+
+            # Sort: Smallest to Largest (Least Preferred to Most Preferred)
+            # cmp returns 1 if v1 > v2. sorted() expects -1 if v1 < v2.
+            # So if v1 > v2, we want v1 later.
+            sorted_vals = sorted(values, key=cmp_to_key(compare_values))
+            new_value_ordering[issue] = sorted_vals
+
+        self.value_ordering = new_value_ordering
+
+        # 4. Update Issue Ordering (Majority Rule)
+        issues = list(self.domain.keys())
+
+        def compare_issues(i1: str, i2: str) -> int:
+            # Count(i1 > i2)
+            c1 = ic_counts.get((i1, i2), 0)
+            # Count(i2 > i1)
+            c2 = ic_counts.get((i2, i1), 0)
+
+            if c1 > c2:
+                return 1 # i1 > i2
+            elif c2 > c1:
+                return -1 # i2 > i1
+            else:
+                # Tie-breaker: Previous belief
+                idx1 = self._get_issue_rank(i1)
+                idx2 = self._get_issue_rank(i2)
+                return 1 if idx1 > idx2 else -1
+
+        self.issue_ordering = sorted(issues, key=cmp_to_key(compare_issues))
+
+        # 5. Estimate Utility Space
+        self._estimateOppUtilitySpace()
+
+    # --- Helpers ---
+
+    def _find_differences(self, offer1: Dict[str, str], offer2: Dict[str, str]) -> List[Tuple[str, str, str]]:
+        """Returns list of (issue, val_in_offer1, val_in_offer2) for differing issues."""
+        diffs = []
+        for issue in self.domain:
+            v1 = offer1.get(issue)
+            v2 = offer2.get(issue)
+            if v1 != v2 and v1 is not None and v2 is not None:
+                diffs.append((issue, v1, v2))
+        return diffs
+
+    def _increment_vc(self, counts: Dict[str, Dict[Tuple[str, str], int]], issue: str, v_preferred: str, v_less: str):
+        """Increments the count for v_preferred > v_less."""
+        pair = (v_preferred, v_less)
+        counts[issue][pair] = counts[issue].get(pair, 0) + 1
+
+    def _increment_ic(self, counts: Dict[Tuple[str, str], int], i_preferred: str, i_less: str):
+        """Increments the count for i_preferred > i_less."""
+        pair = (i_preferred, i_less)
+        counts[pair] = counts.get(pair, 0) + 1
+
+    def _is_preferred(self, issue: str, v_a: str, v_b: str) -> bool:
+        """Returns True if v_a is preferred over v_b according to current beliefs."""
+        rank_a = self._get_rank(issue, v_a)
+        rank_b = self._get_rank(issue, v_b)
+        return rank_a > rank_b
+
+    def _get_rank(self, issue: str, value: str) -> int:
+        """Returns rank of value (higher is better). Returns -1 if not found."""
+        try:
+            return self.value_ordering[issue].index(value)
+        except (KeyError, ValueError):
+            return -1
+
+    def _get_issue_rank(self, issue: str) -> int:
+        """Returns rank of issue (higher is better)."""
+        try:
+            return self.issue_ordering.index(issue)
+        except ValueError:
+            return -1
+
+    def _initialize_beliefs_from_agent(self):
+        """
+        Initialize opponent beliefs by inverting agent's preferences.
+        """
+        agent_value_weights = self.preference._value_weights
+        agent_issue_weights = self.preference._issue_weights
+
+        # Initialize value orderings
+        self.value_ordering = {}
+        for issue in self.preference.issues:
+            # Sort values by agent's utility (highest first)
+            value_utils = agent_value_weights.get(issue, {})
+            sorted_vals = sorted(issue.values, key=lambda v: value_utils.get(v, 0.0), reverse=True)
+            # Reverse to get opponent's initial belief (inverse of agent)
+            sorted_vals.reverse()
+            self.value_ordering[issue.name] = sorted_vals
+
+        # Initialize issue ordering
+        sorted_issues = sorted(self.preference.issues,
+                             key=lambda i: agent_issue_weights.get(i, 0.0),
+                             reverse=True)
+        sorted_issues.reverse()
+        self.issue_ordering = [issue.name for issue in sorted_issues]
+
+    def _estimateOppUtilitySpace(self):
+        """
+        Update self._pref using ordinal value weights and normalized issue ranks.
+        """
+        issue_size = len(self.issue_ordering)
+
+        # Normalize issue ranks by their sum.
+        # Rank 1 to n. Weight = Rank / Sum(Ranks).
+        # self.issue_ordering is sorted [least_important, ..., most_important]
+        issue_weights_map = {}
+        total_rank = issue_size * (issue_size + 1) / 2
+        if total_rank > 0:
+            for idx, issue_name in enumerate(self.issue_ordering):
+                # idx 0 -> rank 1
+                weight = (idx + 1) / total_rank
+                issue_weights_map[issue_name] = weight
+        else:
+            issue_weights_map = {i: 0.0 for i in self.issue_ordering}
+
+        # Calculate value weights as the one-based rank divided by value count.
+        # self.value_ordering is sorted [least_preferred, ..., most_preferred]
+        value_weights_map = {}
+        for issue_name, values in self.value_ordering.items():
+            m = len(values)
+            if m > 0:
+                # idx 0 (worst) -> 1/m. idx m-1 (best) -> 1.0.
+                weights = {}
+                for idx, val in enumerate(values):
+                    weights[val] = (idx + 1) / m
+                value_weights_map[issue_name] = weights
+            else:
+                value_weights_map[issue_name] = {}
+
+        # Update self._pref (the opponent's estimated preference)
+        # Map back to Issue objects
+        issue_name_to_obj = {issue.name: issue for issue in self.preference.issues}
+
+        self._pref._value_weights = {
+            issue_name_to_obj[issue_name]: weights
+            for issue_name, weights in value_weights_map.items()
+            if issue_name in issue_name_to_obj
+        }
+
+        self._pref._issue_weights = {
+            issue_name_to_obj[issue_name]: weight
+            for issue_name, weight in issue_weights_map.items()
+            if issue_name in issue_name_to_obj
+        }

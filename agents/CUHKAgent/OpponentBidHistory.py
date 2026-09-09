@@ -75,7 +75,11 @@ class OpponentBidHistory:
         discreteIndex = 0
 
         if len(candidateBids) >= upperSearchLimit:
-            candidateBids = ran.sample(candidateBids, upperSearchLimit)
+            bids = []
+            for _ in range(upperSearchLimit):
+                issueIndex = ran.randint(0, len(candidateBids) - 1)
+                bids.append(candidateBids[issueIndex])
+            candidateBids = bids
 
         for i in range(len(candidateBids)):
             maxValue = 0

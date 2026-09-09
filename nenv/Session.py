@@ -184,8 +184,6 @@ class Session:
         self._run_process_manager('A', 'Terminate', False, is_accept=True, opponent_name=self.agentB.name, t=t)
         self._run_process_manager('B', 'Terminate', False, is_accept=True, opponent_name=self.agentA.name, t=t)
 
-        self.action_history.append(action)
-
         # Tournament log
 
         row = {"TournamentResults": {
@@ -379,6 +377,9 @@ class Session:
         """
 
         # print(f"{self.agentA.name} vs. {self.agentB.name} is started.")
+
+        # Initialization failures need a real elapsed-time origin too.
+        self.start_time = time.time()
 
         # Initiate agentA
         initiating_result = self._run_process_manager('A', 'Initiate', opponent_name=self.agentB.name)

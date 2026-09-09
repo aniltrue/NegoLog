@@ -16,3 +16,20 @@ from nenv.OpponentModel.ClassicFrequencyOpponentModel import ClassicFrequencyOpp
 from nenv.OpponentModel.WindowedFrequencyOpponentModel import WindowedFrequencyOpponentModel
 from nenv.OpponentModel.BayesianOpponentModel import BayesianOpponentModel
 from nenv.OpponentModel.ConflictBasedOpponentModel import ConflictBasedOpponentModel
+from nenv.OpponentModel.CUHKOpponentModel import CUHKOpponentModel
+from nenv.OpponentModel.StepwiseCOMBOpponentModel import StepwiseCOMBOpponentModel
+from nenv.OpponentModel.ExpectationCOMBOpponentModel import ExpectationCOMBOpponentModel
+from nenv.OpponentModel.RegressionCOMBOpponentModel import RegressionCOMBOpponentModel
+from nenv.OpponentModel.UniformEstimatedPreference import UniformEstimatedPreference
+from nenv.OpponentModel.CBOMEstimatedPreference import CBOMEstimatedPreference
+
+from nenv.OpponentModel.CUHKFrequencyOpponentModel import CUHKFrequencyOpponentModel
+
+__all__ = [
+    "AbstractOpponentModel", "OpponentModelClass", "EstimatedPreference",
+    "UniformEstimatedPreference", "CBOMEstimatedPreference",
+    "ClassicFrequencyOpponentModel", "WindowedFrequencyOpponentModel",
+    "BayesianOpponentModel", "ConflictBasedOpponentModel", "CUHKOpponentModel",
+    "CUHKFrequencyOpponentModel", "StepwiseCOMBOpponentModel",
+    "ExpectationCOMBOpponentModel", "RegressionCOMBOpponentModel",
+]

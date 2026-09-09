@@ -1,10 +1,13 @@
 import math
-import random
+from numbers import Integral
 from typing import Optional
-from scipy.stats import spearmanr, kendalltau
+import numpy as np
+from scipy.stats import spearmanr, kendalltau, pearsonr
 from nenv.Bid import Bid
 from nenv.Preference import Preference
 from nenv.OpponentModel.EstimatedPreference import EstimatedPreference
+from nenv.OpponentModel.UniformEstimatedPreference import UniformEstimatedPreference
+from nenv.OpponentModel.CBOMEstimatedPreference import CBOMEstimatedPreference
 from abc import ABC, abstractmethod
 
 
@@ -25,13 +28,39 @@ class AbstractOpponentModel(ABC):
     """
     _pref: EstimatedPreference  # Estimated preference
 
-    def __init__(self, reference: Preference):
+    DEFAULT_DEADLINE_ROUND = 1000
+
+    def __init__(self, reference: Preference, mode: str = "uniform", deadline_round: Optional[int] = None):
         """
             Constructor
 
             :param reference: Reference preference to get domain information. Generally, the agent's preference is given.
+            :param mode: Initial weights: ``uniform`` (default) or inverse own weights (``cbom``).
+            :param deadline_round: Positive round horizon; ``None`` uses the 1000-round default.
         """
-        self._pref = EstimatedPreference(reference)
+        self.initialize_preference(reference, mode)
+        self.set_deadline(deadline_round)
+
+    def initialize_preference(self, reference: Preference, mode: str = "uniform"):
+        """Select equal weights (uniform) or inverse own weights (cbom)."""
+        initializers = {"uniform": UniformEstimatedPreference, "cbom": CBOMEstimatedPreference}
+        if not isinstance(mode, str) or mode not in initializers:
+            raise ValueError("Unknown preference initialization mode: %r" % (mode,))
+        self._pref = initializers[mode](reference)
+
+    # Keep first-line summaries (D212), rather than the conflicting D213 convention.
+    def set_deadline(self, deadline_round: Optional[int] = None):  # noqa: D213
+        """Configure the positive round horizon before feeding observations.
+
+        A missing round limit, including time-only sessions, uses 1000 rounds.
+        No environment variable is read. Subclasses may call this method even
+        when their constructor does not invoke the base constructor.
+        """
+        if deadline_round is None:
+            deadline_round = self.DEFAULT_DEADLINE_ROUND
+        if isinstance(deadline_round, bool) or not isinstance(deadline_round, Integral) or deadline_round <= 0:
+            raise ValueError("deadline_round must be a positive integer or None")
+        self.deadline_round = int(deadline_round)
 
     @property
     @abstractmethod
@@ -66,7 +95,8 @@ class AbstractOpponentModel(ABC):
     def calculate_error(self, org_pref: Preference,
                         return_rmse: bool = True,
                         return_spearman: bool = True,
-                        return_kendall_tau: bool = True) -> (Optional[float], Optional[float], Optional[float]):
+                        return_kendall_tau: bool = True, *,
+                        vectorized: bool = False) -> (Optional[float], Optional[float], Optional[float]):
         """
             This method calculates the error of the estimated preferences for the performance evaluation of the opponent
             model. There metrics are used [Baarslag2013]_ [Keskin2023]_:
@@ -77,6 +107,10 @@ class AbstractOpponentModel(ABC):
 
             - **Kendall-Tau**: The ranking correlation between real and estimated bid rankings in that domain.
 
+            Tied utilities receive tied ranks. A rank correlation is undefined
+            (NaN) when either utility vector is constant or has fewer than two
+            bids. Evaluating a model does not consume the negotiation RNG.
+
             .. [Baarslag2013] Tim Baarslag, Mark J.C. Hendrikx, Koen V. Hindriks, and Catholijn M. Jonker. Predicting the performance of opponent models in automated negotiation. In International Joint Conferences on Web Intelligence (WI) and Intelligent Agent Technologies (IAT), 2013 IEEE/WIC/ACM, volume 2, pages 59–66, 2013.
             .. [Keskin2023] Mehmet Onur Keskin, Berk Buzcu, and Reyhan Aydoğan. Conflict-based negotiation strategy for human-agent negotiation. Applied Intelligence, 53(24):29741–29757, dec 2023.
 
@@ -84,13 +118,17 @@ class AbstractOpponentModel(ABC):
             :param return_rmse: Whether RMSE will be calculated, or not
             :param return_spearman: Whether Spearman will be calculated, or not
             :param return_kendall_tau: Whether Kendall-Tau will be calculated, or not
+            :param vectorized: Opt in to additive batch evaluation. Custom utility
+                overrides fall back to normal calls; no preference or bid cache is retained.
             :return: The metric results (i.e., RMSE, Spearman and Kendall-Tau) as a tuple
         """
         estimated_pref = self.preference
-
-        bids = org_pref.bids
-
-        utilities = [[bid.utility, estimated_pref.get_utility(bid)] for bid in bids]
+        if vectorized:
+            from nenv.utils.utility_metrics import utility_pairs
+            original_utilities, estimated_utilities = utility_pairs(org_pref, estimated_pref, vectorized=True)
+            utilities = list(zip(original_utilities, estimated_utilities))
+        else:
+            utilities = [[bid.utility, estimated_pref.get_utility(bid)] for bid in org_pref.bids]
 
         rmse = None
 
@@ -101,14 +139,50 @@ class AbstractOpponentModel(ABC):
 
             rmse = math.sqrt(rmse / len(utilities))
 
-        org_indices = list(range(len(bids)))
-        agent_indices = list(range(len(bids)))
+        original_utilities = [utility[0] for utility in utilities]
+        estimated_utilities = [utility[1] for utility in utilities]
+        ranks_defined = (len(utilities) >= 2 and
+                         len(set(original_utilities)) > 1 and
+                         len(set(estimated_utilities)) > 1)
 
-        random.shuffle(agent_indices)
+        spearman = None
+        if return_spearman:
+            spearman = float(spearmanr(original_utilities, estimated_utilities)[0]) if ranks_defined else math.nan
 
-        agent_indices = sorted(agent_indices, key=lambda i: utilities[i][1], reverse=True)
-
-        spearman, _ = spearmanr(org_indices, agent_indices) if return_spearman else [None, 0.]
-        kendall, _ = kendalltau(org_indices, agent_indices) if return_kendall_tau else [None, 0.]
+        kendall = None
+        if return_kendall_tau:
+            kendall = float(kendalltau(original_utilities, estimated_utilities)[0]) if ranks_defined else math.nan
 
         return rmse, spearman, kendall
+
+    def calculate_additional_metrics(self, org_pref: Preference, *, pearson: bool = False,
+                                     mape: bool = False, zero_utility: str = "nan",
+                                     vectorized: bool = False) -> dict:  # noqa: D213
+        """Opt-in statistics, separate from the existing three-value API.
+
+        Only requested keys are returned: ``Pearson`` and/or ``MAPE``.
+        Pearson is NaN for fewer than two bids or a constant vector. MAPE is a
+        percentage, ``100 * mean(abs(true-estimated) / abs(true))``. If any true
+        utility is zero, return NaN (default) or raise ValueError when
+        ``zero_utility='raise'``; observations are never silently discarded.
+        An empty domain yields NaN. This method does not add logger columns.
+        """
+        if zero_utility not in ("nan", "raise"):
+            raise ValueError("zero_utility must be 'nan' or 'raise'")
+        if not pearson and not mape:
+            return {}
+
+        from nenv.utils.utility_metrics import utility_pairs
+        true, estimated = utility_pairs(org_pref, self.preference, vectorized=vectorized)
+        result = {}
+        if pearson:
+            defined = len(true) >= 2 and len(set(true)) > 1 and len(set(estimated)) > 1
+            result["Pearson"] = float(pearsonr(true, estimated)[0]) if defined else math.nan
+        if mape:
+            if np.any(true == 0):
+                if zero_utility == "raise":
+                    raise ValueError("MAPE is undefined for a zero true utility")
+                result["MAPE"] = math.nan
+            else:
+                result["MAPE"] = float(100 * np.mean(np.abs(true-estimated) / np.abs(true))) if len(true) else math.nan
+        return result

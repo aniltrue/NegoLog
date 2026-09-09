@@ -1,11 +1,9 @@
 from __future__ import annotations
 
 import os
-import random
+import math
 import shutil
-import sys
-import warnings
-from typing import List, Dict, Optional, Union
+from typing import List, Dict, Union
 import json
 import matplotlib.pyplot as plt
 import numba
@@ -14,6 +12,7 @@ import random as rnd
 from string import ascii_uppercase
 
 import nenv
+from domain_generator.domain_storage import atomic_domain_output, validate_profiles
 
 EPSILON = 1e-5
 
@@ -23,10 +22,6 @@ DOMAIN_SIZE_RANGE = [0, 100000]
 DOMAIN_OPPOSITION_RANGE = [0.0, 1.0]
 BALANCE_SCORE_RANGE = [0.0, 0.05]
 VALUE_BOOST = [0.0]
-
-if not sys.warnoptions:
-    warnings.simplefilter("ignore")
-
 
 def get_n_digit_float(val: float, n: int = 2) -> float:
     return round(val, n)
@@ -121,18 +116,21 @@ class Preference:
             for value_name in values:
                 self.issues[issue_name][value_name] = round(self.issues[issue_name][value_name], 2)
 
-        while sum(self.issue_weights.values()) != 1.:
-            for issue_name in self.issue_weights:
-                self.issue_weights[issue_name] += random.gauss(0, 0.01)
-                self.issue_weights[issue_name] = max(0.1, self.issue_weights[issue_name])
-
-            issue_weights_sum = sum(self.issue_weights.values())
-
-            for issue_name in self.issue_weights:
-                self.issue_weights[issue_name] /= issue_weights_sum
-                self.issue_weights[issue_name] = round(self.issue_weights[issue_name], 2)
+        # Allocate 100 hundredths in bounded time, without retrying float equality.
+        total = sum(self.issue_weights.values())
+        scaled = {issue: weight * 100 / total for issue, weight in self.issue_weights.items()}
+        units = {issue: math.floor(weight) for issue, weight in scaled.items()}
+        remaining = 100 - sum(units.values())
+        order = sorted(units, key=lambda issue: scaled[issue] - units[issue], reverse=True)
+        for issue_name in order[:remaining]:
+            units[issue_name] += 1
+        self.issue_weights = {issue: count / 100 for issue, count in units.items()}
 
     def generate_bids(self, upper_bound: int = -1) -> List[Dict[str, str]]:
+        """Enumerate complete bids, rejecting spaces above an explicit bound."""
+        size = math.prod(len(values) for values in self.issues.values())
+        if upper_bound != -1 and size > upper_bound:
+            raise ValueError("The complete bid space exceeds upper_bound.")
         bids = [{}]
 
         for issue_name in self.issue_weights.keys():
@@ -147,9 +145,6 @@ class Preference:
                     new_bids.append(_bid)
 
             bids = new_bids
-
-            if len(bids) > upper_bound != -1:
-                break
 
         return bids
 
@@ -191,10 +186,12 @@ def get_pareto(points: np.ndarray) -> (List[np.ndarray], List[int]):
 
 @numba.jit(nopython=True)
 def find_nash_kalai(points: np.ndarray) -> (List[float], List[float], int, int):
-    nash = [0., 0.]
-    kalai = [0., 0.]
-    nash_index = -1
-    kalai_index = -1
+    if points.shape[0] == 0:
+        raise ValueError("At least one bid point is required.")
+    nash = [points[0, 0], points[0, 1]]
+    kalai = [points[0, 0], points[0, 1]]
+    nash_index = 0
+    kalai_index = 0
 
     for i in range(points.shape[0]):
         if points[i, 0] * points[i, 1] > nash[0] * nash[1]:
@@ -232,13 +229,15 @@ def calculate_normalized_balance_score(points: np.ndarray, nash: List[float]) ->
     points_b = list(points[:, 1])
 
     nash_zero = np.sqrt(np.power(nash[0], 2.) + np.power(nash[1], 2.))
+    if nash_zero == 0:
+        return np.nan
 
     total = 0.
 
-    for i in range(len(points_a)):
-        nash_distance = np.sqrt(np.power(nash[0] - points_a[i], 2.) + np.power(nash[1] - points_b[i], 2.))
+    for i, point_a in enumerate(points_a):
+        nash_distance = np.sqrt(np.power(nash[0] - point_a, 2.) + np.power(nash[1] - points_b[i], 2.))
 
-        total += (points_a[i] - points_b[i]) * nash_distance / nash_zero
+        total += (point_a - points_b[i]) * nash_distance / nash_zero
 
     return total / len(points_a)
 
@@ -288,11 +287,7 @@ def convert2genius_specs(specs: dict, pref_a: Preference, pref_b: Preference):
 
     pareto, pareto_front = get_pareto(points)
 
-    pareto_indices = []
-
-    for i in range(len(pareto_front)):
-        if pareto_front[i] == 1:
-            pareto_indices.append(i)
+    pareto_indices = pareto_front
 
     nash, kalai, nash_index, kalai_index = find_nash_kalai(points)
 
@@ -316,6 +311,27 @@ def convert2genius_specs(specs: dict, pref_a: Preference, pref_b: Preference):
     }
 
 
+def _range(value, default, label, *, integer=False, minimum=None, maximum=None):
+    """Validate and copy a two-element range without changing caller inputs."""
+    if value is None:
+        value = default
+    if isinstance(value, (int, float)) and not isinstance(value, bool):
+        value = [value, value]
+    if not isinstance(value, (list, tuple)) or len(value) != 2:
+        raise ValueError(f"{label} must contain two bounds.")
+    if all(bound is None for bound in value) and label == "utility_range":
+        return [None, None]
+    if any(isinstance(bound, bool) or not isinstance(bound, (int, float))
+           or not math.isfinite(bound) for bound in value):
+        raise ValueError(f"{label} must contain finite numeric bounds.")
+    if integer and any(not isinstance(bound, int) for bound in value):
+        raise ValueError(f"{label} must contain integer bounds.")
+    if value[0] > value[1] or (minimum is not None and value[0] < minimum) or (maximum is not None and value[1] > maximum):
+        raise ValueError(f"Invalid {label} bounds.")
+    return list(value)
+
+
+@atomic_domain_output
 def generate_random_domain(name: str,
                            issue_size_range: Union[List[int] | int],
                            value_size_range: Union[List[int] | int],
@@ -327,77 +343,49 @@ def generate_random_domain(name: str,
                            utility_range: Union[List[float] | None] = None,
                            domain_size_range: Union[List[int] | None] = None,
                            is_for_genius: bool = False,
-                           has_randomness: bool = True):
+                           has_randomness: bool = True,
+                           *, output_dir=None, max_attempts: int = 1000):
+    """Generate a domain within fixed constraints, or fail after max_attempts."""
+    issue_size_range = _range(issue_size_range, None, "issue_size_range", integer=True, minimum=1, maximum=26)
+    value_size_range = _range(value_size_range, None, "value_size_range", integer=True, minimum=1, maximum=26)
+    opposition_range = _range(opposition_range, DOMAIN_OPPOSITION_RANGE, "opposition_range", minimum=0)
+    balance_score_range = _range(balance_score_range, BALANCE_SCORE_RANGE, "balance_score_range", minimum=0)
+    domain_size_range = _range(domain_size_range, DOMAIN_SIZE_RANGE, "domain_size_range", integer=True, minimum=0)
+    utility_range = _range(utility_range, UTILITY_RANGE, "utility_range", minimum=0, maximum=1)
+    if isinstance(max_attempts, bool) or not isinstance(max_attempts, int) or max_attempts < 1:
+        raise ValueError("max_attempts must be a positive integer.")
 
-    # Controls for ranges
-    assert issue_size_range is not None, "Issue Size must be provided."
-    assert value_size_range is not None, "Value Size must be provided."
-    assert isinstance(issue_size_range, list) or isinstance(issue_size_range, int), "Invalid type of input."
-    assert isinstance(value_size_range, list) or isinstance(value_size_range, int), "Invalid type of input."
-
-    if isinstance(issue_size_range, list):
-        assert len(issue_size_range) == 2, "Issue Size must contain Min. and Max. values"
-    else:
-        assert issue_size_range >= 2, "Issue Size must be >= 2"
-
-        issue_size_range = [issue_size_range, issue_size_range]
-
-    if isinstance(value_size_range, list):
-        assert len(value_size_range) == 2, "Value Size must contain Min. and Max. values"
-    else:
-        assert value_size_range >= 2, "Value Size must be >= 2"
-
-        value_size_range = [value_size_range, value_size_range]
-
-    # Default Values
-    if opposition_range is None:
-        opposition_range = DOMAIN_OPPOSITION_RANGE
-    else:
-        assert opposition_range[1] >= opposition_range[0], "Invalid Opposition range"
-
-    if balance_score_range is None:
-        balance_score_range = BALANCE_SCORE_RANGE
-    else:
-        assert balance_score_range[1] >= balance_score_range[0], "Invalid Balance Score range"
-
-    if domain_size_range is None:
-        domain_size_range = DOMAIN_SIZE_RANGE
-    else:
-        assert domain_size_range[1] >= domain_size_range[0], "Invalid Domain Size range"
-
-    if utility_range is None:
-        utility_range = UTILITY_RANGE
-    else:
-        assert utility_range[1] >= utility_range[0], "Invalid Utility range"
+    for label, number in [("value_boost", value_boost), ("reservation_value_profile_a", reservation_value_profile_a),
+                          ("reservation_value_profile_b", reservation_value_profile_b)]:
+        if isinstance(number, bool) or not isinstance(number, (int, float)) or not math.isfinite(number):
+            raise ValueError(f"{label} must be finite.")
+    if not isinstance(has_randomness, bool) or not isinstance(is_for_genius, bool):
+        raise ValueError("has_randomness and is_for_genius must be booleans.")
 
     # Generate domain folder
-    path = "/domains_genius" if is_for_genius else "domains"
+    path = output_dir or ("domains_genius" if is_for_genius else "domains")
     if os.path.exists("%s/domain%s/" % (path, name)):
         shutil.rmtree("%s/domain%s/" % (path, name))
 
     os.makedirs("%s/domain%s/" % (path, name))
 
-    while True:
+    for _attempt in range(max_attempts):
         # Decide issues and values
         number_of_issues = rnd.randint(issue_size_range[0], issue_size_range[1])
 
         issue_list = [rnd.randint(value_size_range[0], value_size_range[1]) for _ in range(number_of_issues)]
+        if not domain_size_range[0] <= math.prod(issue_list) <= domain_size_range[1]:
+            continue
 
         # Generate Preferences
-        prefA = Preference(issue_list, False, float(reservation_value_profile_a), value_boost, float(utility_range[0]),
-                           float(utility_range[1]), bool(has_randomness))
+        prefA = Preference(issue_list, False, float(reservation_value_profile_a), value_boost, utility_range[0],
+                           utility_range[1], bool(has_randomness))
 
-        prefB = Preference(issue_list, False, float(reservation_value_profile_b), value_boost, float(utility_range[0]),
-                           float(utility_range[1]), bool(has_randomness))
+        prefB = Preference(issue_list, False, float(reservation_value_profile_b), value_boost, utility_range[0],
+                           utility_range[1], bool(has_randomness))
 
         # Generate Bids
         bids = prefA.generate_bids(int(domain_size_range[1]))
-
-        if len(bids) < int(domain_size_range[0]) or len(bids) > int(domain_size_range[1]):
-            domain_size_range[0] -= 1
-            domain_size_range[1] += 1
-
-            continue
 
         bids = sorted(bids, key=lambda bid: prefA.get_utility(bid), reverse=True)
 
@@ -419,15 +407,9 @@ def generate_random_domain(name: str,
 
         # Control given ranges
         if opposition < float(opposition_range[0]) or opposition > float(opposition_range[1]):
-            opposition_range[0] = float(opposition_range[0]) - EPSILON
-            opposition_range[1] = float(opposition_range[1]) + EPSILON
-
             continue
 
         if abs(balance_score) < float(balance_score_range[0]) or abs(balance_score) > float(balance_score_range[1]):
-            balance_score_range[0] = float(balance_score_range[0]) - EPSILON
-            balance_score_range[1] = float(balance_score_range[1]) + EPSILON
-
             continue
 
         # Draw bidspace
@@ -440,13 +422,14 @@ def generate_random_domain(name: str,
         plt.xlim([0.0, 1.01])
         plt.ylim([0.0, 1.01])
 
-        plt.title("Bid Space\n(size: %d, opposition: %.4f, balance score: %.4f, normalized balance score: %.4f)" % (len(bids), opposition, balance_score, norm_balance_score))
+        plt.title("Bid Space\nsize: %d | opposition: %.4f\nbalance: %.4f | normalized balance: %.4f" %
+                  (len(bids), opposition, balance_score, norm_balance_score), fontsize=10)
 
         plt.xlabel("Profile A", fontsize=18)
         plt.ylabel("Profile B", fontsize=18)
 
         plt.legend()
-        plt.savefig("%s/domain%s/bid_space.png" % (path, name), dpi=1200)
+        plt.savefig("%s/domain%s/bid_space.png" % (path, name), dpi=300, bbox_inches="tight")
 
         plt.close()
 
@@ -462,7 +445,7 @@ def generate_random_domain(name: str,
             "IssueValues": issue_list,
             "Opposition": opposition,
             "BalanceScore": balance_score,
-            "NormalizedBalanceScore": norm_balance_score,
+            "NormalizedBalanceScore": float(norm_balance_score) if np.isfinite(norm_balance_score) else None,
             "Product Score": nash[0] * nash[1],
             "Social Welfare": kalai[0] + kalai[1],
             "Nash_A": nash[0],
@@ -529,7 +512,7 @@ def generate_random_domain(name: str,
             "IssueValues": str(issue_list),
             "Opposition": opposition,
             "BalanceScore": balance_score,
-            "NormalizedBalanceScore": norm_balance_score,
+            "NormalizedBalanceScore": float(norm_balance_score) if np.isfinite(norm_balance_score) else None,
             "ProductScore": nash[0] * nash[1],
             "SocialWelfare": kalai[0] + kalai[1],
             "ReservationValueA": reservation_value_profile_a,
@@ -543,15 +526,22 @@ def generate_random_domain(name: str,
         }
 
 
+    raise ValueError(f"No domain satisfied the constraints in {max_attempts} attempts.")
+
+
+@atomic_domain_output
 def generate_domain(name: str,
                     issue_weights_a: Dict[str, float],
                     issue_weights_b: Dict[str, float],
                     issues_a: Dict[str, Dict[str, float]],
                     issues_b: Dict[str, Dict[str, float]],
                     reservation_value_profile_a: float = 0.,
-                    reservation_value_profile_b: float = 0.):
+                    reservation_value_profile_b: float = 0., *, output_dir=None):
+    """Generate a validated two-profile domain using a staged output folder."""
+    validate_profiles(issue_weights_a, issue_weights_b, issues_a, issues_b,
+                      reservation_value_profile_a, reservation_value_profile_b)
     # Generate domain folder
-    path = "domains"
+    path = output_dir or "domains"
     if os.path.exists("%s/domain%s/" % (path, name)):
         shutil.rmtree("%s/domain%s/" % (path, name))
 
@@ -592,14 +582,14 @@ def generate_domain(name: str,
     plt.xlim([0.0, 1.01])
     plt.ylim([0.0, 1.01])
 
-    plt.title("Bid Space\n(size: %d, opposition: %.4f, balance score: %.4f, normalized balance score: %.4f)" % (
-    points.shape[0], opposition, balance_score, norm_balance_score))
+    plt.title("Bid Space\nsize: %d | opposition: %.4f\nbalance: %.4f | normalized balance: %.4f" %
+              (points.shape[0], opposition, balance_score, norm_balance_score), fontsize=10)
 
     plt.xlabel("Profile A", fontsize=18)
     plt.ylabel("Profile B", fontsize=18)
 
     plt.legend()
-    plt.savefig("%s/domain%s/bid_space.png" % (path, name), dpi=1200)
+    plt.savefig("%s/domain%s/bid_space.png" % (path, name), dpi=300, bbox_inches="tight")
 
     plt.close()
 
@@ -615,7 +605,7 @@ def generate_domain(name: str,
         "IssueValues": [len(values) for values in issues_a.values()],
         "Opposition": opposition,
         "BalanceScore": balance_score,
-        "NormalizedBalanceScore": norm_balance_score,
+        "NormalizedBalanceScore": float(norm_balance_score) if np.isfinite(norm_balance_score) else None,
         "Product Score": nash_point.product_score,
         "Social Welfare": kalai_point.social_welfare,
         "Nash_A": nash_point.utility_a,
@@ -641,7 +631,7 @@ def generate_domain(name: str,
     profile_data = {
         "reservationValue": preference_a.reservation_value,
         "issueWeights": {issue.name: weight for issue, weight in preference_a.issue_weights.items()},
-        "issues": issues_a
+        "issues": {issue.name: preference_a.value_weights[issue] for issue in preference_a.issues}
     }
 
     with open("%s/domain%s/profileA.json" % (path, name), "w") as f:
@@ -650,7 +640,7 @@ def generate_domain(name: str,
     profile_data = {
         "reservationValue": preference_b.reservation_value,
         "issueWeights": {issue.name: weight for issue, weight in preference_b.issue_weights.items()},
-        "issues": issues_b
+        "issues": {issue.name: preference_b.value_weights[issue] for issue in preference_b.issues}
     }
 
     with open("%s/domain%s/profileB.json" % (path, name), "w") as f:
@@ -681,7 +671,7 @@ def generate_domain(name: str,
         "IssueValues": [len(values) for values in issues_a.values()],
         "Opposition": opposition,
         "BalanceScore": balance_score,
-        "NormalizedBalanceScore": norm_balance_score,
+        "NormalizedBalanceScore": float(norm_balance_score) if np.isfinite(norm_balance_score) else None,
         "ProductScore": nash_point.product_score,
         "SocialWelfare": kalai_point.social_welfare,
         "ReservationValueA": reservation_value_profile_a,

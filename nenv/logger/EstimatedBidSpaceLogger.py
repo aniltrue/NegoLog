@@ -21,8 +21,8 @@ class EstimatedBidSpaceLogger(AbstractLogger):
             agentA_utility = session.agentA.preference.get_utility(offer)
             agentB_utility = session.agentB.preference.get_utility(offer)
 
-            estimated_opponent_utilityA = session.agentB.estimators[estimator_id].preference.get_utility(offer)
-            estimated_opponent_utilityB = session.agentA.estimators[estimator_id].preference.get_utility(offer)
+            estimated_opponent_utilityA = session.agentA.estimators[estimator_id].preference.get_utility(offer)
+            estimated_opponent_utilityB = session.agentB.estimators[estimator_id].preference.get_utility(offer)
 
             log = {
                 "EstimatedNashDistanceA": estimated_bid_space_A.nash_distance(
@@ -44,7 +44,11 @@ class EstimatedBidSpaceLogger(AbstractLogger):
 
         for estimator in session.agentA.estimators:
             estimator_results = session.session_log.to_data_frame(estimator.name)
-            estimator_results.dropna(inplace=True)
+            # Other loggers share this sheet. Filter only our own measurements.
+            estimator_results = estimator_results.reindex(
+                columns=["EstimatedNashDistanceA", "EstimatedNashDistanceB",
+                         "EstimatedKalaiDistanceA", "EstimatedKalaiDistanceB"]
+            ).dropna()
 
             log = {
                 "EstimatedNashDistanceA": np.mean(estimator_results["EstimatedNashDistanceA"].to_list()) if len(estimator_results) > 0 else 0.,

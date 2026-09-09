@@ -48,11 +48,11 @@ class BidHistory:
         """
         diff = {}
 
-        for issue in self.pref.issues:
+        for issue_idx, issue in enumerate(self.pref.issues):
             if first[issue] == second[issue]:
-                diff[issue] = 0
+                diff[issue_idx] = 0
             else:
-                diff[issue] = 1
+                diff[issue_idx] = 1
 
         return diff
 

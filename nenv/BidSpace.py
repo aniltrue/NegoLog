@@ -363,6 +363,8 @@ class BidSpace:
         nash_point = self.nash_point
 
         nash_zero = nash_point - BidPoint(None, 0., 0.)
+        if nash_zero == 0:
+            return float("nan")
 
         total_diff = 0.
 
@@ -422,7 +424,7 @@ class BidSpace:
 
             :return: Number of bids in the bid space
         """
-        return len(self.__bids)
+        return len(self.bid_points)
 
     def __iter__(self):
         """
@@ -436,4 +438,4 @@ class BidSpace:
 
             :return: List Iterator
         """
-        return self.__bids.__iter__()
+        return iter(self.bid_points)

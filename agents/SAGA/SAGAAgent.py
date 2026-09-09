@@ -72,7 +72,9 @@ class SAGAAgent(nenv.AbstractAgent):
         timeB = 0.997   # Time to start giving Accept rate to all bids
 
         if time <= timeA:       # First Step
-            a = (util - target) / (1. - target + 1e-10)
+            # Before timeA, below-target bids have no acceptance probability.
+            # A negative base with a fractional exponent would produce NaN.
+            a = max(0., (util - target) / (1. - target + 1e-10))
             b = math.pow(3, (0.5 - time) * 2)
 
             acceptProb = np.power(a, b)
