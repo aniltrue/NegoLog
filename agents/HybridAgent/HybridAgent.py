@@ -31,8 +31,8 @@ class HybridAgent(nenv.AbstractAgent):
     def initiate(self, opponent_name: Optional[str]):
         # Set default values
         self.p0 = 1.0
-        self.p1 = 0.75
-        self.p2 = 0.55
+        self.p1 = 0.8
+        self.p2 = 0.6
         self.p3 = 0.5
 
         self.my_last_bids = []

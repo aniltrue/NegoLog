@@ -43,24 +43,24 @@ def test_each_opponent_only_selects_values_from_the_current_issue(agent, monkeyp
 
     agent.extractOpponentPreferences()
 
-    assert choices == [["a", "b"], ["b", "c"], ["x", "y"], ["y", "z"]]
+    assert choices == [["a", "b"], ["c"], ["x"], ["y", "z"]]
     assert agent.opp0bag == ["a", "x"]
-    assert agent.opp1bag == ["b", "y"]
+    assert agent.opp1bag == ["c", "y"]
 
 
-def test_candidate_threshold_still_uses_the_median(agent, monkeypatch):
-    # Skewed counts distinguish the established median rule from a mean rule.
+def test_candidate_threshold_uses_the_mean(agent, monkeypatch):
+    # Skewed counts distinguish the mean rule from a median rule.
     agent.frequentValuesList0 = [{"a": 0, "b": 0, "c": 9}, {"x": 0, "y": 2, "z": 9}]
     agent.frequentValuesList1 = [{"a": 1, "b": 1, "c": 20}, {"x": 0, "y": 3, "z": 10}]
     choices = record_choices(monkeypatch)
 
     agent.extractOpponentPreferences()
 
-    assert choices == [["a", "b", "c"], ["a", "b", "c"], ["y", "z"], ["y", "z"]]
+    assert choices == [["c"], ["c"], ["z"], ["z"]]
 
 
-@pytest.mark.parametrize("party_count, expected_calls", [(2, 0), (3, 1)])
-def test_history_analysis_still_requires_three_parties(agent, monkeypatch, party_count, expected_calls):
+@pytest.mark.parametrize("party_count, expected_calls", [(1, 0), (2, 1), (3, 1)])
+def test_history_analysis_supports_two_parties(agent, monkeypatch, party_count, expected_calls):
     bid = agent.preference.bids[0]
     agent.history = [bid]
     agent.parties = [f"Party{i}" for i in range(party_count)]
@@ -72,3 +72,7 @@ def test_history_analysis_still_requires_three_parties(agent, monkeypatch, party
     agent.receive_offer(bid, 0.5)
 
     assert len(calls) == expected_calls
+
+
+def test_mean_handles_an_empty_issue(agent):
+    assert agent.mean({}) == 0.0

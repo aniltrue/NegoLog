@@ -3,13 +3,9 @@ from typing import List, Optional, Tuple
 
 import numpy as np
 from scipy.special import erf as scipy_erf
-from sklearn.exceptions import ConvergenceWarning
 from sklearn.gaussian_process import GaussianProcessRegressor, kernels
 
 import nenv
-
-import warnings
-warnings.filterwarnings("ignore", category=ConvergenceWarning)
 
 
 class IAMhaggler(nenv.AbstractAgent):
@@ -29,9 +25,8 @@ class IAMhaggler(nenv.AbstractAgent):
 
     MAXIMUM_ASPIRATION: float = 0.9                 #: For the acceptance strategy
     acceptMultiplier: float = 1.02                  #: For the acceptance strategy
-    lastTimeSlot: int = -1                          #: Number of time slots
-    session_time: int                               #: Deadline
-    discounting_factor: float = 1.0                 #: Discount factor
+    lastTimeSlot: int                          #: Number of time slots
+    discounting_factor: float                 #: Discount factor
 
     utilitySamples: np.ndarray                      #: Column vector (m, 1)
     timeSamples: np.ndarray                         #: Row vector (1, n+1)
@@ -61,6 +56,8 @@ class IAMhaggler(nenv.AbstractAgent):
         return "IAMhaggler"
 
     def initiate(self, opponent_name: Optional[str]):
+        self.discounting_factor = 1.0
+
         m = 100
         utility_samples_array = np.array([1.0 - (i + 0.5) / (m + 1.0) for i in range(m)])
         self.utilitySamples = utility_samples_array.reshape(m, 1)

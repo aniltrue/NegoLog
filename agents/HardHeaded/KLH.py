@@ -28,7 +28,6 @@ class HardHeaded(nenv.AbstractAgent):
     TOP_SELECTED_BIDS: int = 4                                          #: Maximum number of selected bids
     LEARNING_COEF: float = 0.2                                          #: Calculation for golden value in the opponent model
     LEARNING_VALUE_ADDITION: int = 1                                    #: Value count effect
-    UTILITY_TOLERANCE: float = 0.01                                     #: Utility tolerance
     Ka: float                                                           #: Parameter to calculate concession step
     e: float                                                            #: Parameter to calculate concession step
     discountF: float                                                    #: Discount factor
@@ -102,6 +101,10 @@ class HardHeaded(nenv.AbstractAgent):
 
         # Update minimum bid utility depending on the reservation value
         self.MINIMUM_BID_UTILITY = max(self.MINIMUM_BID_UTILITY, self.preference.reservation_value)
+
+    def __init__(self, preference, session_time, estimators):
+        super().__init__(preference, session_time, estimators)
+        self.UTILITY_TOLERANCE = 100 / session_time
 
     @property
     def name(self) -> str:
@@ -196,10 +199,11 @@ class HardHeaded(nenv.AbstractAgent):
 
         # re-weighting issues while making sure that the sum remains 1
         for i in lastDiffSet:
-            if lastDiffSet[i] == 0 and self.oppUtility.get_issue_weight(i) < maximumWeight:
-                self.oppUtility[i] = (self.oppUtility[i] + goldenValue) / totalSum
+            issue = self.preference.issues[i]
+            if lastDiffSet[i] == 0 and self.oppUtility.get_issue_weight(issue) < maximumWeight:
+                self.oppUtility[issue] = (self.oppUtility[issue] + goldenValue) / totalSum
             else:
-                self.oppUtility[i] = self.oppUtility[i] / totalSum
+                self.oppUtility[issue] = self.oppUtility[issue] / totalSum
 
         # Update Estimated Preferences
         for issue in self.preference.issues:
@@ -272,7 +276,8 @@ class HardHeaded(nenv.AbstractAgent):
             newBids[newBid[0]] = newBid[1]
 
             if newBid[0] < p:
-                indexer = self.random100.choice(list(range(len(self.bidHistory.myBids))))
+                indexer = len(self.bidHistory.myBids)
+                indexer = int(math.floor(indexer * self.random100.random()))
                 del newBids[newBid[0]]
 
                 newBids[self.bidHistory.myBids[indexer][0]] = self.bidHistory.myBids[indexer][1]

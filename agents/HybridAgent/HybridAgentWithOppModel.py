@@ -46,21 +46,27 @@ class HybridAgentWithOppModel(nenv.AbstractAgent):
         domain_size = len(self.preference.bids)
 
         if domain_size < 450:
+            self.p2 = 0.80
             self.window_upper_bound = 0.1
             self.window_lower_bound = 0.1
         elif domain_size < 1500:
+            self.p2 = 0.775
             self.window_upper_bound = 0.09
             self.window_lower_bound = 0.09
         elif domain_size < 4500:
+            self.p2 = 0.75
             self.window_upper_bound = 0.08
             self.window_lower_bound = 0.08
         elif domain_size < 18000:
+            self.p2 = 0.725
             self.window_lower_bound = 0.07
             self.window_upper_bound = 0.07
         elif domain_size < 33000:
+            self.p2 = 0.70
             self.window_upper_bound = 0.06
             self.window_lower_bound = 0.06
         else:
+            self.p2 = 0.675
             self.window_upper_bound = 0.05
             self.window_lower_bound = 0.05
 
