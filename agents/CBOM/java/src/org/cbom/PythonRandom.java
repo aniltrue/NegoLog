@@ -13,7 +13,8 @@ final class PythonRandom {
         for (int i = 0; i < key.length; i++) key[i] = seed.shiftRight(32 * i).intValue();
         mt[0] = 19650218;
         for (int i = 1; i < 624; i++) mt[i] = 1812433253 * (mt[i - 1] ^ (mt[i - 1] >>> 30)) + i;
-        int i = 1, j = 0;
+        int i = 1;
+        int j = 0;
         for (int k = Math.max(624, key.length); k > 0; k--) {
             mt[i] = (mt[i] ^ (mt[i - 1] ^ (mt[i - 1] >>> 30)) * 1664525) + key[j] + j;
             i++; j++;

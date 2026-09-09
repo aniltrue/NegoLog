@@ -15,21 +15,33 @@ public final class CBOMAgent {
     private static final double[][] BEHAVIOR_WEIGHTS = {
         {}, {1}, {.25, .75}, {.11, .22, .66}, {.05, .15, .3, .5}
     };
-    public record Action(String kind, Map<String, String> bid, Double ownUtility, double target,
-                         CandidatePool.Selection selection, String reason) {
-        public Map<String, Object> toMap() { return Json.map("kind", kind, "bid", bid,
-                "own_utility", ownUtility, "target", target, "selection", selection == null ? null : selection.toMap(), "reason", reason); }
-    }
+
     public final Preference preference;
     public final ConflictBasedOpponentModel model;
     public final CandidatePool pool;
-    private final double p0, p1, p2, p3, epsilon;
+    private final double p0;
+    private final double p1;
+    private final double p2;
+    private final double p3;
+    private final double epsilon;
     private final int modelThreshold;
-    private final List<Map<String, String>> ownHistory = new ArrayList<>(), opponentHistory = new ArrayList<>();
-    private final List<Double> ownUtilities = new ArrayList<>(), opponentUtilities = new ArrayList<>();
+    private final List<Map<String, String>> ownHistory = new ArrayList<>();
+    private final List<Map<String, String>> opponentHistory = new ArrayList<>();
+    private final List<Double> ownUtilities = new ArrayList<>();
+    private final List<Double> opponentUtilities = new ArrayList<>();
     private final Set<List<String>> offered = new HashSet<>();
-    private boolean terminal, pendingOffer;
+    private boolean terminal;
+    private boolean pendingOffer;
     private double lastTime;
+
+    public record Action(String kind, Map<String, String> bid, Double ownUtility, double target,
+                         CandidatePool.Selection selection, String reason) {
+        public Map<String, Object> toMap() {
+            return Json.map("kind", kind, "bid", bid,
+                    "own_utility", ownUtility, "target", target, "selection",
+                    selection == null ? null : selection.toMap(), "reason", reason);
+        }
+    }
 
     public CBOMAgent(Preference preference) { this(preference, Map.of()); }
     public CBOMAgent(Preference preference, Map<String, Object> options) {
@@ -111,7 +123,8 @@ public final class CBOMAgent {
     private Action end(double target, String reason) { terminal = true; return new Action("end", null, null, target, null, reason); }
     public Action act(double t) {
         t = eventTime(t);
-        double target = targetUtility(t), maximum = preference.utility(preference.bestBid());
+        double target = targetUtility(t);
+        double maximum = preference.utility(preference.bestBid());
         lastTime = t;
         if (maximum < preference.reservation) return end(target, "no outcome meets reservation utility");
         boolean opening = ownHistory.isEmpty();

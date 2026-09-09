@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Compile the standalone Java implementation using only a JDK and Python."""
 import shutil
-import subprocess
+import subprocess  # nosec B404
 from pathlib import Path
 
 

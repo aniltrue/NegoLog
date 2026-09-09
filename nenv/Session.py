@@ -405,7 +405,30 @@ class Session:
                     pass  # Cleanup must not replace the original host failure.
             raise
 
-    def _start(self) -> LogRow:  # noqa: C901
+    def _agent_turn(self, role: str, t: float, action: Optional[Action], do_receive: bool) -> tuple[Optional[LogRow], Action]:
+        if do_receive:
+            receiving_bid_result = self._run_process_manager(role, 'Receive Bid', bid=action.bid, t=t)
+            if receiving_bid_result:  # If any problem occurs, end the session
+                return receiving_bid_result, action
+
+        act_result = self._run_process_manager(role, 'Act', t=t)
+        if isinstance(act_result, dict):  # If any problem occurs, end the session
+            return act_result, action
+
+        action = act_result
+        if action is None or not isinstance(action, Action):
+            return self.on_error(role, t), action
+        if isinstance(action, EndNegotiation):
+            return self.on_end(role, action, t), action
+        if isinstance(action, Accept):
+            if role == "A" and self.round == 0:
+                return self.on_error("A", t), action
+            return self.on_acceptance(role, action, t), action
+
+        self.on_offer(action, role, t)
+        return None, action
+
+    def _start(self) -> LogRow:
         """
             This method starts the negotiation.
 
@@ -435,32 +458,9 @@ class Session:
         t = self.get_time()
 
         while t < 1.:  # Until deadline
-            # AgentA
-            if self.round > 0:
-                receiving_bid_result = self._run_process_manager('A', 'Receive Bid', bid=action.bid, t=t)
-
-                if receiving_bid_result:  # If any problem occurs, end the session
-                    return receiving_bid_result
-
-            act_result = self._run_process_manager('A', 'Act', t=t)
-
-            if isinstance(act_result, dict):  # If any problem occurs, end the session
-                return act_result
-            else:
-                action = act_result
-
-            if action is None or not isinstance(action, Action):
-                return self.on_error("A", t)
-
-            if isinstance(action, EndNegotiation):
-                return self.on_end("A", action, t)
-
-            if isinstance(action, Accept) and self.round == 0:  # Forbidden action
-                return self.on_error("A", t)
-            if isinstance(action, Accept):
-                return self.on_acceptance("A", action, t)
-            else:
-                self.on_offer(action, "A", t)
+            row, action = self._agent_turn("A", t, action, self.round > 0)
+            if row is not None:
+                return row
 
             # time.sleep(random.random() * 0.09 + 0.01)
 
@@ -469,29 +469,9 @@ class Session:
             if t >= 1.:
                 return self.on_fail(t)
 
-            # AgentB
-            receiving_bid_result = self._run_process_manager('B', 'Receive Bid', bid=action.bid, t=t)
-
-            if receiving_bid_result:  # If any problem occurs, end the session
-                return receiving_bid_result
-
-            act_result = self._run_process_manager('B', 'Act', t=t)
-
-            if isinstance(act_result, dict):  # If any problem occurs, end the session
-                return act_result
-            else:
-                action = act_result
-
-            if action is None or not isinstance(action, Action):
-                return self.on_error("B", t)
-
-            if isinstance(action, EndNegotiation):
-                return self.on_end("B", action, t)
-
-            if isinstance(action, Accept):
-                return self.on_acceptance("B", action, t)
-            else:
-                self.on_offer(action, "B", t)
+            row, action = self._agent_turn("B", t, action, True)
+            if row is not None:
+                return row
 
             self.round += 1
             t = self.get_time()

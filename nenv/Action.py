@@ -11,6 +11,7 @@ class Action(ABC):
     bid: Optional[Bid]  #: Corresponding bid, absent when ending negotiation
 
     def __init__(self, bid: Optional[Bid]):
+        """Store the action bid payload."""
         self.bid = bid
 
 
@@ -52,6 +53,7 @@ class EndNegotiation(Action):
     """End the session without agreement, retaining a human-readable reason."""
 
     def __init__(self, reason: str = "agent ended negotiation"):
+        """Create an end action with a human-readable reason."""
         if not isinstance(reason, str):
             raise ValueError("End reason must be a string")
         super().__init__(None)

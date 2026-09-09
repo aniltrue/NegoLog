@@ -33,14 +33,18 @@ final class StableOrder {
         @SuppressWarnings("unchecked")
         List<T> sort() {
             if (values.length > 1) {
-                int minimum = minrun(values.length), base = 0;
+                int minimum = minrun(values.length);
+                int base = 0;
                 while (base < values.length) {
                     int length = countRun(base);
                     if (length < minimum) {
                         int force = Math.min(minimum, values.length - base);
-                        binarySort(base, base + force, base + length); length = force;
+                        binarySort(base, base + force, base + length);
+                        length = force;
                     }
-                    pending.add(new Run(base, length)); collapse(); base += length;
+                    pending.add(new Run(base, length));
+                    collapse();
+                    base += length;
                 }
                 while (pending.size() > 1) {
                     int n = pending.size() - 2;
@@ -66,20 +70,29 @@ final class StableOrder {
                 if (descending != smaller) break;
                 length++;
             }
-            if (descending) for (int left = base, right = base + length - 1; left < right; left++, right--) {
-                Object value = values[left]; values[left] = values[right]; values[right] = value;
+            if (descending) {
+                int left = base;
+                int right = base + length - 1;
+                for ( ; left < right; left++, right--) {
+                    Object value = values[left];
+                    values[left] = values[right];
+                    values[right] = value;
+                }
             }
             return length;
         }
         private void binarySort(int base, int end, int start) {
             if (start == base) start++;
             for (; start < end; start++) {
-                Object pivot = values[start]; int left = base, right = start;
+                Object pivot = values[start];
+                int left = base;
+                int right = start;
                 do {
                     int middle = left + ((right - left) >>> 1);
                     if (less(pivot, values[middle])) right = middle; else left = middle + 1;
                 } while (left < right);
-                System.arraycopy(values, left, values, left + 1, start - left); values[left] = pivot;
+                System.arraycopy(values, left, values, left + 1, start - left);
+                values[left] = pivot;
             }
         }
         private void collapse() {
@@ -94,9 +107,13 @@ final class StableOrder {
             }
         }
         private void mergeAt(int index) {
-            Run left = pending.get(index), right = pending.remove(index + 1);
+            Run left = pending.get(index);
+            Run right = pending.remove(index + 1);
             pending.set(index, new Run(left.base, left.length + right.length));
-            int baseA = left.base, na = left.length, baseB = right.base, nb = right.length;
+            int baseA = left.base;
+            int na = left.length;
+            int baseB = right.base;
+            int nb = right.length;
             int skipped = gallopRight(values[baseB], values, baseA, na, 0);
             baseA += skipped; na -= skipped;
             if (na == 0) return;
@@ -108,7 +125,8 @@ final class StableOrder {
             return offset > (maximum - 1) / 2 ? maximum : 2 * offset + 1;
         }
         private int gallopLeft(Object key, Object[] array, int base, int length, int hint) {
-            int last = 0, offset = 1;
+            int last = 0;
+            int offset = 1;
             if (less(array[base + hint], key)) {
                 int maximum = length - hint;
                 while (offset < maximum) {
@@ -133,7 +151,8 @@ final class StableOrder {
             return offset;
         }
         private int gallopRight(Object key, Object[] array, int base, int length, int hint) {
-            int last = 0, offset = 1;
+            int last = 0;
+            int offset = 1;
             if (less(key, array[base + hint])) {
                 int maximum = hint + 1;
                 while (offset < maximum) {
@@ -162,13 +181,16 @@ final class StableOrder {
         }
         private void mergeLo(int baseA, int na, int baseB, int nb) {
             Object[] temp = Arrays.copyOfRange(values, baseA, baseA + na);
-            int a = 0, b = baseB, destination = baseA;
+            int a = 0;
+            int b = baseB;
+            int destination = baseA;
             values[destination++] = values[b++];
             if (--nb == 0) { System.arraycopy(temp, a, values, destination, na); return; }
             if (na == 1) { copyB(temp, a, b, nb, destination); return; }
             int threshold = minGallop;
             for (;;) {
-                int countA = 0, countB = 0;
+                int countA = 0;
+                int countB = 0;
                 for (;;) {
                     if (less(values[b], temp[a])) {
                         values[destination++] = values[b++]; countB++; countA = 0;
@@ -211,13 +233,16 @@ final class StableOrder {
         }
         private void mergeHi(int baseA, int na, int baseB, int nb) {
             Object[] temp = Arrays.copyOfRange(values, baseB, baseB + nb);
-            int a = baseA + na - 1, b = nb - 1, destination = baseB + nb - 1;
+            int a = baseA + na - 1;
+            int b = nb - 1;
+            int destination = baseB + nb - 1;
             values[destination--] = values[a--];
             if (--na == 0) { System.arraycopy(temp, 0, values, destination - nb + 1, nb); return; }
             if (nb == 1) { copyA(temp, b, a, na, destination); return; }
             int threshold = minGallop;
             for (;;) {
-                int countA = 0, countB = 0;
+                int countA = 0;
+                int countB = 0;
                 for (;;) {
                     if (less(temp[b], values[a])) {
                         values[destination--] = values[a--]; countA++; countB = 0;

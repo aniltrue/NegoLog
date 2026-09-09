@@ -1,6 +1,4 @@
-"""
-    This module contains entire components of Negotiation ENVironment framework.
-"""
+"""Negotiation ENVironment (NENV) package exports."""
 
 from nenv.Issue import Issue
 from nenv.Bid import Bid

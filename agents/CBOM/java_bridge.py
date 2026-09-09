@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import math
 import queue
-import subprocess
+import subprocess  # nosec B404
 import tempfile
 import threading
 
@@ -16,6 +16,7 @@ class JavaBridge:
     max_response_bytes = 8 * 1024 * 1024
 
     def __init__(self, command: list[str], timeout: float):
+        """Create and launch the CBOM JVM process."""
         if isinstance(timeout, bool) or not isinstance(timeout, (float, int)):
             raise ValueError("request_timeout must be a positive finite number")
         if not 0 < timeout <= 600 or not math.isfinite(timeout):

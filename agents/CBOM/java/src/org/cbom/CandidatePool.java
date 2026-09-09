@@ -11,15 +11,6 @@ import java.util.Set;
 /** Finite exact or fixed-seed sampled candidate index. */
 @SuppressWarnings({"PMD.AvoidReassigningParameters", "PMD.NPathComplexity"})
 public final class CandidatePool {
-    private record Entry(double utility, List<String> encoded) {}
-    public record Selection(Map<String, String> bid, double ownUtility, Double opponentUtility,
-                            double epsilon, int candidateCount, boolean exact) {
-        public Map<String, Object> toMap() { return Json.map("bid", bid, "own_utility", ownUtility,
-                "opponent_utility", opponentUtility, "epsilon", epsilon, "candidate_count", candidateCount, "exact", exact); }
-    }
-    public static final class NoAvailableBid extends RuntimeException {
-        public NoAvailableBid() { super("No unused bid at or above reservation remains in the candidate pool"); }
-    }
     public final Preference preference;
     public final boolean exact;
     private final List<Entry> entries = new ArrayList<>();
@@ -46,6 +37,15 @@ public final class CandidatePool {
             for (List<String> encoded : candidates) add(encoded);
         }
         entries.sort(Comparator.comparingDouble(Entry::utility));
+    }
+    private record Entry(double utility, List<String> encoded) {}
+    public record Selection(Map<String, String> bid, double ownUtility, Double opponentUtility,
+                           double epsilon, int candidateCount, boolean exact) {
+        public Map<String, Object> toMap() { return Json.map("bid", bid, "own_utility", ownUtility,
+                "opponent_utility", opponentUtility, "epsilon", epsilon, "candidate_count", candidateCount, "exact", exact); }
+    }
+    public static final class NoAvailableBid extends RuntimeException {
+        public NoAvailableBid() { super("No unused bid at or above reservation remains in the candidate pool"); }
     }
     private void enumerate() {
         // Mixed-radix iteration matches itertools.product without consuming one
@@ -80,7 +80,8 @@ public final class CandidatePool {
         if (!Double.isFinite(nearest)) throw new NoAvailableBid();
         double steps = Math.max(0, Math.ceil((nearest - epsilon - 1e-12) / .01));
         double width = epsilon + steps * .01;
-        double lower = target - width - 1e-12, upper = target + width + 1e-12;
+        double lower = target - width - 1e-12;
+        double upper = target + width + 1e-12;
         Selection selected = null;
         double best = Double.NEGATIVE_INFINITY;
         int count = 0;

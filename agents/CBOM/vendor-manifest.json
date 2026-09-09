@@ -21,19 +21,19 @@
     "java/NOTICE": "df709eddeb2c78887d44055feb245ef2f26a33146d5ed4cb647bca273bb30f73",
     "java/PSF-LICENSE": "3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf",
     "java/README.md": "10844f2da2e5730adcbb208342b1d38d0dc217fc22f3ea5d98910fabc3263c8e",
-    "java/build.py": "0885d170042b57e6cee44c4606c3e82000245f98ba8031270c17518b48b20391",
+    "java/build.py": "36319698a25b3f8bf5a3f3348150c1adfb7967c29a8f5e72f31cfd5484c02bfe",
     "java/data/profile_a.json": "a52a1b4a8946147ebd971540f50f4a5d373110170059ad1d1e258242d92dd2ab",
     "java/data/profile_b.json": "4814bfc43076dc345416ae044791303d112385f3c25c6e1493c5b068f3b14f96",
     "java/examples/long-ranking-example.json": "dd42b6d076bbd5617a2a380176123c5ecb6cccb60f04494c343055a3e88a398d",
-    "java/src/org/cbom/AccurateSum.java": "a413e34da25588ea934e83a70ec673320edfda44c4e8c8a049cabd0618d295f8",
-    "java/src/org/cbom/CBOMAgent.java": "b0f79782e102366d9aa0e1da074582277107a8ddd58d7e73d5598cf6e76055ba",
-    "java/src/org/cbom/CandidatePool.java": "27991c88b71f9ca7a7bf6494c0cfdbf974bd9c41768d038a0bce0f2ccb66ceed",
-    "java/src/org/cbom/ConflictBasedOpponentModel.java": "f22ebc475c74cbc4345723fddb71db16c467d360ce7f7c9b3f88d05f61709f9a",
+    "java/src/org/cbom/AccurateSum.java": "b040c340078875e8e4debfc2757b5957520de1e9507076ab4f7b81d8c56ed0a4",
+    "java/src/org/cbom/CBOMAgent.java": "7df605576cda868bf7b893250c9c84aeee67af411fccd75051e7da533310419f",
+    "java/src/org/cbom/CandidatePool.java": "9d523aab9deee14a6e9b1b45243213cede14ca7405283c9d7d368e8cfc476484",
+    "java/src/org/cbom/ConflictBasedOpponentModel.java": "f8fa949627987d945674566266bfc88e5cf14ae42e0b66f3e7590d875637fde0",
     "java/src/org/cbom/Json.java": "5b0990492ae4b8f28cf1f5f95aa5cc9cbe8e816bbdf8a76b95606364ba0f7f4c",
     "java/src/org/cbom/Main.java": "170321e6f16c496c46035a331aaa52d09365918987a9fdc34c9c19a5e7988639",
     "java/src/org/cbom/Preference.java": "92f546997a9f236c6481e3f62e93f1177f9ed9e8ddd8c4393a5c60f6e125c0b2",
-    "java/src/org/cbom/PythonRandom.java": "73cbe63634ffc32f6b0fd6728b916627267a90cb9a4b4e07f1f428cdee852c62",
+    "java/src/org/cbom/PythonRandom.java": "d56342c7e3e660a9547a6bf9591022d0c05aff770400d7381f0474c800dee001",
     "java/src/org/cbom/SelfTest.java": "3fd8d2780d7bda895f51c83f6ad425b0785949079689d389c10e2ba488a3ca79",
-    "java/src/org/cbom/StableOrder.java": "280b049635dccfcecedf5eb1d9f4809ae628453a846cbfa495bd4a741b41be2a"
+    "java/src/org/cbom/StableOrder.java": "683d7a6d666068241d51b0612365ad1d615c3b5e488319505d1f2f6092c738b4"
   }
 }

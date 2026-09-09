@@ -14,19 +14,21 @@ import java.util.Map;
 /** Exact aggregated CBOM comparison evidence; no Python process is used. */
 @SuppressWarnings({"PMD.AvoidReassigningParameters", "PMD.NPathComplexity"})
 public final class ConflictBasedOpponentModel {
-    private record Transition(String issue, String before, String after) {}
-    private record Joint(Transition first, Transition second) {}
-    private record IssuePair(String first, String second) {}
     public final Preference reference;
     public final int historySize;
+    private Preference preference;
     private final Deque<List<String>> history = new ArrayDeque<>();
     private final Map<List<String>, Long> offers = new LinkedHashMap<>();
     private final Map<Transition, Long> valueCounts = new HashMap<>();
     private final Map<Joint, Long> jointCounts = new HashMap<>();
     private final Map<String, List<String>> valueOrdering = new LinkedHashMap<>();
     private List<String> issueOrdering;
-    private Preference preference;
-    private long observations, comparisons;
+    private long observations;
+    private long comparisons;
+
+    private record Transition(String issue, String before, String after) {}
+    private record Joint(Transition first, Transition second) {}
+    private record IssuePair(String first, String second) {}
 
     public ConflictBasedOpponentModel(Preference reference) { this(reference, 1000); }
     public ConflictBasedOpponentModel(Preference reference, int historySize) {
@@ -87,10 +89,17 @@ public final class ConflictBasedOpponentModel {
         }
         Map<IssuePair, Long> issueCounts = new HashMap<>();
         for (var entry : jointCounts.entrySet()) {
-            Transition a = entry.getKey().first, b = entry.getKey().second;
-            boolean lossA = ranks.get(a.issue).get(a.before) > ranks.get(a.issue).get(a.after);
-            boolean lossB = ranks.get(b.issue).get(b.before) > ranks.get(b.issue).get(b.after);
-            if (lossA != lossB) issueCounts.merge(lossA ? new IssuePair(a.issue, b.issue) : new IssuePair(b.issue, a.issue), entry.getValue(), Math::addExact);
+            Transition transitionA = entry.getKey().first;
+            Transition transitionB = entry.getKey().second;
+            boolean lossA = ranks.get(transitionA.issue).get(transitionA.before) >
+                    ranks.get(transitionA.issue).get(transitionA.after);
+            boolean lossB = ranks.get(transitionB.issue).get(transitionB.before) >
+                    ranks.get(transitionB.issue).get(transitionB.after);
+            if (lossA != lossB) {
+                IssuePair key = lossA ? new IssuePair(transitionA.issue, transitionB.issue) :
+                        new IssuePair(transitionB.issue, transitionA.issue);
+                issueCounts.merge(key, entry.getValue(), Math::addExact);
+            }
         }
         for (String issue : reference.issues) valueOrdering.put(issue, StableOrder.sorted(reference.domain.get(issue), (a, b) -> {
             long difference = valueCounts.getOrDefault(new Transition(issue, a, b), 0L) - valueCounts.getOrDefault(new Transition(issue, b, a), 0L);

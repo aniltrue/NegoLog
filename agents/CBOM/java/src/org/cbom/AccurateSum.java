@@ -11,7 +11,11 @@ final class AccurateSum {
             int i = 0;
             for (int j = 0; j < n; j++) {
                 double y = partials[j];
-                if (Math.abs(x) < Math.abs(y)) { double temp = x; x = y; y = temp; }
+                if (Math.abs(x) < Math.abs(y)) {
+                    double temp = x;
+                    x = y;
+                    y = temp;
+                }
                 double hi = x + y;
                 double lo = y - (hi - x);
                 if (lo != 0) partials[i++] = lo;
@@ -20,17 +24,20 @@ final class AccurateSum {
             n = i;
             if (x != 0) partials[n++] = x;
         }
-        double hi = 0, lo = 0;
+        double hi = 0;
+        double lo = 0;
         if (n > 0) {
             hi = partials[--n];
             while (n > 0) {
-                double x = hi, y = partials[--n];
+                double x = hi;
+                double y = partials[--n];
                 hi = x + y;
                 lo = y - (hi - x);
                 if (lo != 0) break;
             }
-            if (n > 0 && ((lo < 0 && partials[n-1] < 0) || (lo > 0 && partials[n-1] > 0))) {
-                double y = lo * 2, x = hi + y;
+            if (n > 0 && ((lo < 0 && partials[n - 1] < 0) || (lo > 0 && partials[n - 1] > 0))) {
+                double y = lo * 2;
+                double x = hi + y;
                 if (y == x - hi) hi = x;
             }
         }
