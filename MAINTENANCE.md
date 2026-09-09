@@ -3,7 +3,8 @@
 This update changes model initialization and several built-in agents' behavior,
 as well as correcting evaluation and logging errors. It is not a drop-in
 reproduction of results obtained with earlier commits. Record the code revision,
-model configuration and seed when comparing experiments.
+model configuration and seed when comparing experiments. Removing assessment-time
+RNG consumption can also change subsequent stochastic choices with the same seed.
 
 ## Preference API migration
 
@@ -79,14 +80,86 @@ Undefined ranks may propagate NaN through existing aggregate functions. Do not
 replace them silently with zero or combine corrected metric columns with older
 results without identifying their code versions.
 
-## Optional sparse workbook output
+## Optional additive batch evaluation
 
-`ExcelLog.save(path, sparse_sheets={"CustomMetrics"})` omits empty `{}` padding
-rows only from selected sheets. The default remains dense, and in-memory rows
-are unchanged. Compacted sheets need explicit keys and a compatible reader;
-the built-in estimator readers still depend on dense row alignment. Loading a
-compacted sheet does not reconstruct padding. No sampling schedule or automatic
-compaction is enabled.
+```python
+rmse, spearman, kendall = model.calculate_error(reference, vectorized=True)
+```
+
+The default scalar path is unchanged. The fast path handles the standard
+additive utility implementation using ordinary double-precision weights and
+standard bids with a common issue iteration order. Custom utility functions,
+custom iteration, other preference subclasses, different bid issue orders and
+other numeric types fall back to normal scalar calls. The helper checks the
+original method identities, including overrides installed before it is loaded.
+
+No utility values, bid encodings or preference data are persistently cached.
+Each call reflects current weights, bid contents, stored true utilities and bid
+order. The original assessment convention uses `reference.bids[i].utility` for
+true utilities. The fast path does not regenerate those values or change the
+reference preference's own bid cache. Speed depends on domain and input type;
+small/custom workloads can fall back or see little benefit.
+
+## Additional named statistics
+
+```python
+extra = model.calculate_additional_metrics(reference, pearson=True, mape=True)
+# {'Pearson': ..., 'MAPE': ...}
+```
+
+Only requested keys are returned; the default call returns `{}`. This is a
+separate method and does not add logger columns or alter the existing tuple.
+Pearson is NaN for constant vectors or fewer than two bids. MAPE is a percentage:
+`100 * mean(abs(true - estimated) / abs(true))`. If any true utility equals zero,
+the default returns NaN. Set `zero_utility="raise"` for an explicit `ValueError`;
+zero-valued observations are never silently dropped. Empty input yields NaN.
+This method also accepts `vectorized=True`.
+
+## Public CUHK frequency adapter
+
+`nenv.OpponentModel.CUHKFrequencyOpponentModel` exposes a preference estimate
+based on the counting rule in the existing public
+`agents/CUHKAgent/OpponentBidHistory.py` helper. Repeated offers count while
+history contains at most 100 distinct bids; the 101st distinct bid stops further
+value-count updates, while distinct history and bid counts continue growing.
+This preserves the public helper's gate rather than defining a new window.
+
+The adapter explicitly chooses equal issue weights and per-issue maximum
+normalization of value counts. Initially all values score 1; after observations,
+unseen values score 0. These normalization choices do not promise the same
+ordering as CUHKAgent's raw-frequency bid selection. It does not change CUHKAgent
+or claim to reproduce that agent's full policy. Display name: `CUHK Frequency Model`.
+
+The separately exposed `CUHKOpponentModel` continues updating counts after
+100 distinct offers. The two adapters have different update contracts; choose
+them explicitly rather than treating them as interchangeable names.
+
+## Optional sampling and round keys
+
+```python
+logger = EstimatorMetricLogger(log_dir, sample_every=5)
+```
+
+The default (`sample_every=1`, `include_round=False`) measures every offer and
+keeps the original columns. An interval N measures offers from both sides in
+rounds 0, N, 2N, ...; it does not skip opponent-model updates. Terminal accept/fail
+callbacks still measure the final state. Sampling adds explicit `Round` and
+`Action` keys. Use `include_round=True` to add these keys without sampling.
+The interval must be a positive integer. Configure an instance through the
+Python API, or define a logger subclass with these options for class-based
+tournament configuration.
+
+New keyed records and legacy dense records can be read by the estimator-series
+extractor. Unmeasured padding rows are skipped. A compressed legacy sheet without
+round/action keys cannot be reconstructed safely. For existing session-log
+reprocessing, use a clean copy with no prior estimator metric values; keyed
+sampling cannot silently combine newly measured and old dense observations.
+
+`ExcelLog.save(path, sparse_sheets={"MyMetrics"})` can omit empty `{}` rows only
+from explicitly selected sheets. Default serialization remains dense and
+in-memory rows are unchanged. Compaction does not restore padding on load;
+readers other than the keyed estimator reader may still require dense alignment.
+No automatic compaction is enabled.
 
 ## Validation
 
