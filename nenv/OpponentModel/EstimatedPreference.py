@@ -27,7 +27,6 @@ class EstimatedPreference(Preference, ABC):
 
         :param reference: Reference Preference to get domain information.
         """
-        pass
 
     def __getitem__(self, key) -> float:
         """

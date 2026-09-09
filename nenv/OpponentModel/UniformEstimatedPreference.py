@@ -1,17 +1,16 @@
 from nenv.OpponentModel.EstimatedPreference import EstimatedPreference
 from nenv.Preference import Preference
 
-class UniformEstimatedPreference(EstimatedPreference):
+# Keep the first-line summary (D212), rather than the conflicting D213 convention.
+class UniformEstimatedPreference(EstimatedPreference):  # noqa: D213
+    """Initialize opponent preferences with equal issue and value weights.
+
+    Issue weights are ``1 / number_of_issues``. Value weights are equal within
+    each issue; max-normalization makes every value weight 1.
     """
-        Uniform initialization for opponent model preferences.
-        All issue weights are initialized uniformly (1/N for N issues).
-        All values have equal initial weight; max-normalization makes each value weight 1.
-    """
+
     def __init__(self, reference: Preference):
-        """
-            Constructor
-        :param reference: Reference Preference to get domain information.
-        """
+        """Initialize uniform weights over the reference domain."""
         super().__init__(reference)
 
     def initialize_weights(self, reference: Preference):

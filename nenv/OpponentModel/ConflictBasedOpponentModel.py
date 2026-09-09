@@ -75,7 +75,7 @@ class ConflictBasedOpponentModel(AbstractOpponentModel):
         }
         ic_counts: Dict[Tuple[str, str], int] = {}
 
-        for old_offer, current_offer, diffs in self.CM:
+        for _old_offer, _current_offer, diffs in self.CM:
             # Single-issue difference: Strong evidence for value preference
             if len(diffs) == 1:
                 issue, v_old, v_new = diffs[0]
@@ -236,7 +236,7 @@ class ConflictBasedOpponentModel(AbstractOpponentModel):
                 weight = (idx + 1) / total_rank
                 issue_weights_map[issue_name] = weight
         else:
-             issue_weights_map = {i: 0.0 for i in self.issue_ordering}
+            issue_weights_map = {i: 0.0 for i in self.issue_ordering}
 
         # Calculate value weights as the one-based rank divided by value count.
         # self.value_ordering is sorted [least_preferred, ..., most_preferred]

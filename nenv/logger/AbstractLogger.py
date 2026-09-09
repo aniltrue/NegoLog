@@ -46,7 +46,8 @@ class AbstractLogger(ABC):
 
         pass
 
-    def get_session_path(self, row: dict) -> str:
+    # Keep the first-line summary (D212), rather than the conflicting D213 convention.
+    def get_session_path(self, row: dict) -> str:  # noqa: D213
         """Resolve a recorded session, including repetitions and moved outputs.
 
         Older tournament workbooks may lack FilePath; retain their conventional

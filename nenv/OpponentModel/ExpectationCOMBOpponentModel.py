@@ -22,6 +22,7 @@ def likelihood_none_zero(likelihood_cal):
 class weight_space:
 
     def __init__(self, reference: Preference, num_hypothesis=11) -> None:
+        """Initialize issue-weight hypotheses and value index ranges."""
         self.num_issues = len(reference.issues)
         self.num_hypothesis = num_hypothesis
         self.h_space = None
@@ -33,9 +34,9 @@ class weight_space:
         self.issue_num_values = {}
         _i = 0
         _ii = 0
-        for k in range(len(reference.issues)):
+        for k, issue in enumerate(reference.issues):
             self.issue_values_range[k] = [_ii]
-            _i = len(reference.issues[k].values)
+            _i = len(issue.values)
             self.issue_num_values[k] = _i
             _ii = _ii + _i
             self.issue_values_range[k].append(_ii)
@@ -90,6 +91,7 @@ class weight_space:
 class evaluation_space:
 
     def __init__(self, reference: Preference, num_hypothesis=11) -> None:
+        """Initialize value-evaluation hypotheses and issue index ranges."""
         self.h_space = None
         self.h_probs = None
         self.expectation = None
@@ -100,9 +102,9 @@ class evaluation_space:
 
         _i = 0
         _ii = 0
-        for k in range(len(reference.issues)):
+        for k, issue in enumerate(reference.issues):
             self.issue_values_range[k] = [_ii]
-            _i = len(reference.issues[k].values)
+            _i = len(issue.values)
             self.issue_num_values[k] = _i
             _ii = _ii + _i
             self.issue_values_range[k].append(_ii)
@@ -163,14 +165,17 @@ class evaluation_space:
         return expectation
 
 
-class ExpectationCOMBOpponentModel(AbstractOpponentModel):
-    """
-        **Expectation COMB Opponent Model**:
-            This model uses Bayesian learning with decoupled hypothesis spaces for weights and evaluations.
-            The expectation variant compares the newest bid to the mean of all previous bids.
+# Keep the first-line summary (D212), rather than the conflicting D213 convention.
+class ExpectationCOMBOpponentModel(AbstractOpponentModel):  # noqa: D213
+    """Expectation COMB opponent model.
+
+    This model uses Bayesian learning with decoupled hypothesis spaces for
+    weights and evaluations. The expectation variant compares the newest bid
+    to the mean of all previous bids.
     """
 
     def __init__(self, reference: Preference, deadline_round=None):
+        """Initialize hypotheses, offer history, and the round horizon."""
         super().__init__(reference, deadline_round=deadline_round)
 
         self.SIGMA = 0.15

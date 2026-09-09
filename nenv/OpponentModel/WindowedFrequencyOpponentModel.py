@@ -35,6 +35,7 @@ class WindowedFrequencyOpponentModel(AbstractOpponentModel):
         return "Frequency Window Opponent Model"
 
     def __init__(self, reference: Preference, deadline_round=None):
+        """Initialize the observation window and issue-level frequency models."""
         super().__init__(reference, deadline_round=deadline_round)
         self.window_size = 25
         self.offers = []

@@ -48,7 +48,8 @@ class AbstractOpponentModel(ABC):
             raise ValueError("Unknown preference initialization mode: %r" % (mode,))
         self._pref = initializers[mode](reference)
 
-    def set_deadline(self, deadline_round: Optional[int] = None):
+    # Keep first-line summaries (D212), rather than the conflicting D213 convention.
+    def set_deadline(self, deadline_round: Optional[int] = None):  # noqa: D213
         """Configure the positive round horizon before feeding observations.
 
         A missing round limit, including time-only sessions, uses 1000 rounds.
@@ -156,7 +157,7 @@ class AbstractOpponentModel(ABC):
 
     def calculate_additional_metrics(self, org_pref: Preference, *, pearson: bool = False,
                                      mape: bool = False, zero_utility: str = "nan",
-                                     vectorized: bool = False) -> dict:
+                                     vectorized: bool = False) -> dict:  # noqa: D213
         """Opt-in statistics, separate from the existing three-value API.
 
         Only requested keys are returned: ``Pearson`` and/or ``MAPE``.

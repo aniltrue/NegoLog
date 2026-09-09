@@ -1,5 +1,6 @@
-"""
-CUHK Frequency-Based Opponent Model
+# Keep the first-line summary (D212), rather than the conflicting D213 convention.
+# noqa: D213
+"""Estimate opponent preferences from CUHK-style value frequencies.
 
 A standalone implementation of the frequency-based opponent modeling approach used by CUHKAgent.
 Tracks value frequencies from opponent bids and estimates opponent preferences.
@@ -22,8 +23,9 @@ class CUHKOpponentModel(AbstractOpponentModel):
     to be more important to the opponent.
     """
 
-    _bidHistory: List[Bid]
-    _opponentBidsStatisticsForDiscrete: List[Dict[str, int]]
+    # Keep the established attribute names for existing model integrations.
+    _bidHistory: List[Bid]  # noqa: N815
+    _opponentBidsStatisticsForDiscrete: List[Dict[str, int]]  # noqa: N815
 
     def __init__(self, reference: Preference):
         """
@@ -54,7 +56,7 @@ class CUHKOpponentModel(AbstractOpponentModel):
 
     @property
     def name(self) -> str:
-        """Return the name of this opponent model"""
+        """Return the name of this opponent model."""
         return "CUHK Frequency Opponent Model"
 
     def update(self, bid: Bid, t: float):

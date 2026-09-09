@@ -25,7 +25,8 @@ class IAMhaggler(nenv.AbstractAgent):
 
     MAXIMUM_ASPIRATION: float = 0.9                 #: For the acceptance strategy
     acceptMultiplier: float = 1.02                  #: For the acceptance strategy
-    lastTimeSlot: int                          #: Number of time slots
+    # Preserve the attribute name used by the existing strategy and extensions.
+    lastTimeSlot: int  # noqa: N815
     discounting_factor: float                 #: Discount factor
 
     utilitySamples: np.ndarray                      #: Column vector (m, 1)

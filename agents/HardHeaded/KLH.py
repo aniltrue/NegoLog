@@ -103,6 +103,7 @@ class HardHeaded(nenv.AbstractAgent):
         self.MINIMUM_BID_UTILITY = max(self.MINIMUM_BID_UTILITY, self.preference.reservation_value)
 
     def __init__(self, preference, session_time, estimators):
+        """Initialize the agent and its duration-dependent utility tolerance."""
         super().__init__(preference, session_time, estimators)
         self.UTILITY_TOLERANCE = 100 / session_time
 

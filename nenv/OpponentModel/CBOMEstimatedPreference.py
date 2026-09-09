@@ -1,17 +1,16 @@
 from nenv.OpponentModel.EstimatedPreference import EstimatedPreference
 from nenv.Preference import Preference
 
-class CBOMEstimatedPreference(EstimatedPreference):
+# Keep the first-line summary (D212), rather than the conflicting D213 convention.
+class CBOMEstimatedPreference(EstimatedPreference):  # noqa: D213
+    """Initialize opponent weights as the inverse of the agent's preferences.
+
+    Weights start at ``1 - agent_weight`` and are normalized. This follows the
+    conflict-based model's assumption of opposite preferences.
     """
-        CBOM (Conflict-Based Opponent Model) initialization for opponent model preferences.
-        Initializes weights as the inverse of the agent's preferences (1 - agent_weight).
-        This follows the assumption that the opponent has opposite preferences.
-    """
+
     def __init__(self, reference: Preference):
-        """
-            Constructor
-        :param reference: Reference Preference to get domain information.
-        """
+        """Initialize inverse weights from the reference domain and preferences."""
         super().__init__(reference)
 
     def initialize_weights(self, reference: Preference):

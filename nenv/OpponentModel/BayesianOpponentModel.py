@@ -29,6 +29,7 @@ class BayesianOpponentModel(AbstractOpponentModel):
     fBiddingHistory: list
 
     def __init__(self, reference: Preference, deadline_round=None):
+        """Initialize the utility hypotheses and the round-based horizon."""
         super().__init__(reference, deadline_round=deadline_round)
 
         self.fPreviousBidUtility = 1.
@@ -252,7 +253,7 @@ class BayesianOpponentModel(AbstractOpponentModel):
         return u
 
     def findMinMaxUtility(self):
-        """Find minimum and maximum utilities across all possible bids"""
+        """Find minimum and maximum utilities across all possible bids."""
         from itertools import product
 
         # Generate all possible combinations of issue values

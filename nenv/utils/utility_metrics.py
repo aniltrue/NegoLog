@@ -6,7 +6,8 @@ from nenv.Bid import (Bid, IssueIterator, _STANDARD_BID_ITER,
 from nenv.Preference import Preference, _ADDITIVE_GET_UTILITY
 
 
-def utility_pairs(reference, estimate, *, vectorized=False):
+# Keep the first-line summary (D212), rather than the conflicting D213 convention.
+def utility_pairs(reference, estimate, *, vectorized=False):  # noqa: D213
     """Return paired true/estimated utilities in reference bid order.
 
     True utilities retain the assessment API's existing ``bid.utility``
@@ -30,7 +31,8 @@ def utility_pairs(reference, estimate, *, vectorized=False):
                 Bid.__iter__ is _STANDARD_BID_ITER and
                 IssueIterator.__init__ is _STANDARD_ISSUE_ITER_INIT and
                 IssueIterator.__next__ is _STANDARD_ISSUE_ITER_NEXT and
-                all(type(bid) is Bid and type(bid.content) is dict for bid in bids))
+                # Exact types keep customized bid iteration on the scalar path.
+                all(type(bid) is Bid and type(bid.content) is dict for bid in bids))  # pylint: disable=unidiomatic-typecheck
     if not standard:
         return true, np.asarray([method(bid) for bid in bids], dtype=float)
 
@@ -43,8 +45,9 @@ def utility_pairs(reference, estimate, *, vectorized=False):
     # public weight-view properties can themselves be customized independently.
     issue_weights = estimate._issue_weights
     value_weights = estimate._value_weights
-    if type(issue_weights) is not dict or type(value_weights) is not dict or any(
-            type(value_weights[issue]) is not dict for issue in issues):
+    # Custom mappings can alter scalar arithmetic and must not enter this path.
+    if type(issue_weights) is not dict or type(value_weights) is not dict or any(  # pylint: disable=unidiomatic-typecheck
+            type(value_weights[issue]) is not dict for issue in issues):  # pylint: disable=unidiomatic-typecheck
         return true, np.asarray([method(bid) for bid in bids], dtype=float)
     # Float32/custom arithmetic can round before promotion in get_utility.
     # Keep its scalar operations rather than silently changing precision.

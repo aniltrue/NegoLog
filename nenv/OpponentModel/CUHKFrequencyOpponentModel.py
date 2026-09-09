@@ -1,3 +1,5 @@
+# Keep first-line summaries (D212), rather than the conflicting D213 convention.
+# noqa: D213
 """Expose the public CUHKAgent helper's frequency counters as an estimator.
 
 The counting rule comes from ``agents/CUHKAgent/OpponentBidHistory.py`` in
@@ -10,7 +12,7 @@ from nenv.OpponentModel.AbstractOpponentModel import AbstractOpponentModel
 from nenv.OpponentModel.EstimatedPreference import EstimatedPreference
 
 
-class CUHKFrequencyOpponentModel(AbstractOpponentModel):
+class CUHKFrequencyOpponentModel(AbstractOpponentModel):  # noqa: D213
     """An opt-in preference view of the public CUHK value-frequency rule.
 
     Every offer increments its bid count. Value counts include repeated offers
@@ -33,6 +35,7 @@ class CUHKFrequencyOpponentModel(AbstractOpponentModel):
     """
 
     def __init__(self, reference: Preference):
+        """Initialize uniform estimates and empty bid and value counters."""
         super().__init__(reference)
         self._bid_history = []
         self._bid_counts = {}
@@ -45,7 +48,7 @@ class CUHKFrequencyOpponentModel(AbstractOpponentModel):
     def name(self) -> str:
         return "CUHK Frequency Model"
 
-    def update(self, bid: Bid, t: float):
+    def update(self, bid: Bid, t: float):  # noqa: D213
         """Count an offer using the public helper's 100-distinct-bid gate.
 
         The received bid is copied so later caller mutation cannot alter an

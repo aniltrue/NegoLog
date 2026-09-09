@@ -30,7 +30,8 @@ class EstimatorMetricLogger(AbstractLogger):
     _metric_columns = ("RMSE_A", "RMSE_B", "SpearmanA", "SpearmanB", "KendallTauA", "KendallTauB",
                        "RMSE", "Spearman", "KendallTau")
 
-    def __init__(self, log_dir: str, sample_every: int = 1, include_round: bool = False):
+    # Keep first-line summaries (D212), rather than the conflicting D213 convention.
+    def __init__(self, log_dir: str, sample_every: int = 1, include_round: bool = False):  # noqa: D213
         """Configure optional round sampling without changing model updates.
 
         ``sample_every=1`` measures every offer, preserving the existing columns.
@@ -148,7 +149,7 @@ class EstimatorMetricLogger(AbstractLogger):
 
         summary.to_excel(self.get_path("opponent model/estimator_summary.xlsx"), sheet_name="EstimatorSummary")
 
-    def get_estimator_results(self, tournament_logs: ExcelLog, estimator_names: list) -> Tuple[Dict[str, List[List[float]]], Dict[str, List[List[float]]], Dict[str, List[List[float]]]]:
+    def get_estimator_results(self, tournament_logs: ExcelLog, estimator_names: list) -> Tuple[Dict[str, List[List[float]]], Dict[str, List[List[float]]], Dict[str, List[List[float]]]]:  # noqa: D213
         """Read metric histories, using explicit keys when available.
 
         Old sheets without ``Round`` are read by their dense row alignment with
