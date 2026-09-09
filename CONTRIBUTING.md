@@ -33,7 +33,7 @@ fork. From the checkout root, use Python 3.10 and the existing dependency file:
 git switch -c improve-my-component
 python3.10 -m venv .venv
 source .venv/bin/activate
-python -m pip install -r requirements.txt "pytest>=8.4,<9"
+python -m pip install -r requirements.txt "pytest>=9.0.3,<10"
 ```
 
 On Windows PowerShell, use `py -3.10 -m venv .venv` and

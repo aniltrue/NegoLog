@@ -1,5 +1,5 @@
-NegoLog: build, observe, and assess negotiations
-================================================
+NegoLog V2: build, observe, and assess negotiations
+===================================================
 
 NegoLog is a Python framework for bilateral automated negotiation. Two agents
 exchange offers over a shared domain, each using its own preference profile.
@@ -34,8 +34,8 @@ Choose your starting point
    * - Look up a Python interface
      - :doc:`api`: classes and signatures from this checkout.
 
-These pages describe the maintenance preview revision used to build them.
-:doc:`getting-started` identifies the matching branch. When updating an existing
+These pages describe NegoLog V2 (2.1.0). :doc:`getting-started` identifies the
+matching repository. When updating an existing
 experiment, use the :download:`migration guide <../MAINTENANCE.md>`; the older
 checked-in ``docs/`` HTML is a historical snapshot. Agent performance and model
 accuracy answer different questions, and the examples are functional
@@ -50,6 +50,7 @@ Guides and reference
    getting-started
    tutorials
    components
+   cbom
    runs
    models
    logging

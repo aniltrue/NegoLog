@@ -93,6 +93,23 @@ class SessionLogs:
             :return: Updated log row
         """
         self.round = int(row["Round"])
+        if row["Action"] == "End":
+            # End rows have no bid and must not become model observations.
+            result = row_tournament["TournamentResults"]
+            result.update({
+                "Round": self.round, "Time": float(row["Time"]),
+                "NumOffer": sum(not isinstance(action, (nenv.Accept, nenv.EndNegotiation))
+                                for action in self.action_history),
+                "Who": row["Who"], "Result": "Failed",
+                "AgentAUtility": row["AgentAUtility"],
+                "AgentBUtility": row["AgentBUtility"],
+                "ProductScore": row["ProductScore"],
+                "SocialWelfare": row["SocialWelfare"], "BidContent": None,
+                "EndReason": row.get("EndReason", "agent ended negotiation"),
+            })
+            self.action_history.append(nenv.EndNegotiation(result["EndReason"]))
+            return row
+
         bid = self.parse_bid(row["BidContent"])
 
         if row["Action"] == 'Accept':

@@ -12,13 +12,12 @@ GPU, account, or Node.js installation is needed.
 1. Get the matching code
 ------------------------
 
-These instructions describe the maintenance preview in
-`pull request #2 <https://github.com/aniltrue/NegoLog/pull/2>`_. Until it is
-merged, clone that branch to get the quickstart and APIs shown here:
+These instructions describe **NegoLog V2 (2.1.0)**. Clone the V2 repository
+to get the quickstart and APIs shown here:
 
 .. code-block:: console
 
-   git clone --branch maintenance/agent-model-framework-updates https://github.com/aniltrue/NegoLog.git
+   git clone https://github.com/aniltrue/NegoLog.git
    cd NegoLog
 
 Already have a checkout? Use the revision that supplied these documentation

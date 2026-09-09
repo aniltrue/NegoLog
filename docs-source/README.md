@@ -1,4 +1,4 @@
-# NegoLog user guides and API documentation
+# NegoLog V2 user guides and API documentation
 
 Choose a guide before building anything:
 
@@ -8,14 +8,15 @@ Choose a guide before building anything:
 | Understand workbooks and use the browser interface | [Read the results and run the UI](getting-started.rst#read-the-results) |
 | Configure a study or register a custom agent/logger | [Hands-on tutorials](tutorials.rst) |
 | Choose an agent, model, or analysis | [Built-in components](components.rst) |
+| Run CBOM in Python or Java | [CBOM agents and examples](cbom.rst) |
 | Understand domains and run status | [Run lifecycle](runs.rst) |
 | Interpret estimation metrics and sampling | [Models](models.rst) and [logging](logging.rst) |
 | Resolve an installation or runtime problem | [Troubleshooting](troubleshooting.rst) |
 | Look up Python classes | [API reference](api.rst) |
 
-These sources describe the current checkout, including the maintenance preview
-in [PR #2](https://github.com/aniltrue/NegoLog/pull/2). Follow the matching branch
-instructions in [Getting started](getting-started.rst). API signatures and
+These sources describe NegoLog V2 (2.1.0). Follow the matching repository
+instructions in [Getting started](getting-started.rst), and see the
+[release notes](../CHANGELOG.md) when updating. API signatures and
 selected docstrings are generated from `nenv` through Sphinx autodoc. The
 checked-in HTML under [`docs/`](../docs/README.md) is a historical snapshot.
 

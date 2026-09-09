@@ -1,0 +1,2 @@
+# Keep the hashed, vendored public source identical across checkout platforms.
+agents/CBOM/** text eol=lf

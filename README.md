@@ -2,11 +2,16 @@
 
 **Build negotiation agents. Run tournaments. Understand their decisions.**
 
-NegoLog is a **Python framework for bilateral automated negotiation and
+NegoLog V2 is a **Python framework for bilateral automated negotiation and
 opponent-model assessment**. Two agents negotiate over a domain, exchange offers,
 and try to reach an agreement. You choose the strategies, preference profiles,
 deadlines and analyses; NegoLog runs the sessions and produces inspectable logs
 and plots.
+
+NegoLog V2 continues the framework created by Anıl Doğru, Mehmet Onur Keskin
+and the original contributors. Its GPLv3 license and published framework
+citation are retained. The CBOM integration also ships in the maintained
+[monurkeskin/NegoLogV2 distribution](https://github.com/monurkeskin/NegoLogV2).
 
 [Start here](#quickstart) · [Usage guides](docs-source/README.md) ·
 [Component catalog](docs-source/components.rst) ·
@@ -19,9 +24,10 @@ and plots.
 
 | Your task | What NegoLog provides | Start with |
 | --- | --- | --- |
-| Develop a negotiation agent | Bidding and acceptance interfaces, session management, and **26 bundled agents** | [Add an agent](docs-source/tutorials.rst#add-your-first-agent-module) |
+| Develop a negotiation agent | Bidding and acceptance interfaces, session management, and **28 agent entries** | [Add an agent](docs-source/tutorials.rst#add-your-first-agent-module) |
 | Study opponent preferences | **Nine opponent models**, true-profile assessment, and per-offer or final-session metrics | [Choose models and loggers](docs-source/components.rst) |
 | Run a comparison | Configurable pairings, both role orders, repeated sessions, Excel summaries and plots | [Your first tournament](#quickstart) |
+| Use CBOM in Python or Java | The paper's strategy with an actively updated CBOM model in either language | [Run CBOM](#run-cbom-in-python-or-java) |
 | Explore negotiation domains | Bundled discrete domains, a generator, profile editing and a local web interface | [Use the web interface](#web-interface) |
 
 New to automated negotiation? An **issue** is a topic such as delivery time; a
@@ -30,13 +36,10 @@ Each agent's **utility profile** scores those bids. A **strategy** decides what
 to offer or accept; an **opponent model** estimates the other side's preferences
 from received offers.
 
-> **NegoLog V2 update:** these instructions match
-> [PR #2](https://github.com/aniltrue/NegoLog/pull/2), which is awaiting upstream review.
-> The V2 distribution is also available at
-> [monurkeskin/NegoLogV2](https://github.com/monurkeskin/NegoLogV2), version 2.0.0.
-> The clone command below selects that branch. Existing users should read the
-> [migration checklist](MAINTENANCE.md#migration-quick-reference): preference APIs and
-> several model and agent behaviors have changed since the original version.
+> **NegoLog V2 — version 2.1.0.** See the [release notes](CHANGELOG.md) and
+> [migration checklist](MAINTENANCE.md#migration-quick-reference) before upgrading
+> an existing experiment. Preference APIs and several model and agent behaviors
+> have changed since the original version.
 
 ## Quickstart
 
@@ -47,11 +50,11 @@ access; the bundled example runs locally on the CPU.
 ### 1. Get the code
 
 ```sh
-git clone --branch maintenance/agent-model-framework-updates --single-branch https://github.com/aniltrue/NegoLog.git
+git clone https://github.com/aniltrue/NegoLog.git
 cd NegoLog
 ```
 
-Already viewing a checkout of this branch? Run the next commands from its root.
+Already viewing a V2 checkout? Run the next commands from its root.
 
 ### 2. Install dependencies
 
@@ -150,6 +153,41 @@ results. A seed helps reproduce random choices but does not guarantee identical
 outcomes across all agents, machines or wall-clock deadlines. See the
 [reproducibility checklist](docs-source/tutorials.rst#prepare-a-reproducible-study).
 
+## Run CBOM in Python or Java
+
+The framework bundles two agents for
+**[Conflict-based negotiation strategy for human-agent negotiation](https://doi.org/10.1007/s10489-023-05001-9)**:
+`CBOMAgent` (Python) and `CBOMJavaAgent` (Java). Both use their own live CBOM
+estimates to choose offers. No separate CBOM clone is needed.
+
+![CBOM Python and Java engines run standalone or through NegoLog adapters.](docs-source/_static/cbom-integration.svg)
+
+Start with Python after the installation above:
+
+```sh
+python run.py tournament_configurations/cbom-python.yaml
+```
+
+This runs two sessions against Boulware. To compare both implementations, install
+a **JDK 17+**, check `java -version` and `javac -version`, then run:
+
+```sh
+python agents/CBOM/java/build.py
+python run.py tournament_configurations/cbom.yaml
+```
+
+The second example runs **six sessions**: Python CBOM, Java CBOM and Boulware in
+both roles. Open `results/cbom/results.xlsx` and `sessions/` to see outcomes and
+offers; the display names are `CBOM` and `CBOMJava`. Java executes the model and
+strategy in its own persistent process. Build it before starting timed sessions.
+
+The [CBOM guide](docs-source/cbom.rst) covers one-session runs, independent
+Python/Java demos, settings, termination reasons and troubleshooting.
+The [standalone CBOM repository](https://github.com/monurkeskin/CBOM) provides the
+method reference, implementation differences and language-parity limits.
+For studies using this agent and framework, cite the **CBOM 2023 paper** and the
+**NegoLog 2024 paper**, and record both software revisions.
+
 ## Web interface
 
 Prefer a visual workflow? From the repository root, in the same environment:
@@ -233,7 +271,7 @@ methods when your work relies on them.
 ## Help and contributing
 
 Start with [troubleshooting](docs-source/troubleshooting.rst). If the issue
-persists, [open an issue](https://github.com/aniltrue/NegoLog/issues) with your
+persists, [open an issue](https://github.com/monurkeskin/NegoLogV2/issues) with your
 revision, environment, minimal configuration and traceback. The
 [contribution guide](CONTRIBUTING.md) covers bug reports, documentation fixes,
 new components, and the checks to run before a pull request.

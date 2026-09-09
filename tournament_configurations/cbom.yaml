@@ -1,0 +1,21 @@
+# Build Java first: python agents/CBOM/java/build.py
+# Run: python run.py tournament_configurations/cbom.yaml
+# Three agents, six role-swapped sessions on the same bundled domain.
+deadline_time: null
+deadline_round: 30
+agents:
+  - CBOMAgent
+  - CBOMJavaAgent
+  - BoulwareAgent
+domains:
+  - "0"
+loggers:
+  - BidSpaceLogger
+  - TournamentSummaryLogger
+estimators: []
+self_negotiation: false
+repeat: 1
+result_dir: results/cbom
+seed: 0
+shuffle: false
+drawing_format: matplotlib-PNG

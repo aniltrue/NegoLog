@@ -1,0 +1,19 @@
+# Python CBOM against an existing baseline, in both roles. No Java required.
+# Run: python run.py tournament_configurations/cbom-python.yaml
+deadline_time: null
+deadline_round: 30
+agents:
+  - CBOMAgent
+  - BoulwareAgent
+domains:
+  - "0"
+loggers:
+  - BidSpaceLogger
+  - TournamentSummaryLogger
+estimators: []
+self_negotiation: false
+repeat: 1
+result_dir: results/cbom-python
+seed: 0
+shuffle: false
+drawing_format: matplotlib-PNG

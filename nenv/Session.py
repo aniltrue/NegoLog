@@ -1,6 +1,6 @@
 import time
 from typing import List, Union, Optional
-from nenv.Action import Accept, Action
+from nenv.Action import Accept, Action, EndNegotiation
 from nenv.Agent import AbstractAgent
 from nenv.BidSpace import BidSpace
 from nenv.utils.ProcessManager import ProcessManager
@@ -207,7 +207,23 @@ class Session:
 
         return row
 
-    def on_fail(self, t: float) -> LogRow:
+    def on_end(self, agent_no: str, action: EndNegotiation, t: float) -> LogRow:
+        """Record an explicit no-agreement decision without logging a false bid."""
+        self.action_history.append(action)
+        utility_a = self.agentA.preference.reservation_value
+        utility_b = self.agentB.preference.reservation_value
+        row = {
+            "Round": self.round, "Time": t, "Who": agent_no, "Action": "End",
+            "AgentAUtility": utility_a, "AgentBUtility": utility_b,
+            "ProductScore": utility_a * utility_b,
+            "SocialWelfare": utility_a + utility_b, "BidContent": None,
+            "EndReason": action.reason, "ElapsedTime": time.time() - self.start_time,
+        }
+        self.session_log.append({"Session": row})
+        self.last_row = row
+        return self.on_fail(t, agent_no, action.reason)
+
+    def on_fail(self, t: float, agent_no: str = "-", reason: Optional[str] = None) -> LogRow:
         """
             This method is called when the deadline is up without any acceptance
 
@@ -232,7 +248,7 @@ class Session:
             "Round": self.round,
             "Time": t,
             "NumOffer": self.get_number_of_offers(),
-            "Who": "-",
+            "Who": agent_no,
             "Result": "Failed",
             "AgentAUtility": agentA_utility,
             "AgentBUtility": agentB_utility,
@@ -241,6 +257,9 @@ class Session:
             "BidContent": None,
             "ElapsedTime": time.time() - self.start_time
         }}
+
+        if reason is not None:
+            row["TournamentResults"]["EndReason"] = reason
 
         for logger in self.loggers:
             update(row, logger.on_fail(t, self))
@@ -370,6 +389,46 @@ class Session:
             return self.process_manager.return_val
 
     def start(self) -> LogRow:
+        """Run a session and release agent resources if a host callback fails."""
+        try:
+            return self._start()
+        except BaseException:
+            # Agent exceptions already follow the ordinary error-result path.
+            # Logger, workbook, or caller failures must also release resources
+            # (notably persistent Java agents) before preserving that exception.
+            for role, opponent in (("A", self.agentB), ("B", self.agentA)):
+                try:
+                    self._run_process_manager(role, "Terminate", False, is_accept=False,
+                                              opponent_name=opponent.name,
+                                              t=self.last_row.get("Time", 0.))
+                except BaseException:
+                    pass  # Cleanup must not replace the original host failure.
+            raise
+
+    def _agent_turn(self, role: str, t: float, action: Optional[Action], do_receive: bool) -> tuple[Optional[LogRow], Action]:
+        if do_receive:
+            receiving_bid_result = self._run_process_manager(role, 'Receive Bid', bid=action.bid, t=t)
+            if receiving_bid_result:  # If any problem occurs, end the session
+                return receiving_bid_result, action
+
+        act_result = self._run_process_manager(role, 'Act', t=t)
+        if isinstance(act_result, dict):  # If any problem occurs, end the session
+            return act_result, action
+
+        action = act_result
+        if action is None or not isinstance(action, Action):
+            return self.on_error(role, t), action
+        if isinstance(action, EndNegotiation):
+            return self.on_end(role, action, t), action
+        if isinstance(action, Accept):
+            if role == "A" and self.round == 0:
+                return self.on_error("A", t), action
+            return self.on_acceptance(role, action, t), action
+
+        self.on_offer(action, role, t)
+        return None, action
+
+    def _start(self) -> LogRow:
         """
             This method starts the negotiation.
 
@@ -399,29 +458,9 @@ class Session:
         t = self.get_time()
 
         while t < 1.:  # Until deadline
-            # AgentA
-            if self.round > 0:
-                receiving_bid_result = self._run_process_manager('A', 'Receive Bid', bid=action.bid, t=t)
-
-                if receiving_bid_result:  # If any problem occurs, end the session
-                    return receiving_bid_result
-
-            act_result = self._run_process_manager('A', 'Act', t=t)
-
-            if isinstance(act_result, dict):  # If any problem occurs, end the session
-                return act_result
-            else:
-                action = act_result
-
-            if action is None or not isinstance(action, Action):
-                return self.on_error("A", t)
-
-            if isinstance(action, Accept) and self.round == 0:  # Forbidden action
-                return self.on_error("A", t)
-            if isinstance(action, Accept):
-                return self.on_acceptance("A", action, t)
-            else:
-                self.on_offer(action, "A", t)
+            row, action = self._agent_turn("A", t, action, self.round > 0)
+            if row is not None:
+                return row
 
             # time.sleep(random.random() * 0.09 + 0.01)
 
@@ -430,26 +469,9 @@ class Session:
             if t >= 1.:
                 return self.on_fail(t)
 
-            # AgentB
-            receiving_bid_result = self._run_process_manager('B', 'Receive Bid', bid=action.bid, t=t)
-
-            if receiving_bid_result:  # If any problem occurs, end the session
-                return receiving_bid_result
-
-            act_result = self._run_process_manager('B', 'Act', t=t)
-
-            if isinstance(act_result, dict):  # If any problem occurs, end the session
-                return act_result
-            else:
-                action = act_result
-
-            if action is None or not isinstance(action, Action):
-                return self.on_error("B", t)
-
-            if isinstance(action, Accept):
-                return self.on_acceptance("B", action, t)
-            else:
-                self.on_offer(action, "B", t)
+            row, action = self._agent_turn("B", t, action, True)
+            if row is not None:
+                return row
 
             self.round += 1
             t = self.get_time()
@@ -467,7 +489,7 @@ class Session:
         counter = 0
 
         for action in self.action_history:
-            if not isinstance(action, Accept):
+            if not isinstance(action, (Accept, EndNegotiation)):
                 counter += 1
 
         return counter

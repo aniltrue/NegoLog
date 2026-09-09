@@ -202,7 +202,13 @@ def fetch_agents():
         agents = {}
 
         for file_name in sorted(glob.glob("agents/**/*.py", recursive=True)):
-            module_path = file_name.replace("\\", "/").removesuffix(".py").replace("/", ".")
+            portable_name = file_name.replace("\\", "/")
+            # Agent discovery must not execute bundled CLI entry points or
+            # traverse private implementation packages such as vendored CBOM.
+            if any(part.startswith("_") and part != "__init__.py"
+                   for part in portable_name.split("/")):
+                continue
+            module_path = portable_name.removesuffix(".py").replace("/", ".")
             module_path = module_path.removesuffix(".__init__")
 
             module = importlib.import_module(module_path)

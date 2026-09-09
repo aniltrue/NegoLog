@@ -27,10 +27,20 @@ def test_home_page_and_bundled_assets_are_served(client):
 def test_agent_catalog_contains_only_loadable_concrete_agents(client):
     data = client.get("/fetch/agents").get_json()
     assert not data["error"]
-    assert len(data["agents"]) == 26
+    assert len(data["agents"]) == 28
+    assert {"CBOMAgent", "CBOMJavaAgent"} <= data["agents"].keys()
     assert "AbstractAgent" not in data["agents"]
     for path in data["agents"].values():
         load_agent_class(path)
+
+
+def test_discovery_skips_private_implementation_and_cli_entrypoints(client, monkeypatch):
+    paths = ["agents/CBOM/_vendor/cbom/__main__.py", "agents/CBOM/_vendor/cbom/model.py",
+             "agents/CBOM/__main__.py", "agents/CBOM/__init__.py"]
+    monkeypatch.setattr(web.glob, "glob", lambda *args, **kwargs: paths)
+    data = client.get("/fetch/agents").get_json()
+    assert not data["error"]
+    assert set(data["agents"]) == {"CBOMAgent", "CBOMJavaAgent"}
 
 
 @pytest.mark.parametrize("filename", ["agents/boulware/Boulware.py", r"agents\boulware\Boulware.py"])

@@ -114,6 +114,7 @@ class AbstractAgent(ABC):
             be an Action object. The decision can be making offer or accepting the opponent's offer:\n
             - **Making offer**: You should return an **Offer** object such as: *nenv.Offer(bid)*
             - **Accepting offer**: You should return an **Accept** object such as *nevn.Accept(bid)*, or in a simpler manner: *self.accept_action*
+            - **Ending without agreement**: Return *nenv.EndNegotiation(reason)*. Both parties receive their reservation utility.
 
             *Note* Do not forget to check whether the agent can accept the offer. Therefore, you can use **can_accept**
             method to check. Otherwise, your agent will be failed and penalized.

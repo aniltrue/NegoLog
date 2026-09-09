@@ -35,8 +35,17 @@ models have separate roles. The descriptions below summarize implemented
 mechanisms, not a performance ranking or a guarantee of equivalence to the
 original publication.
 
-26 negotiating agents
----------------------
+28 negotiating agent entries
+----------------------------
+
+CBOM in two languages
+~~~~~~~~~~~~~~~~~~~~~
+
+``CBOMAgent`` and ``CBOMJavaAgent`` implement the same documented strategy in
+Python and Java. Both maintain an internal CBOM model used for offer selection.
+Their display names are ``CBOM`` and ``CBOMJava``. Follow :doc:`cbom` for a
+Python-only example, Java setup, mixed-language tournament and method citation.
+Java requires a prebuilt JAR and JDK 17+; unrelated agents require neither.
 
 Time-based starting points
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

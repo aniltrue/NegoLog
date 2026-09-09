@@ -3,7 +3,9 @@ message: >-
   If you use NegoLog in your research, please cite the IJCAI 2024 paper
   listed in preferred-citation and record the code revision used.
 type: software
-title: NegoLog
+title: NegoLog V2
+version: 2.1.0
+date-released: "2026-09-09"
 authors:
   - family-names: Doğru
     given-names: Anıl

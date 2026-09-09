@@ -7,3 +7,4 @@ __pycache__/
 *.pyo
 *.pyd
 */__pycache__
+/agents/CBOM/java/build/

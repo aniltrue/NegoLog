@@ -1,0 +1,39 @@
+CBOM: maintained paper-code implementation
+Copyright (C) 2026 Mehmet Onur Keskin and contributors.
+Distributed under GNU GPL version 3 (see LICENSE).
+
+Research method and original negotiation strategy:
+Mehmet Onur Keskin, Berk Buzcu and Reyhan Aydoğan (2023).
+Conflict-based negotiation strategy for human-agent negotiation.
+Applied Intelligence 53, 29741-29757. DOI: 10.1007/s10489-023-05001-9.
+
+The opponent model in src/cbom/model.py is derived from NegoLog V2's public
+ConflictBasedOpponentModel. NegoLog was developed by Anıl Doğru, Mehmet Onur
+Keskin and contributors. The maintained CBOM work also credits Emre Kuru.
+Source: https://github.com/monurkeskin/NegoLogV2
+Commit: c13b4f791db9ba682e451d90baa3bc3e0bdf6052
+License: GNU GPL version 3.
+tests/reference/negolog_v2_cbom.py preserves that source file verbatim.
+Changes here: standalone profile API and exact aggregation of comparison
+evidence, with differential validation. No new CBOM inference rule is claimed.
+
+The negotiation strategy implements published Algorithm 2. Hybrid parameter
+defaults and recent-difference weights also follow Berk Buzcu's public Solver
+agent in HumanRobotNego (GNU GPL version 3), with attribution to the original
+authors; other features of that project are not incorporated.
+Source: https://github.com/berkbuzcu/HumanRobotNego
+Commit: 0a2dd11ad324a057e7af9d2cd1cdccbf4c7bf499
+Path: human_robot_negotiation/agent/solver_agent/solver_agent/solver_agent.py
+
+This release is a maintained implementation associated with the paper, not an
+archive of its original human-study software or a reproduction of its results.
+See docs/provenance.md and docs/method.md for behavioral differences.
+
+Java sorting compatibility:
+java/src/org/cbom/StableOrder.java adapts the comparison and merge schedule
+of CPython 3.10.20 Objects/listobject.c to Java, including TimSort galloping.
+Copyright (c) 2001-2023 Python Software Foundation; all rights reserved.
+Source: https://github.com/python/cpython/blob/v3.10.20/Objects/listobject.c
+The PSF license and historical license notices are preserved in java/PSF-LICENSE.
+This compatibility code preserves the reference's operational treatment of
+cyclic majority comparisons; it does not introduce a new CBOM learning rule.
