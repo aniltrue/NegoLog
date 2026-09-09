@@ -1,7 +1,8 @@
 import math
 from numbers import Integral
 from typing import Optional
-from scipy.stats import spearmanr, kendalltau
+import numpy as np
+from scipy.stats import spearmanr, kendalltau, pearsonr
 from nenv.Bid import Bid
 from nenv.Preference import Preference
 from nenv.OpponentModel.EstimatedPreference import EstimatedPreference
@@ -93,7 +94,8 @@ class AbstractOpponentModel(ABC):
     def calculate_error(self, org_pref: Preference,
                         return_rmse: bool = True,
                         return_spearman: bool = True,
-                        return_kendall_tau: bool = True) -> (Optional[float], Optional[float], Optional[float]):
+                        return_kendall_tau: bool = True, *,
+                        vectorized: bool = False) -> (Optional[float], Optional[float], Optional[float]):
         """
             This method calculates the error of the estimated preferences for the performance evaluation of the opponent
             model. There metrics are used [Baarslag2013]_ [Keskin2023]_:
@@ -115,13 +117,17 @@ class AbstractOpponentModel(ABC):
             :param return_rmse: Whether RMSE will be calculated, or not
             :param return_spearman: Whether Spearman will be calculated, or not
             :param return_kendall_tau: Whether Kendall-Tau will be calculated, or not
+            :param vectorized: Opt in to additive batch evaluation. Custom utility
+                overrides fall back to normal calls; no preference or bid cache is retained.
             :return: The metric results (i.e., RMSE, Spearman and Kendall-Tau) as a tuple
         """
         estimated_pref = self.preference
-
-        bids = org_pref.bids
-
-        utilities = [[bid.utility, estimated_pref.get_utility(bid)] for bid in bids]
+        if vectorized:
+            from nenv.utils.utility_metrics import utility_pairs
+            original_utilities, estimated_utilities = utility_pairs(org_pref, estimated_pref, vectorized=True)
+            utilities = list(zip(original_utilities, estimated_utilities))
+        else:
+            utilities = [[bid.utility, estimated_pref.get_utility(bid)] for bid in org_pref.bids]
 
         rmse = None
 
@@ -147,3 +153,35 @@ class AbstractOpponentModel(ABC):
             kendall = float(kendalltau(original_utilities, estimated_utilities)[0]) if ranks_defined else math.nan
 
         return rmse, spearman, kendall
+
+    def calculate_additional_metrics(self, org_pref: Preference, *, pearson: bool = False,
+                                     mape: bool = False, zero_utility: str = "nan",
+                                     vectorized: bool = False) -> dict:
+        """Opt-in statistics, separate from the existing three-value API.
+
+        Only requested keys are returned: ``Pearson`` and/or ``MAPE``.
+        Pearson is NaN for fewer than two bids or a constant vector. MAPE is a
+        percentage, ``100 * mean(abs(true-estimated) / abs(true))``. If any true
+        utility is zero, return NaN (default) or raise ValueError when
+        ``zero_utility='raise'``; observations are never silently discarded.
+        An empty domain yields NaN. This method does not add logger columns.
+        """
+        if zero_utility not in ("nan", "raise"):
+            raise ValueError("zero_utility must be 'nan' or 'raise'")
+        if not pearson and not mape:
+            return {}
+
+        from nenv.utils.utility_metrics import utility_pairs
+        true, estimated = utility_pairs(org_pref, self.preference, vectorized=vectorized)
+        result = {}
+        if pearson:
+            defined = len(true) >= 2 and len(set(true)) > 1 and len(set(estimated)) > 1
+            result["Pearson"] = float(pearsonr(true, estimated)[0]) if defined else math.nan
+        if mape:
+            if np.any(true == 0):
+                if zero_utility == "raise":
+                    raise ValueError("MAPE is undefined for a zero true utility")
+                result["MAPE"] = math.nan
+            else:
+                result["MAPE"] = float(100 * np.mean(np.abs(true-estimated) / np.abs(true))) if len(true) else math.nan
+        return result

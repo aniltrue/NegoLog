@@ -209,3 +209,10 @@ class Bid:
         bid.utility = -1.
 
         return bid
+
+
+# Optional additive evaluation must respect customized iteration, even when a
+# caller changes a base-class method before importing the assessment helper.
+_STANDARD_BID_ITER = Bid.__iter__
+_STANDARD_ISSUE_ITER_INIT = IssueIterator.__init__
+_STANDARD_ISSUE_ITER_NEXT = IssueIterator.__next__
