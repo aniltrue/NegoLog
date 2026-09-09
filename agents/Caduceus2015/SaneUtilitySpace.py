@@ -1,7 +1,7 @@
 import nenv.OpponentModel
 
 
-class SaneUtilitySpace(nenv.OpponentModel.EstimatedPreference):
+class SaneUtilitySpace(nenv.OpponentModel.CBOMEstimatedPreference):
     def __init__(self, reference: nenv.Preference):
         super().__init__(reference)
 

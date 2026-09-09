@@ -159,7 +159,10 @@ class IAMhaggler(nenv.AbstractAgent):
 
         self.maxUtilityInTimeSlot = max(self.maxUtilityInTimeSlot, opponent_utility)
 
-        if time_slot == 0:
+        # The first opponent offer can arrive after slot zero (for example,
+        # when opening a short round-based session). Wait for an observed slot
+        # to close before fitting a model from its completed-slot history.
+        if time_slot == 0 or not self.opponentTimes:
             return 1.0 - time / 2.0
 
         if regression_update_required:

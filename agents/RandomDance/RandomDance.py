@@ -75,7 +75,7 @@ class PlayerData:
 
         for issue in issues:
             issueData = self.map[issue]
-            bid = pref.bids[-1]
+            bid = pref.bids[-1].copy()
             values = issueData.values
 
             for value in values:
