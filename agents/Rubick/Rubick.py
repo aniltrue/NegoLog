@@ -317,6 +317,8 @@ class Rubick(nenv.AbstractAgent):
             medianEvalValues1.append(self.median(self.frequentValuesList1[i]))
 
         for i in range(len(self.frequentValuesList0)):
+            opp0priors = []
+            opp1priors = []
             for val in self.frequentValuesList0[i].keys():
                 if self.frequentValuesList0[i][val] >= medianEvalValues0[i]:
                     opp0priors.append(val)
