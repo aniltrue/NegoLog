@@ -112,8 +112,9 @@ class EstimatedParetoLogger(AbstractLogger):
             if bid_point not in estimated_pareto:
                 fn += 1.
 
-        recall = tp / (tp + fp)
-        precision = tp / (tp + fn)
-        f1 = 2 * precision * recall / (precision + recall)
+        # Empty predictions/frontiers and disjoint sets have zero scores.
+        precision = tp / (tp + fp) if tp + fp else 0.
+        recall = tp / (tp + fn) if tp + fn else 0.
+        f1 = 2 * precision * recall / (precision + recall) if precision + recall else 0.
 
         return precision, recall, f1
