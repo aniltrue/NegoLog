@@ -15,9 +15,8 @@ from nenv.Preference import Preference
 from nenv.Bid import Bid
 
 
-class CUHKOpponentModel(AbstractOpponentModel):
-    """
-    Frequency-based opponent model that tracks how often each value appears in opponent bids.
+class CUHKOpponentModel(AbstractOpponentModel):  # noqa: D213
+    """Track how often each issue value appears in opponent bids.
 
     Uses a frequency heuristic: values that appear more frequently are assumed
     to be more important to the opponent.
@@ -27,9 +26,8 @@ class CUHKOpponentModel(AbstractOpponentModel):
     _bidHistory: List[Bid]  # noqa: N815
     _opponentBidsStatisticsForDiscrete: List[Dict[str, int]]  # noqa: N815
 
-    def __init__(self, reference: Preference):
-        """
-        Initialize the CUHK opponent model.
+    def __init__(self, reference: Preference):  # noqa: D213
+        """Initialize the CUHK opponent model.
 
         :param reference: Reference preference to get domain information
         """
@@ -59,9 +57,8 @@ class CUHKOpponentModel(AbstractOpponentModel):
         """Return the name of this opponent model."""
         return "CUHK Frequency Opponent Model"
 
-    def update(self, bid: Bid, t: float):
-        """
-        Update the opponent model with a new bid from the opponent.
+    def update(self, bid: Bid, t: float):  # noqa: D213
+        """Update the opponent model with a new bid from the opponent.
 
         :param bid: Bid received from opponent
         :param t: Current negotiation time (0-1)
@@ -72,9 +69,8 @@ class CUHKOpponentModel(AbstractOpponentModel):
 
         self._update_statistics(bid)
 
-    def _update_statistics(self, bid: Bid):
-        """
-        Update frequency counters for each value in the bid.
+    def _update_statistics(self, bid: Bid):  # noqa: D213
+        """Update frequency counters for each value in the bid.
 
         :param bid: Bid to update statistics from
         """
@@ -86,9 +82,8 @@ class CUHKOpponentModel(AbstractOpponentModel):
                     self._opponentBidsStatisticsForDiscrete[issue_idx][value] += 1
 
     @property
-    def preference(self):
-        """
-        Return the estimated opponent preference based on observed value frequencies.
+    def preference(self):  # noqa: D213
+        """Return the preference estimated from observed value frequencies.
 
         :return: EstimatedPreference object with frequency-based weights
         """

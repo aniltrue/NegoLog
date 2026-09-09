@@ -13,9 +13,8 @@ class UniformEstimatedPreference(EstimatedPreference):  # noqa: D213
         """Initialize uniform weights over the reference domain."""
         super().__init__(reference)
 
-    def initialize_weights(self, reference: Preference):
-        """
-            Initialize all weights uniformly.
+    def initialize_weights(self, reference: Preference):  # noqa: D213
+        """Initialize all weights uniformly.
 
         :param reference: Reference Preference to get domain information.
         """

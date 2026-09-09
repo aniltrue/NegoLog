@@ -13,9 +13,8 @@ class CBOMEstimatedPreference(EstimatedPreference):  # noqa: D213
         """Initialize inverse weights from the reference domain and preferences."""
         super().__init__(reference)
 
-    def initialize_weights(self, reference: Preference):
-        """
-            Initialize weights as inverse of agent's preferences.
+    def initialize_weights(self, reference: Preference):  # noqa: D213
+        """Initialize weights as the inverse of the agent's preferences.
 
         :param reference: Reference Preference to get domain information (agent's preference).
         """
