@@ -60,8 +60,9 @@ class EstimatedParetoLogger(AbstractLogger):
             estimator_results = session.session_log.to_data_frame(estimator.name)
             # Other loggers share this sheet. Undefined rank correlations must
             # not discard otherwise valid frontier measurements.
-            estimator_results.dropna(subset=["PrecisionA", "RecallA", "F1A",
-                                              "PrecisionB", "RecallB", "F1B"], inplace=True)
+            estimator_results = estimator_results.reindex(
+                columns=["PrecisionA", "RecallA", "F1A", "PrecisionB", "RecallB", "F1B"]
+            ).dropna()
 
             row[estimator.name] = {
                 "PrecisionA": np.mean(estimator_results["PrecisionA"].to_list()) if len(

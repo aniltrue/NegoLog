@@ -35,3 +35,15 @@ def test_unrelated_missing_ranks_do_not_change_other_metric_summaries(tmp_path, 
         assert result[column] == pytest.approx(.5)
     assert math.isnan(workbook.log_rows["Model"][0]["SpearmanA"])
     assert len(workbook.log_rows["Model"]) == 3
+
+
+@pytest.mark.parametrize("logger_class", [EstimatedParetoLogger, EstimatedBidSpaceLogger])
+@pytest.mark.parametrize("other_metrics_only", [False, True])
+def test_empty_or_unmeasured_sheet_keeps_zero_summary(tmp_path, logger_class, other_metrics_only):
+    workbook = ExcelLog(["Model"])
+    if other_metrics_only:
+        workbook.append({"Model": {"SpearmanA": math.nan, "RMSE_A": .25}})
+    session = SimpleNamespace(agentA=SimpleNamespace(estimators=[SimpleNamespace(name="Model")]),
+                              session_log=workbook)
+    result = logger_class(str(tmp_path)).on_session_end({}, session)["Model"]
+    assert all(value == 0. for value in result.values())

@@ -45,8 +45,10 @@ class EstimatedBidSpaceLogger(AbstractLogger):
         for estimator in session.agentA.estimators:
             estimator_results = session.session_log.to_data_frame(estimator.name)
             # Other loggers share this sheet. Filter only our own measurements.
-            estimator_results.dropna(subset=["EstimatedNashDistanceA", "EstimatedNashDistanceB",
-                                              "EstimatedKalaiDistanceA", "EstimatedKalaiDistanceB"], inplace=True)
+            estimator_results = estimator_results.reindex(
+                columns=["EstimatedNashDistanceA", "EstimatedNashDistanceB",
+                         "EstimatedKalaiDistanceA", "EstimatedKalaiDistanceB"]
+            ).dropna()
 
             log = {
                 "EstimatedNashDistanceA": np.mean(estimator_results["EstimatedNashDistanceA"].to_list()) if len(estimator_results) > 0 else 0.,
