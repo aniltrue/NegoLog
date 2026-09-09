@@ -31,9 +31,9 @@ if __name__ == "__main__":
 
         exit(1)
 
-    configuration["agent_classes"] = set([load_agent_class(path) for path in configuration["agents"]])
-    configuration["logger_classes"] = set([load_logger_class(path) for path in configuration["loggers"]])
-    configuration["estimator_classes"] = set([load_estimator_class(path) for path in configuration["estimators"]])
+    configuration["agent_classes"] = [load_agent_class(path) for path in configuration["agents"]]
+    configuration["logger_classes"] = [load_logger_class(path) for path in configuration["loggers"]]
+    configuration["estimator_classes"] = [load_estimator_class(path) for path in configuration["estimators"]]
 
     del configuration["agents"]
     del configuration["loggers"]

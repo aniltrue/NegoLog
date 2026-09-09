@@ -71,12 +71,19 @@ class Tournament:
         assert len(agent_classes) > 0, "Empty list of agent classes."
         assert len(domains) > 0, "Empty list of domains."
 
-        self.agent_classes = agent_classes
+        def ordered_classes(classes):
+            if isinstance(classes, (set, frozenset)):
+                return sorted(classes, key=lambda cls: (cls.__module__, cls.__qualname__))
+            return list(dict.fromkeys(classes))
+
+        self.agent_classes = ordered_classes(agent_classes)
+        if len(self.agent_classes) < 2 and not self_negotiation:
+            raise ValueError("Use at least two different agents or enable self_negotiation.")
         self.domains = domains
-        self.estimators = estimator_classes
+        self.estimators = ordered_classes(estimator_classes)
         self.deadline_time = deadline_time
         self.deadline_round = deadline_round
-        self.loggers = [logger_class(result_dir) for logger_class in set(logger_classes)]
+        self.loggers = [logger_class(result_dir) for logger_class in ordered_classes(logger_classes)]
         self.result_dir = result_dir
         self.seed = seed
         self.repeat = repeat
@@ -129,12 +136,23 @@ class Tournament:
 
         print("*" * 50)
 
+        session_counts = {}
+        used_session_paths = set()
         for i, (agent_class_1, agent_class_2, domain_name) in enumerate(negotiations):
             # Start session
             session_runner = SessionManager(agent_class_1, agent_class_2, domain_name, self.deadline_time, self.deadline_round, list(self.estimators), self.loggers)
 
             session_path = "%s_%s_Domain%s.xlsx" % \
                            (session_runner.agentA.name, session_runner.agentB.name, domain_name)
+            base_path = session_path
+            occurrence = session_counts.get(base_path, 0) + 1
+            if occurrence > 1:
+                session_path = base_path.removesuffix(".xlsx") + f"_repeat{occurrence}.xlsx"
+            while session_path in used_session_paths:
+                occurrence += 1
+                session_path = base_path.removesuffix(".xlsx") + f"_repeat{occurrence}.xlsx"
+            session_counts[base_path] = occurrence
+            used_session_paths.add(session_path)
 
             session_start_time = time.time()
             tournament_logs.append(session_runner.run(os.path.join(self.result_dir, "sessions/", session_path)))

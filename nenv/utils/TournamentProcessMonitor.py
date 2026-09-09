@@ -101,6 +101,8 @@ class TournamentProcessMonitor:
 
         :return: Nothing
         """
+        if not self.total_number_of_sessions:
+            return 0.
         return self.completed_number_of_sessions / self.total_number_of_sessions
 
     @property
@@ -112,7 +114,7 @@ class TournamentProcessMonitor:
 
         :return: The estimated remaining time to complete the tournament process
         """
-        completed_percentage = self.completed_number_of_sessions / self.total_number_of_sessions
+        completed_percentage = self.completed_percentage
 
         if completed_percentage == 0.:
             return None

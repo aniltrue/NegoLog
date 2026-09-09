@@ -59,11 +59,7 @@ class Bid:
         if (not isinstance(other, Bid)) and (not isinstance(other, dict)):
             return False
 
-        for issue in self.content.keys():
-            if other[issue] != self.content[issue]:
-                return False
-
-        return True
+        return self.content == (other.content if isinstance(other, Bid) else other)
 
     def __iter__(self):
         """
@@ -115,7 +111,7 @@ class Bid:
 
             :return: Hash value of the bid
         """
-        return self.content.__str__().__hash__()
+        return hash(frozenset(self.content.items()))
 
     def __str__(self):
         """

@@ -109,11 +109,7 @@ class EstimatedMoveLogger(AbstractLogger):
         accuracy = [0. for _ in range(len(estimator_names))]
 
         for row in tournament_logs.log_rows["TournamentResults"]:
-            agent_a = row["AgentA"]
-            agent_b = row["AgentB"]
-            domain_name = "Domain%d" % int(row["DomainName"])
-
-            session_path = self.get_path(f"sessions/{agent_a}_{agent_b}_{domain_name}.xlsx")
+            session_path = self.get_session_path(row)
             session_log = ExcelLog(file_path=session_path)
 
             for i in range(len(estimator_names)):

@@ -169,11 +169,7 @@ class EstimatorMetricLogger(AbstractLogger):
         kendall = {name: [[] for _ in range(max_round + 1)] for name in estimator_names}
 
         for _, row in tournament_results["TournamentResults"].to_dict('index').items():
-            agent_a = row["AgentA"]
-            agent_b = row["AgentB"]
-            domain_name = "Domain%d" % int(row["DomainName"])
-
-            session_path = self.get_path(f"sessions/{agent_a}_{agent_b}_{domain_name}.xlsx")
+            session_path = self.get_session_path(row)
 
             session_log = ExcelLog(file_path=session_path)
             session_rows = session_log.log_rows["Session"]
@@ -218,6 +214,8 @@ class EstimatorMetricLogger(AbstractLogger):
         return rmse, spearman, kendall
 
     def draw(self, rmse: dict, spearman: dict, kendall: dict):
+        if not any(values for rounds in rmse.values() for values in rounds):
+            return  # No offers were measured, so there is no curve to plot.
         rmse_mean, _ = self.get_mean_std(rmse)
         spearman_mean, _ = self.get_mean_std(spearman)
         kendall_mean, _ = self.get_mean_std(kendall)
@@ -251,7 +249,7 @@ class EstimatorMetricLogger(AbstractLogger):
 
             break
 
-        return round(float(np.median(counts)))
+        return round(float(np.median(counts))) if counts else 0
 
     @staticmethod
     def get_mean_std(results: dict) -> Tuple[Dict[str, List[float]], Dict[str, List[float]]]:
@@ -262,7 +260,7 @@ class EstimatorMetricLogger(AbstractLogger):
             std[estimator_name] = []
 
             for result in rounds:
-                means[estimator_name].append(float(np.mean(result)))
-                std[estimator_name].append(float(np.std(result)))
+                means[estimator_name].append(float(np.mean(result)) if result else np.nan)
+                std[estimator_name].append(float(np.std(result)) if result else np.nan)
 
         return means, std
