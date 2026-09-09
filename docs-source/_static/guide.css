@@ -1,0 +1,92 @@
+/* Keep guides readable beside the complete, searchable API reference. */
+body {
+  color: #203047;
+  background: #fff;
+}
+div.document {
+  width: min(1180px, calc(100% - 48px));
+  margin: 32px auto;
+}
+div.body {
+  min-width: 0;
+  max-width: none;
+  padding: 0 32px 40px;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+}
+div.body h1, div.body h2, div.body h3,
+div.sphinxsidebar h3, div.sphinxsidebar h4 {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: #163d59;
+}
+div.body h1 { line-height: 1.2; }
+div.body h2 { margin-top: 1.6em; }
+div.body p { hyphens: none; }
+div.sphinxsidebar { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+div.body code, div.body span.pre, div.body dt {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+div.body pre, div.body pre span { white-space: pre; }
+div.body div.math { overflow-x: auto; }
+a, div.sphinxsidebar a { color: #125b80; }
+a:hover { color: #773b0b; }
+a:focus-visible, input:focus-visible {
+  outline: 3px solid #125b80;
+  outline-offset: 3px;
+}
+div.body pre {
+  overflow-x: auto;
+  padding: 14px 18px;
+  border: 1px solid #d4dfe7;
+  border-radius: 6px;
+  line-height: 1.5;
+}
+div.body img {
+  max-width: 100%;
+  height: auto;
+}
+div.body table.docutils {
+  display: block;
+  overflow-x: auto;
+  border: 1px solid #d4dfe7;
+  border-collapse: collapse;
+  font-size: 0.94em;
+  max-width: 100%;
+}
+div.body table.docutils th, div.body table.docutils td {
+  padding: 10px 12px;
+  border: 1px solid #d4dfe7;
+}
+div.body table.docutils th { background: #eef5f9; }
+div.body table.docutils td p { margin: 0; }
+div.body .admonition {
+  border: 1px solid #c5d9e7;
+  border-left: 4px solid #125b80;
+  border-radius: 4px;
+  background: #f3f8fb;
+}
+div.body .admonition p.admonition-title { background: transparent; }
+div.body dd { margin-left: 24px; min-width: 0; }
+div.body dl.field-list {
+  grid-template-columns: minmax(0, max-content) minmax(0, 1fr);
+}
+div.body dt.sig { overflow-wrap: anywhere; }
+@media screen and (max-width: 875px) {
+  body { padding: 0; }
+  div.document { width: auto; margin: 16px; }
+  div.bodywrapper { margin: 0; }
+  div.body { padding: 12px 4px; }
+  div.sphinxsidebar {
+    float: none;
+    width: auto;
+    margin: 0;
+    padding: 0;
+    background: #eef5f9;
+    border-radius: 6px;
+  }
+  div.sphinxsidebarwrapper { padding: 14px 18px; }
+  div.sphinxsidebar input { max-width: 90%; }
+  div.body dd { margin-left: 12px; }
+}

@@ -1,6 +1,58 @@
 Logging and measurement cost
 ============================
 
+Add a logger
+------------
+
+Subclass ``nenv.logger.AbstractLogger`` and override only the callbacks needed
+for your analysis. Tournament configuration constructs each logger with
+``log_dir``. If you override ``__init__``, call ``super().__init__(log_dir)``;
+the base constructor calls ``initiate()`` once. Reset state for each session in
+``before_session_start(session)`` when it must not carry over to the next pair.
+
+Row callbacks return a nested mapping such as
+``{"MyAnalysis": {"OfferCount": count}}``: the outer key selects a worksheet,
+and the inner mapping supplies its column values. Return ``{}`` when there is
+no measurement. Choose distinct sheet/column names; a reused column name can
+replace another logger's value in the merged row.
+
+.. list-table:: Callback outputs
+   :header-rows: 1
+   :widths: 38 62
+
+   * - Callback
+     - What to return / where it is used
+   * - ``before_session_start(session)``
+     - A list of additional session worksheet names, or ``[]``.
+   * - ``on_offer(agent, offer, time, session)``
+     - A row mapping merged into the current session workbook row.
+   * - ``on_accept(agent, offer, time, session)``
+     - A row mapping merged into the final outcome returned to the tournament.
+   * - ``on_fail(time, session)``
+     - A row mapping for the terminal outcome without agreement, including
+       error/timeout paths. Use ``on_session_end`` to inspect the recorded
+       outcome when distinguishing those cases.
+   * - ``on_session_end(final_row, session)``
+     - A row mapping added to the completed outcome in the tournament workbook.
+   * - ``on_tournament_end(tournament_logs, agent_names, domain_names, estimator_names)``
+     - No row return is consumed; write the required summaries or figures.
+
+Terminal metric callback results belong to the tournament outcome; do not
+assume they also populate the saved session workbook's terminal row. Use
+``self.get_path(filename)`` for output under the configured result directory,
+and ``self.get_session_path(row)`` when reopening a recorded session, including
+repeated sessions or a copied results folder.
+
+To try a logger:
+
+1. Start with the working sampled-logger example in :doc:`tutorials` and select
+   its full Python path in ``loggers``.
+2. Confirm the expected sheet and column names in a small run before adding
+   more callbacks. Keep worksheet names within Excel's 31-character limit.
+3. Check the cases your measurement needs: agreement, failure, no usable
+   observations, and undefined numerical values. Document required companion
+   loggers; :doc:`components` lists built-in dependencies.
+
 Default observations
 --------------------
 
@@ -58,7 +110,7 @@ API
 .. autoclass:: nenv.logger.EstimatorOnlyFinalMetricLogger
 
 .. autoclass:: nenv.logger.AbstractLogger
-   :members: get_session_path
+   :members: initiate, before_session_start, on_offer, on_accept, on_fail, on_session_end, on_tournament_end, get_path, get_session_path
 
 .. autoclass:: nenv.utils.ExcelLog
    :members: save, load

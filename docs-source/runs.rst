@@ -10,6 +10,11 @@ path. Unknown fields and invalid component types produce errors. Use at least
 one positive deadline: time is measured in seconds; round limits are integers.
 A single configured agent requires ``self_negotiation: true``.
 
+``shuffle: true`` randomizes the session schedule. ``seed`` initializes the
+framework's Python and NumPy random streams; individual agents and wall-clock
+timing can still affect reproducibility. See :doc:`tutorials` for a complete
+configuration and the experiment record to retain.
+
 Before replacing an output directory, setup checks catalog rows by domain name
 and loads the selected profiles. Project source/input directories and ancestor
 directories cannot be output targets. Normal tournament output still replaces
@@ -53,3 +58,17 @@ this is distinct from a normal session deadline without agreement (``Failed``).
 Cancellation requested before startup is retained and does not replace previous
 results. Cancelling an active run does not guarantee immediate interruption of
 blocking native code; the existing thread-cancellation limits still apply.
+
+Local clients and component loading
+-----------------------------------
+
+Web requests must use a loopback host. Browser requests must come from the
+interface's own origin, including its scheme and port; local HTTP clients
+without an ``Origin`` header remain supported. Open the address served by
+``app.py``, rather than opening the bundled HTML as a local file. The server is
+a local research interface, not an authenticated multi-user service.
+
+Custom component import paths execute Python code. Class validation checks the
+required interface; it does not sandbox that code. Use trusted configurations
+and components. The :doc:`tutorials` show the importable-module workflow, and
+:doc:`troubleshooting` covers rejected local requests and occupied ports.

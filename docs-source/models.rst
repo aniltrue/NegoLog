@@ -1,6 +1,37 @@
 Opponent models and assessment
 ==============================
 
+Implement an opponent model
+---------------------------
+
+Use this checklist for a custom estimator, then follow :doc:`tutorials` for the
+import-path configuration and direct-assessment example:
+
+1. Subclass ``nenv.OpponentModel.AbstractOpponentModel``. Keep construction from
+   one reference preference supported; tournament setup calls
+   ``YourModel(reference)``. If you override the constructor, call
+   ``super().__init__(reference)`` to initialize its estimated preference and
+   default round horizon.
+2. Implement a ``name`` property returning a distinct display name, and
+   ``update(bid, t)`` to process a received offer. ``t`` is normalized negotiation
+   time. Update the estimated weights as required by your algorithm; ``update``
+   returns nothing. The base ``preference`` property already exposes the
+   estimated profile, so a separate property implementation is unnecessary.
+3. Keep ``set_deadline(deadline_round)`` callable before observations. If you
+   override it, accept ``None`` for the default horizon and preserve positive
+   integer validation. Initialize any state that the override needs before
+   calling the base constructor, which also calls ``set_deadline``.
+4. Put the model in an importable module and select, for example,
+   ``my_models.MyModel`` in ``estimators``. Begin on a small bundled domain;
+   inspect utilities before updates, after an offer, and after a repeated offer.
+   Keep the opponent's true profile in assessment code, outside the learning
+   update.
+
+``ClassicFrequencyOpponentModel`` is a compact existing implementation to read
+alongside the API below. :doc:`components` describes the other built-in choices.
+Document the assumptions behind initialization and updates when contributing
+a new model; a successful run alone does not establish estimation quality.
+
 Preference initialization
 -------------------------
 
@@ -76,7 +107,7 @@ API
 ---
 
 .. autoclass:: nenv.OpponentModel.AbstractOpponentModel
-   :members: initialize_preference, set_deadline, calculate_error, calculate_additional_metrics
+   :members: name, update, preference, initialize_preference, set_deadline, calculate_error, calculate_additional_metrics
 
 .. autoclass:: nenv.OpponentModel.EstimatedPreference
    :members: initialize_weights, normalize

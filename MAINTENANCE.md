@@ -1,4 +1,31 @@
-# Opponent model and agent updates
+# Migration and compatibility
+
+Use this guide when moving an existing experiment or extension to the current
+checkout. For a first run, start with the [README](README.md); for available
+classes, use the [component catalog](docs-source/components.rst).
+
+## Migration quick reference
+
+| If your project does this | What to change or check | Details |
+| --- | --- | --- |
+| Instantiates `EstimatedPreference(reference)` | Choose `UniformEstimatedPreference(reference)` or `CBOMEstimatedPreference(reference)`. Custom subclasses implement `initialize_weights`. | [Preference API](#preference-api-migration) |
+| Assumes an inverse initial estimate | Base models now default to uniform weights. Select an explicit supported initialization and record it. | [Preference API](#preference-api-migration) |
+| Constructs a custom opponent model or embeds one in an agent | Support the deadline handoff before observations. Use a positive integer round limit; the default horizon is 1000. | [Preference API](#preference-api-migration) |
+| Compares earlier agent/model results with new runs | Treat the revisions as different implementations. Several concession, initialization and update policies changed. | [Models](#opponent-models), [agents](#existing-agents) |
+| Unpacks `calculate_error(...)` | Keep the same three values: RMSE, Spearman and Kendall. Treat undefined correlations as missing values. | [Assessment corrections](#assessment-corrections) |
+| Wants Pearson, MAPE or faster additive evaluation | Request named statistics separately; enable `vectorized=True` explicitly when appropriate. | [Additional statistics](#additional-named-statistics), [batch evaluation](#optional-additive-batch-evaluation) |
+| Selects a CUHK estimator | Choose between the two counting contracts explicitly; neither class is the full CUHK agent. | [CUHK adapters](#public-cuhk-frequency-adapter) |
+| Samples metrics or reprocesses workbooks | Preserve round/action keys and choose compatible readers; default Excel output remains dense. | [Sampling and round keys](#optional-sampling-and-round-keys) |
+| Generates domains or reruns a tournament | Keep input profiles and previous output separately. Successful runs replace their result directory; infeasible domain constraints now raise an error. | [Configuration, domains and lifecycle](#configuration-domains-and-run-lifecycle) |
+| Uses checked-in `docs/` HTML as the current API | Read or build `docs-source/` for this checkout. | [Current documentation](#current-documentation) |
+
+Before a comparison, save the earlier revision, configuration, profiles and
+results. Run a small round-limited example with the new revision, inspect its
+outcomes and expected columns, then record the new revision with subsequent
+results. A successful smoke test checks integration; it does not establish
+equivalence to an earlier experiment.
+
+## Opponent model and agent updates
 
 This update changes model initialization and several built-in agents' behavior,
 as well as correcting evaluation and logging errors. It is not a drop-in
